@@ -37,7 +37,7 @@ namespace BusinessLogic
       this.PhotoPath = daEmployee.PhotoPath;
     }
 
-    public static List<Employee> GetAll(string connectionString)
+    public static new List<Employee> GetAll(string connectionString)
     {
       List<DA.Employee> daEmployeeList = DA.Employee.GetAll(connectionString);
       List<Employee> blEmployeeList = daEmployeeList

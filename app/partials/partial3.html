@@ -1,1 +1,11 @@
-<p>This is the partial for view 1.</p>
+<h1>Employees</h1>
+<ul>
+  <li data-ng-repeat="employee in employees | orderBy:'LastName'">[{{$index + 1}}] {{employee.LastName}}, {{employee.FirstName}}
+    <dl>
+      <dt>Supervisor</dt>
+      <dd data-ng-if="hasSupervisor(employee)">{{employee.Supervisor.LastName}}, {{employee.Supervisor.FirstName}}</dd>
+      <dd data-ng-if="!hasSupervisor(employee)">none</dd>
+    </dl>
+  </li>
+</ul>
+<pre>{{ employees }}</pre>
