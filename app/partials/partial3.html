@@ -3,9 +3,13 @@
   <li data-ng-repeat="employee in employees | orderBy:'LastName'">[{{$index + 1}}] {{employee.LastName}}, {{employee.FirstName}}
     <dl>
       <dt>Supervisor</dt>
-      <dd data-ng-if="hasSupervisor(employee)">{{employee.Supervisor.LastName}}, {{employee.Supervisor.FirstName}}</dd>
-      <dd data-ng-if="!hasSupervisor(employee)">none</dd>
+      <dd data-ng-if="employee.Supervisor">{{employee.Supervisor.LastName}}, {{employee.Supervisor.FirstName}}</dd>
+      <dd data-ng-if="!employee.Supervisor">none</dd>
+      <dt>Notes</dt>
+      <dd>
+        <p>{{ employee.Notes }}</p>
+      </dd>
     </dl>
   </li>
 </ul>
-<pre>{{ employees }}</pre>
+<pre>{{ employees | json }}</pre>
