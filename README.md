@@ -1,3 +1,22 @@
+# angular-asmx — angularjs front end and asmx web service back end
+
+This project is an angularjs client interacting with an asmx web service.
+The client was created by cloning angular-seed.
+This README contains the original angular-seed README.
+See the 'Install Dependencies' section.
+The web service provides interaction with the Northwind database.
+The web service needs to run on a Windows server, IIS, IIS Express, or
+the Visual Studio builtin server.
+
+## Software Tools
+
+In addition to the tools needed for angular-seed (see below),
+the asmx web service requires the following.
+
+* Visual Studio Express 2012 for Web
+* .Net 4.0
+* SQL Server 2008 R2 Express
+
 # angular-seed — the seed for AngularJS apps
 
 This project is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
