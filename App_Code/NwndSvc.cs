@@ -5,17 +5,17 @@ using System.Web.Script.Services;
 using BL = BusinessLogic;
 
 /// <summary>
-/// Summary description for MyWebService
+/// Summary description for NwndSvc
 /// </summary>
 [WebService(Namespace = "http://tempuri.org/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
 [System.Web.Script.Services.ScriptService]
-public class MyWebService : System.Web.Services.WebService
+public class NwndSvc : System.Web.Services.WebService
 {
   string _connectionString;
 
-  public MyWebService()
+  public NwndSvc()
   {
     _connectionString = ConfigurationManager.ConnectionStrings["NorthwindConnectionString"].ConnectionString;
 

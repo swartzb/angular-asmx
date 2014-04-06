@@ -13,7 +13,7 @@ angular.module('myApp.controllers', [])
     $scope.hasSupervisor = function (employee) { return employee.Supervisor; };
 
     $http({
-      url: '../MyWebService.asmx/GetAllEmployees',
+      url: '../NwndSvc.asmx/GetAllEmployees',
       method: "POST",
       data: "{}",
       headers: { 'Content-Type': 'application/json' }
