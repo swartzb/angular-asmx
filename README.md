@@ -17,6 +17,22 @@ the asmx web service requires the following.
 * .Net 4.0
 * SQL Server 2008 R2 Express
 
+## Getting Started
+
+### Clone this repository
+
+### Install Dependencies
+
+See the 'Install Dependencies' section for angular-seed below.
+
+Install the Northwind database by opening SQL Server Management Studio (SSMS) and executing
+script server/instnwnd.sql
+
+### Run the Application
+
+Open the angular-asmx directory in Visual Studio Express 2012 for Web as a Web Site.
+Right-click app/index.html and select 'View in Browser'.
+
 # angular-seed — the seed for AngularJS apps
 
 This project is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
