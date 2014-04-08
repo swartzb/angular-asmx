@@ -6,7 +6,7 @@ This README contains the original angular-seed README.
 See the 'Install Dependencies' section.
 The web service provides interaction with the Northwind database.
 The web service needs to run on a Windows server, IIS, IIS Express, or
-the Visual Studio builtin server.
+the ASP.NET Developement Server (Visual Studio).
 
 ## Software Tools
 
@@ -26,7 +26,8 @@ the asmx web service requires the following.
 See the 'Install Dependencies' section for angular-seed below.
 
 Install the Northwind database by opening SQL Server Management Studio (SSMS) and executing
-script server/instnwnd.sql
+script server/instnwnd.sql.
+The script may be re-executed any time to reinitialize the database.
 
 ### Run the Application
 
