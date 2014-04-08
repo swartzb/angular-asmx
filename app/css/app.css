@@ -28,3 +28,8 @@
   content: "";
   padding: 0;
 }
+
+li.selected {
+  color: white;
+  background-color: blue;
+}
