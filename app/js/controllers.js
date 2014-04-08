@@ -9,7 +9,7 @@ angular.module('myApp.controllers', [])
   .controller('MyCtrl2', [function () {
 
   }])
-  .controller('MyCtrl3', ['$scope', '$http', function ($scope, $http) {
+  .controller('EmployeesController', ['$scope', '$http', function ($scope, $http) {
     $scope.hasSupervisor = function (employee) { return employee.Supervisor; };
 
     $http({
