@@ -5,7 +5,7 @@
   <button data-ng-disabled="!selectedEmployee" data-ng-click="deleteSelectedEmployee()">Delete Selected Employee</button>
 </div>
 <ul>
-  <li data-ng-repeat="employee in employees | orderBy:'LastName'" data-ng-click="$parent.toggleSelect(employee)" data-ng-class="{selected: employee.isSelected}">[{{$index + 1}}] {{employee.LastName}}, {{employee.FirstName}}
+  <li data-ng-repeat="employee in employees | orderBy:'LastName'" data-ng-click="$parent.toggleSelect(employee)" data-ng-class="{selected: employee == $parent.selectedEmployee}">[{{$index + 1}}] {{employee.LastName}}, {{employee.FirstName}}
     <dl>
       <dt>Supervisor</dt>
       <dd data-ng-if="employee.Supervisor">{{employee.Supervisor.LastName}}, {{employee.Supervisor.FirstName}}</dd>
@@ -16,4 +16,4 @@
     </dl>
   </li>
 </ul>
-<pre>{{ employees | json }}</pre>
+<pre>employees = {{ employees | json }}</pre>
