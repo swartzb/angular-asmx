@@ -3,13 +3,13 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-  .controller('MyCtrl1', [function() {
+  .controller('MyCtrl1', [function () {
 
   }])
   .controller('MyCtrl2', [function () {
 
   }])
-  .controller('EmployeesController', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+  .controller('EmployeesController', ['$scope', '$window', 'northwindService', function ($scope, $window, northwindService) {
     $scope.selectedEmployee = null;
 
     $scope.editSelectedEmployee = function () {
@@ -31,12 +31,7 @@ angular.module('myApp.controllers', [])
       return;
     };
 
-    $http({
-      url: '../NwndSvc.asmx/GetAllEmployees',
-      method: "POST",
-      data: "{}",
-      headers: { 'Content-Type': 'application/json' }
-    }).success(function (data, status, headers, config) {
+    northwindService.getAllEmployees().success(function (data, status, headers, config) {
       $scope.employees = data.d;
       return;
     }).error(function (data, status, headers, config) {
