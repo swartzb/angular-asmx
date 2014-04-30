@@ -8,15 +8,25 @@
 angular.module('myApp.services', []).
   value('version', '0.1').
   factory('northwindService', ['$http', function ($http) {
+    var employees, errorInfo;
+
     var serviceInstance = {
       getAllEmployees: function () {
-        var promise = $http({
+        var firstPromise = $http({
           url: '../NwndSvc.asmx/GetAllEmployees',
           method: "POST",
           data: "{}",
           headers: { 'Content-Type': 'application/json' }
         });
-        return promise;
+
+        var secondPromise = firstPromise.success(function (data, status, headers, config) {
+          employees = data.d;
+          return;
+        }).error(function (data, status, headers, config) {
+          errorInfo = data;
+        });
+
+        return firstPromise;
       }
     };
 
