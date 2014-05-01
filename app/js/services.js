@@ -9,6 +9,8 @@ angular.module('myApp.services', []).
   value('version', '0.1').
   factory('northwindService', ['$http', function ($http) {
     var serviceInstance = {
+      selectedEmployee: null,
+
       employees: [],
 
       errorInfo: {},
@@ -19,6 +21,7 @@ angular.module('myApp.services', []).
 
       getAllEmployees: function () {
         var that = this;
+        this.selectedEmployee = null;
         this.employees = [];
         this.errorInfo = {};
         this.status = undefined;

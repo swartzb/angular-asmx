@@ -11,7 +11,6 @@ angular.module('myApp.controllers', ['myApp.services'])
   }])
   .controller('EmployeesController', ['$scope', '$window', 'northwindService', function ($scope, $window, northwindService) {
     $scope.northwind = northwindService;
-    $scope.selectedEmployee = null;
 
     $scope.addNewEmployee = function () {
       $window.alert('Add New Employee ');
@@ -19,28 +18,28 @@ angular.module('myApp.controllers', ['myApp.services'])
     };
 
     $scope.editSelectedEmployee = function () {
-      if ($scope.selectedEmployee) {
-        $window.alert('Edit ' + $scope.selectedEmployee.LastName + ', ' + $scope.selectedEmployee.FirstName);
+      if ($scope.northwind.selectedEmployee) {
+        $window.alert('Edit ' + $scope.northwind.selectedEmployee.LastName + ', ' + $scope.northwind.selectedEmployee.FirstName);
       }
       return;
     };
 
     $scope.deleteSelectedEmployee = function () {
-      if ($scope.selectedEmployee) {
-        $window.alert('Delete ' + $scope.selectedEmployee.LastName + ', ' + $scope.selectedEmployee.FirstName);
+      if ($scope.northwind.selectedEmployee) {
+        $window.alert('Delete ' + $scope.northwind.selectedEmployee.LastName + ', ' + $scope.northwind.selectedEmployee.FirstName);
       }
       return;
     };
 
     $scope.viewSelectedEmployeeDetails = function () {
-      if ($scope.selectedEmployee) {
-        $window.alert('View Details for ' + $scope.selectedEmployee.LastName + ', ' + $scope.selectedEmployee.FirstName);
+      if ($scope.northwind.selectedEmployee) {
+        $window.alert('View Details for ' + $scope.northwind.selectedEmployee.LastName + ', ' + $scope.northwind.selectedEmployee.FirstName);
       }
       return;
     };
 
     $scope.toggleSelect = function (employee) {
-      $scope.selectedEmployee = (employee == $scope.selectedEmployee) ? null : employee;
+      $scope.northwind.selectedEmployee = (employee == $scope.northwind.selectedEmployee) ? null : employee;
       return;
     };
 
