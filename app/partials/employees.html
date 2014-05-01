@@ -1,17 +1,18 @@
 <h1>Employees</h1>
 <div data-ng-if="northwind.httpState =='inProgress'">
-  <h1>In Progress</h1>
+  <h2>In Progress</h2>
 </div>
 <div data-ng-if="northwind.httpState =='error'">
-  <h1>Error</h1>
+  <h2>Error</h2>
   <pre>status = {{ northwind.status | json }}</pre>
   <pre>errorInfo = {{ northwind.errorInfo | json }}</pre>
 </div>
 <div data-ng-if="northwind.httpState =='success'">
   <div>
-    <button>Add New Employee</button>
+    <button data-ng-click="addNewEmployee()">Add New Employee</button>
     <button data-ng-disabled="!selectedEmployee" data-ng-click="editSelectedEmployee()">Edit Selected Employee</button>
     <button data-ng-disabled="!selectedEmployee" data-ng-click="deleteSelectedEmployee()">Delete Selected Employee</button>
+    <button data-ng-disabled="!selectedEmployee" data-ng-click="viewSelectedEmployeeDetails()">View Selected Employee Details</button>
   </div>
   <ul>
     <li data-ng-repeat="employee in northwind.employees | orderBy:'LastName'" data-ng-click="$parent.toggleSelect(employee)" data-ng-class="{selected: employee == $parent.selectedEmployee}">[{{$index + 1}}] {{employee.LastName}}, {{employee.FirstName}}

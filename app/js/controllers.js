@@ -13,6 +13,11 @@ angular.module('myApp.controllers', ['myApp.services'])
     $scope.northwind = northwindService;
     $scope.selectedEmployee = null;
 
+    $scope.addNewEmployee = function () {
+      $window.alert('Add New Employee ');
+      return;
+    };
+
     $scope.editSelectedEmployee = function () {
       if ($scope.selectedEmployee) {
         $window.alert('Edit ' + $scope.selectedEmployee.LastName + ', ' + $scope.selectedEmployee.FirstName);
@@ -23,6 +28,13 @@ angular.module('myApp.controllers', ['myApp.services'])
     $scope.deleteSelectedEmployee = function () {
       if ($scope.selectedEmployee) {
         $window.alert('Delete ' + $scope.selectedEmployee.LastName + ', ' + $scope.selectedEmployee.FirstName);
+      }
+      return;
+    };
+
+    $scope.viewSelectedEmployeeDetails = function () {
+      if ($scope.selectedEmployee) {
+        $window.alert('View Details for ' + $scope.selectedEmployee.LastName + ', ' + $scope.selectedEmployee.FirstName);
       }
       return;
     };
