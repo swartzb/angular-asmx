@@ -10,6 +10,7 @@ angular.module('myApp.controllers', ['myApp.services'])
 
   }])
   .controller('EmployeesController', ['$scope', '$window', 'northwindService', function ($scope, $window, northwindService) {
+    $scope.northwind = northwindService;
     $scope.selectedEmployee = null;
 
     $scope.editSelectedEmployee = function () {
@@ -31,10 +32,5 @@ angular.module('myApp.controllers', ['myApp.services'])
       return;
     };
 
-    northwindService.getAllEmployees().success(function (data, status, headers, config) {
-      $scope.employees = data.d;
-      return;
-    }).error(function (data, status, headers, config) {
-      $scope.data = data;
-    });
+    northwindService.getAllEmployees();
   }]);

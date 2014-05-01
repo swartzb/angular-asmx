@@ -3,6 +3,8 @@ using System.Web.Services;
 using System.Configuration;
 using System.Web.Script.Services;
 using BL = BusinessLogic;
+using System.Threading;
+using System;
 
 /// <summary>
 /// Summary description for NwndSvc
@@ -33,6 +35,7 @@ public class NwndSvc : System.Web.Services.WebService
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<BL.Employee> GetAllEmployees()
   {
+    Thread.Sleep(TimeSpan.FromSeconds(2));
     return BL.Employee.GetAll(_connectionString);
   }
 }

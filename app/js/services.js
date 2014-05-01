@@ -8,10 +8,22 @@
 angular.module('myApp.services', []).
   value('version', '0.1').
   factory('northwindService', ['$http', function ($http) {
-    var employees, errorInfo;
-
     var serviceInstance = {
+      employees: [],
+
+      errorInfo: {},
+
+      status: undefined,
+
+      httpState: 'idle',
+
       getAllEmployees: function () {
+        var that = this;
+        this.employees = [];
+        this.errorInfo = {};
+        this.status = undefined;
+        this.httpState = 'inProgress';
+
         var firstPromise = $http({
           url: '../NwndSvc.asmx/GetAllEmployees',
           method: "POST",
@@ -20,10 +32,15 @@ angular.module('myApp.services', []).
         });
 
         var secondPromise = firstPromise.success(function (data, status, headers, config) {
-          employees = data.d;
+          that.employees = data.d;
+          that.status = status;
+          that.httpState = 'success';
           return;
         }).error(function (data, status, headers, config) {
-          errorInfo = data;
+          that.errorInfo = data;
+          that.status = status;
+          that.httpState = 'error';
+          return;
         });
 
         return firstPromise;
