@@ -15,7 +15,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
 
       $scope.addNewEmployee = function () {
         $location.path('/employees/add');
-        //$window.alert('Add New Employee ');
         return;
       };
 
