@@ -52,4 +52,10 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
     function ($scope, $routeParams, $window, northwindService) {
       $scope.northwind = northwindService;
       $scope.headerText = 'Add New Employee';
-    }]);
+    }])
+  .controller('IndexController', ['$scope', function ($scope) {
+    $scope.isMainMenuEnabled = true;
+    $scope.setMainMenuEnabled = function (enabled) {
+      $scope.isMainMenuEnabled = enabled;
+    };
+  }]);
