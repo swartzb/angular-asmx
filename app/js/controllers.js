@@ -9,12 +9,13 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
   .controller('MyCtrl2', [function () {
 
   }])
-  .controller('EmployeesController', ['$scope', '$routeParams', '$window', 'northwindService',
-    function ($scope, $routeParams, $window, northwindService) {
+  .controller('EmployeesController', ['$scope', '$routeParams', '$window', '$location', 'northwindService',
+    function ($scope, $routeParams, $window, $location, northwindService) {
       $scope.northwind = northwindService;
 
       $scope.addNewEmployee = function () {
-        $window.alert('Add New Employee ');
+        $location.path('/employees/add');
+        //$window.alert('Add New Employee ');
         return;
       };
 
@@ -47,4 +48,9 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
       if ($routeParams.loadVal) {
         northwindService.getAllEmployees();
       }
+    }])
+  .controller('AddEmployeeController', ['$scope', '$routeParams', '$window', 'northwindService',
+    function ($scope, $routeParams, $window, northwindService) {
+      $scope.northwind = northwindService;
+      $scope.headerText = 'Add New Employee';
     }]);
