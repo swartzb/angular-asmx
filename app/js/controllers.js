@@ -14,6 +14,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
       $scope.northwind = northwindService;
 
       $scope.addNewEmployee = function () {
+        $scope.setMainMenuEnabled(false);
         $location.path('/employees/add');
         return;
       };
@@ -44,18 +45,25 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
         return;
       };
 
-      if ($routeParams.loadVal) {
+      if ($routeParams.loadVal == 'true') {
         northwindService.getAllEmployees();
       }
     }])
-  .controller('AddEmployeeController', ['$scope', '$routeParams', '$window', 'northwindService',
-    function ($scope, $routeParams, $window, northwindService) {
+  .controller('AddEmployeeController', ['$scope', '$routeParams', '$location', 'northwindService',
+    function ($scope, $routeParams, $location, northwindService) {
       $scope.northwind = northwindService;
       $scope.headerText = 'Add New Employee';
+      $scope.doCancel = function () {
+        $scope.setMainMenuEnabled(true);
+        $location.path('/employees/load/false');
+      };
     }])
-  .controller('IndexController', ['$scope', function ($scope) {
+  .controller('IndexController', ['$scope', '$location', function ($scope, $location) {
     $scope.isMainMenuEnabled = true;
     $scope.setMainMenuEnabled = function (enabled) {
       $scope.isMainMenuEnabled = enabled;
+    };
+    $scope.employeesClickHandler = function () {
+      $location.path('/employees/load/true');
     };
   }]);

@@ -18,10 +18,12 @@
 </head>
 <body>
   <div class="container" data-ng-controller="IndexController">
-    <ul data-ng-disabled="!isMainMenuEnabled" class="menu">
+    <ul class="menu">
       <li><a href="#/view1">view1</a></li>
       <li><a href="#/view2">view2</a></li>
-      <li><a href="#/employees/load/true">Employees</a></li>
+      <li>
+        <button class="btn btn-link" data-ng-disabled="!isMainMenuEnabled" data-ng-click="employeesClickHandler()">Employees</button>
+      </li>
     </ul>
 
     <div data-ng-view=""></div>
