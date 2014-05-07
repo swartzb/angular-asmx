@@ -2,9 +2,19 @@
 <div data-ng-if="northwind.httpState =='success'">
   <form novalidate>
     <div class="form-group">
-    <button class="btn btn-primary" data-ng-click="doCancel()">Cancel</button>
+      <label for="employeeFirstName">First Name</label>
+      <input type="text" data-ng-model="employee.FirstName" class="form-control" id="employeeFirstName" placeholder="Enter First Name" required>
+    </div>
+    <div class="form-group">
+      <label for="employeeLastName">Last Name</label>
+      <input type="text" data-ng-model="employee.LastName" class="form-control" id="employeeLastName" placeholder="Enter Last Name" required>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" data-ng-click="doOK()">{{okButtonText}}</button>
+      <button class="btn btn-primary" data-ng-click="doCancel()">Cancel</button>
     </div>
   </form>
+  <pre>employee = {{ employee | json }}</pre>
 </div>
 <div data-ng-if="northwind.httpState =='inProgress'">
   <h2>In Progress</h2>

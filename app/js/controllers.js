@@ -52,8 +52,14 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
   .controller('AddEmployeeController', ['$scope', '$routeParams', '$location', 'northwindService',
     function ($scope, $routeParams, $location, northwindService) {
       $scope.northwind = northwindService;
+      $scope.employee = {};
       $scope.headerText = 'Add New Employee';
+      $scope.okButtonText = 'Add';
       $scope.doCancel = function () {
+        $scope.setMainMenuEnabled(true);
+        $location.path('/employees/load/false');
+      };
+      $scope.doOK = function () {
         $scope.setMainMenuEnabled(true);
         $location.path('/employees/load/false');
       };
