@@ -72,4 +72,11 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
     $scope.employeesClickHandler = function () {
       $location.path('/employees/load/true');
     };
+
+    $scope.getCssClasses = function (ngModelContoller) {
+      return {
+        'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
+        'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
+      };
+    };
   }]);
