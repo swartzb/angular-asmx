@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-ng-app="myAppMod">
+<head>
+  <meta charset="utf-8">
+  <title>$http input args test</title>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+  <script>
+    angular.module('myAppMod', []).
+    controller('myController', ['$scope', '$http', function ($scope, $http) {
+      $scope.state = 'In Progress';
+
+      var inData = {
+        inArgs: {
+          id: 1,
+          val: 'input'
+        }
+      };
+      $http({
+        url: '../NwndSvc.asmx/InputArgsTest',
+        method: "POST",
+        data: JSON.stringify(inData),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .success(function (data, status, headers, config) {
+        $scope.state = 'success';
+        $scope.data = data;
+        $scope.status = status;
+        return;
+      })
+      .error(function (data, status, headers, config) {
+        $scope.state = 'error';
+        $scope.data = data;
+        $scope.status = status;
+        return;
+      });
+    }]);
+  </script>
+</head>
+<body data-ng-controller="myController">
+  <h1>{{state}}</h1>
+  <div data-ng-if="state == 'In Progress'">
+  </div>
+  <div data-ng-if="state == 'success'">
+    <pre>status = {{ status | json }}</pre>
+    <pre>data.d = {{data.d | json}}</pre>
+  </div>
+  <div data-ng-if="state == 'error'">
+    <pre>status = {{ status | json }}</pre>
+    <pre>data = {{ data | json }}</pre>
+  </div>
+</body>
+</html>

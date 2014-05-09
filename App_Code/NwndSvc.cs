@@ -5,7 +5,14 @@ using System.Web.Script.Services;
 using BL = BusinessLogic;
 using System.Threading;
 using System;
+using System.Diagnostics;
 
+public class args
+{
+  public int id { get; set; }
+  public string val { get; set; }
+  public int? supervisorId { get; set; }
+}
 /// <summary>
 /// Summary description for NwndSvc
 /// </summary>
@@ -33,8 +40,23 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  public args InputArgsTest(args inArgs)
+  {
+    Thread.Sleep(TimeSpan.FromSeconds(2));
+    args outArgs = new args
+    {
+      id = -inArgs.id,
+      val = inArgs.val + " and output",
+      supervisorId = inArgs.supervisorId
+    };
+    return outArgs;
+  }
+
+  [WebMethod]
+  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<BL.Employee> GetAllEmployees()
   {
+    Debug.Print("GetAllEmployees");
     Thread.Sleep(TimeSpan.FromSeconds(2));
     return BL.Employee.GetAll(_connectionString);
   }
