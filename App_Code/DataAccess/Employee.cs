@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Xml.Serialization;
 
@@ -52,6 +53,55 @@ namespace DataAccess
 
     public string PhotoPath { get; set; }
 
+    static void Delete(SqlConnection conn, SqlTransaction txn, int id)
+    {
+      string sqlCmd = "DELETE FROM Employees WHERE (EmployeeID = @id)";
+      using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+      {
+        cmd.Parameters.AddWithValue("@id", id);
+        int numRows = cmd.ExecuteNonQuery();
+      }
+    }
+
+    static void Insert(SqlConnection conn, SqlTransaction txn, Employee emp)
+    {
+      string sqlCmd = "INSERT INTO Employees (LastName, FirstName, Title, TitleOfCourtesy, BirthDate, HireDate, Address, City, Region, PostalCode, Country, HomePhone, Extension, Notes, ReportsTo, PhotoPath)"
+        + " VALUES (@LastName,@FirstName,@Title,@TitleOfCourtesy,@BirthDate,@HireDate,@Address,@City,@Region,@PostalCode,@Country,@HomePhone,@Extension,@Notes,@ReportsTo,@PhotoPath)"
+        + " SELECT @id = SCOPE_IDENTITY()";
+      using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+      {
+        SqlParameter p = new SqlParameter
+        {
+          ParameterName = "@id",
+          SqlDbType = SqlDbType.Int,
+          Direction = ParameterDirection.Output
+        };
+        cmd.Parameters.Add(p);
+        cmd.Parameters.AddWithValue("@LastName", emp.LastName);
+        cmd.Parameters.AddWithValue("@FirstName", emp.FirstName);
+        cmd.Parameters.AddWithValue("@Title", emp.Title);
+        cmd.Parameters.AddWithValue("@TitleOfCourtesy", emp.TitleOfCourtesy);
+        cmd.Parameters.AddWithValue("@BirthDate",
+          emp.BirthDate.HasValue ? (object)emp.BirthDate.Value : DBNull.Value);
+        cmd.Parameters.AddWithValue("@HireDate",
+          emp.HireDate.HasValue ? (object)emp.HireDate.Value : DBNull.Value);
+        cmd.Parameters.AddWithValue("@Address", emp.Address);
+        cmd.Parameters.AddWithValue("@City", emp.City);
+        cmd.Parameters.AddWithValue("@Region", emp.Region);
+        cmd.Parameters.AddWithValue("@PostalCode", emp.PostalCode);
+        cmd.Parameters.AddWithValue("@Country", emp.Country);
+        cmd.Parameters.AddWithValue("@HomePhone", emp.HomePhone);
+        cmd.Parameters.AddWithValue("@Extension", emp.Extension);
+        cmd.Parameters.AddWithValue("@Notes", emp.Notes);
+        cmd.Parameters.AddWithValue("@ReportsTo",
+          emp.ReportsTo.HasValue ? (object)emp.ReportsTo.Value : DBNull.Value);
+        cmd.Parameters.AddWithValue("@PhotoPath", emp.PhotoPath);
+
+        int numRows = cmd.ExecuteNonQuery();
+        emp.EmployeeID = (int)p.Value;
+      }
+    }
+
     static List<Employee> SelectAll(SqlConnection conn, SqlTransaction txn)
     {
       List<Employee> employeeList = new List<Employee>();
@@ -89,6 +139,42 @@ namespace DataAccess
             };
             employeeList.Add(e);
           }
+        }
+      }
+
+      return employeeList;
+    }
+
+    public static List<Employee> Remove(string connectionString, int id)
+    {
+      List<Employee> employeeList = null;
+
+      using (SqlConnection conn = new SqlConnection(connectionString))
+      {
+        conn.Open();
+        using (SqlTransaction txn = conn.BeginTransaction())
+        {
+          Delete(conn, txn, id);
+          employeeList = SelectAll(conn, txn);
+          txn.Commit();
+        }
+      }
+
+      return employeeList;
+    }
+
+    public static List<Employee> Add(string connectionString, Employee emp)
+    {
+      List<Employee> employeeList = null;
+
+      using (SqlConnection conn = new SqlConnection(connectionString))
+      {
+        conn.Open();
+        using (SqlTransaction txn = conn.BeginTransaction())
+        {
+          Insert(conn, txn, emp);
+          employeeList = SelectAll(conn, txn);
+          txn.Commit();
         }
       }
 

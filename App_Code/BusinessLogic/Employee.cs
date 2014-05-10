@@ -37,9 +37,29 @@ namespace BusinessLogic
       this.PhotoPath = daEmployee.PhotoPath;
     }
 
+    public static new List<Employee> Add(string connectionString, DA.Employee emp)
+    {
+      List<DA.Employee> daEmployeeList = DA.Employee.Add(connectionString, emp);
+      List<Employee> blEmployeeList = FromDaList(daEmployeeList);
+      return blEmployeeList;
+    }
+
+    public static new List<Employee> Remove(string connectionString, int id)
+    {
+      List<DA.Employee> daEmployeeList = DA.Employee.Remove(connectionString, id);
+      List<Employee> blEmployeeList = FromDaList(daEmployeeList);
+      return blEmployeeList;
+    }
+
     public static new List<Employee> GetAll(string connectionString)
     {
       List<DA.Employee> daEmployeeList = DA.Employee.GetAll(connectionString);
+      List<Employee> blEmployeeList = FromDaList(daEmployeeList);
+      return blEmployeeList;
+    }
+
+    static List<Employee> FromDaList(List<DA.Employee> daEmployeeList)
+    {
       List<Employee> blEmployeeList = daEmployeeList
         .Select(daEmp => { Employee blEmp = new Employee(); blEmp.Init(daEmp); return blEmp; })
         .ToList();
@@ -56,5 +76,4 @@ namespace BusinessLogic
       return blEmployeeList;
     }
   }
-
 }

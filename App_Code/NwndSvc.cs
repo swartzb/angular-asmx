@@ -6,6 +6,7 @@ using BL = BusinessLogic;
 using System.Threading;
 using System;
 using System.Diagnostics;
+using DA = DataAccess;
 
 public class args
 {
@@ -59,5 +60,23 @@ public class NwndSvc : System.Web.Services.WebService
     Debug.Print("GetAllEmployees");
     Thread.Sleep(TimeSpan.FromSeconds(2));
     return BL.Employee.GetAll(_connectionString);
+  }
+
+  [WebMethod]
+  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  public List<BL.Employee> AddEmployee(DA.Employee employee)
+  {
+    Debug.Print("AddEmployee");
+    Thread.Sleep(TimeSpan.FromSeconds(2));
+    return BL.Employee.Add(_connectionString, employee);
+  }
+
+  [WebMethod]
+  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  public List<BL.Employee> DeleteEmployee(int id)
+  {
+    Debug.Print("DeleteEmployee");
+    Thread.Sleep(TimeSpan.FromSeconds(2));
+    return BL.Employee.Remove(_connectionString, id);
   }
 }
