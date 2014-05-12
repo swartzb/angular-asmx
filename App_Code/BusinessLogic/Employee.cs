@@ -9,6 +9,18 @@ namespace BusinessLogic
   /// </summary>
   public class Employee : DA.Employee
   {
+    public new class ReturnVal
+    {
+      public int id { get; set; }
+      public List<Employee> employees { get; set; }
+
+      public ReturnVal(DA.Employee.ReturnVal daRetVal)
+      {
+        id = daRetVal.id;
+        employees = FromDaList(daRetVal.employees);
+      }
+    }
+
     public Employee Supervisor { get; set; }
 
     public Employee()
@@ -37,11 +49,11 @@ namespace BusinessLogic
       this.PhotoPath = daEmployee.PhotoPath;
     }
 
-    public static new List<Employee> Add(string connectionString, DA.Employee emp)
+    public static new ReturnVal Add(string connectionString, DA.Employee emp)
     {
-      List<DA.Employee> daEmployeeList = DA.Employee.Add(connectionString, emp);
-      List<Employee> blEmployeeList = FromDaList(daEmployeeList);
-      return blEmployeeList;
+      DA.Employee.ReturnVal daRetVal = DA.Employee.Add(connectionString, emp);
+      ReturnVal retVal = new ReturnVal(daRetVal);
+      return retVal;
     }
 
     public static new List<Employee> Remove(string connectionString, int id)

@@ -9,9 +9,15 @@ namespace DataAccess
   /// <summary>
   /// Summary description for Employee
   /// </summary>
-  [XmlType("NewTypeName")]
+  [XmlType("Employee")]
   public class Employee
   {
+    public class ReturnVal
+    {
+      public int id { get; set; }
+      public List<Employee> employees { get; set; }
+    }
+
     public Employee()
     {
 
@@ -63,7 +69,7 @@ namespace DataAccess
       }
     }
 
-    static void Insert(SqlConnection conn, SqlTransaction txn, Employee emp)
+    static int Insert(SqlConnection conn, SqlTransaction txn, Employee emp)
     {
       string sqlCmd = "INSERT INTO Employees (LastName, FirstName, Title, TitleOfCourtesy, BirthDate, HireDate, Address, City, Region, PostalCode, Country, HomePhone, Extension, Notes, ReportsTo, PhotoPath)"
         + " VALUES (@LastName,@FirstName,@Title,@TitleOfCourtesy,@BirthDate,@HireDate,@Address,@City,@Region,@PostalCode,@Country,@HomePhone,@Extension,@Notes,@ReportsTo,@PhotoPath)"
@@ -79,27 +85,39 @@ namespace DataAccess
         cmd.Parameters.Add(p);
         cmd.Parameters.AddWithValue("@LastName", emp.LastName);
         cmd.Parameters.AddWithValue("@FirstName", emp.FirstName);
-        cmd.Parameters.AddWithValue("@Title", emp.Title);
-        cmd.Parameters.AddWithValue("@TitleOfCourtesy", emp.TitleOfCourtesy);
+        cmd.Parameters.AddWithValue("@Title",
+          string.IsNullOrWhiteSpace(emp.Title) ? DBNull.Value : (object)emp.Title);
+        cmd.Parameters.AddWithValue("@TitleOfCourtesy",
+          string.IsNullOrWhiteSpace(emp.TitleOfCourtesy) ? DBNull.Value : (object)emp.TitleOfCourtesy);
         cmd.Parameters.AddWithValue("@BirthDate",
           emp.BirthDate.HasValue ? (object)emp.BirthDate.Value : DBNull.Value);
         cmd.Parameters.AddWithValue("@HireDate",
           emp.HireDate.HasValue ? (object)emp.HireDate.Value : DBNull.Value);
-        cmd.Parameters.AddWithValue("@Address", emp.Address);
-        cmd.Parameters.AddWithValue("@City", emp.City);
-        cmd.Parameters.AddWithValue("@Region", emp.Region);
-        cmd.Parameters.AddWithValue("@PostalCode", emp.PostalCode);
-        cmd.Parameters.AddWithValue("@Country", emp.Country);
-        cmd.Parameters.AddWithValue("@HomePhone", emp.HomePhone);
-        cmd.Parameters.AddWithValue("@Extension", emp.Extension);
-        cmd.Parameters.AddWithValue("@Notes", emp.Notes);
+        cmd.Parameters.AddWithValue("@Address",
+          string.IsNullOrWhiteSpace(emp.Address) ? DBNull.Value : (object)emp.Address);
+        cmd.Parameters.AddWithValue("@City",
+          string.IsNullOrWhiteSpace(emp.City) ? DBNull.Value : (object)emp.City);
+        cmd.Parameters.AddWithValue("@Region",
+          string.IsNullOrWhiteSpace(emp.Region) ? DBNull.Value : (object)emp.Region);
+        cmd.Parameters.AddWithValue("@PostalCode",
+          string.IsNullOrWhiteSpace(emp.PostalCode) ? DBNull.Value : (object)emp.PostalCode);
+        cmd.Parameters.AddWithValue("@Country",
+          string.IsNullOrWhiteSpace(emp.Country) ? DBNull.Value : (object)emp.Country);
+        cmd.Parameters.AddWithValue("@HomePhone",
+          string.IsNullOrWhiteSpace(emp.HomePhone) ? DBNull.Value : (object)emp.HomePhone);
+        cmd.Parameters.AddWithValue("@Extension",
+          string.IsNullOrWhiteSpace(emp.Extension) ? DBNull.Value : (object)emp.Extension);
+        cmd.Parameters.AddWithValue("@Notes",
+          string.IsNullOrWhiteSpace(emp.Notes) ? DBNull.Value : (object)emp.Notes);
         cmd.Parameters.AddWithValue("@ReportsTo",
           emp.ReportsTo.HasValue ? (object)emp.ReportsTo.Value : DBNull.Value);
-        cmd.Parameters.AddWithValue("@PhotoPath", emp.PhotoPath);
+        cmd.Parameters.AddWithValue("@PhotoPath",
+          string.IsNullOrWhiteSpace(emp.PhotoPath) ? DBNull.Value : (object)emp.PhotoPath);
 
         int numRows = cmd.ExecuteNonQuery();
         emp.EmployeeID = (int)p.Value;
       }
+      return emp.EmployeeID;
     }
 
     static List<Employee> SelectAll(SqlConnection conn, SqlTransaction txn)
@@ -163,22 +181,22 @@ namespace DataAccess
       return employeeList;
     }
 
-    public static List<Employee> Add(string connectionString, Employee emp)
+    public static ReturnVal Add(string connectionString, Employee emp)
     {
-      List<Employee> employeeList = null;
+      ReturnVal retVal = new ReturnVal();
 
       using (SqlConnection conn = new SqlConnection(connectionString))
       {
         conn.Open();
         using (SqlTransaction txn = conn.BeginTransaction())
         {
-          Insert(conn, txn, emp);
-          employeeList = SelectAll(conn, txn);
+          retVal.id = Insert(conn, txn, emp);
+          retVal.employees = SelectAll(conn, txn);
           txn.Commit();
         }
       }
 
-      return employeeList;
+      return retVal;
     }
 
     public static List<Employee> GetAll(string connectionString)

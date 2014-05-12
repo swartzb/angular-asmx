@@ -28,7 +28,14 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
 
       $scope.deleteSelectedEmployee = function () {
         if ($scope.northwind.selectedEmployee) {
-          $window.alert('Delete ' + $scope.northwind.selectedEmployee.LastName + ', ' + $scope.northwind.selectedEmployee.FirstName);
+          $scope.setMainMenuEnabled(false);
+          $scope.northwind.deleteEmployee($scope.northwind.selectedEmployee).
+          success(function (data, status, headers, config, statusText) {
+            $scope.setMainMenuEnabled(true);
+          }).
+          error(function (data, status, headers, config, statusText) {
+            $scope.setMainMenuEnabled(true);
+          });
         }
         return;
       };
@@ -60,8 +67,14 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
         $location.path('/employees/load/false');
       };
       $scope.doOK = function () {
-        $scope.setMainMenuEnabled(true);
-        $location.path('/employees/load/false');
+        $scope.northwind.addEmployee($scope.employee).
+          success(function (data, status, headers, config, statusText) {
+            $scope.setMainMenuEnabled(true);
+            $location.path('/employees/load/false');
+          }).
+          error(function (data, status, headers, config, statusText) {
+            $scope.setMainMenuEnabled(true);
+          });
       };
     }])
   .controller('IndexController', ['$scope', '$location', function ($scope, $location) {
