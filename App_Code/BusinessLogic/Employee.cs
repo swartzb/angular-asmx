@@ -11,12 +11,14 @@ namespace BusinessLogic
   {
     public new class ReturnVal
     {
-      public int id { get; set; }
+      public int? id { get; set; }
+      public int? numRows { get; set; }
       public List<Employee> employees { get; set; }
 
       public ReturnVal(DA.Employee.ReturnVal daRetVal)
       {
         id = daRetVal.id;
+        numRows = daRetVal.numRows;
         employees = FromDaList(daRetVal.employees);
       }
     }
@@ -56,11 +58,11 @@ namespace BusinessLogic
       return retVal;
     }
 
-    public static new List<Employee> Remove(string connectionString, int id)
+    public static new ReturnVal Remove(string connectionString, int id)
     {
-      List<DA.Employee> daEmployeeList = DA.Employee.Remove(connectionString, id);
-      List<Employee> blEmployeeList = FromDaList(daEmployeeList);
-      return blEmployeeList;
+      DA.Employee.ReturnVal daRetVal = DA.Employee.Remove(connectionString, id);
+      ReturnVal retVal = new ReturnVal(daRetVal);
+      return retVal;
     }
 
     public static new List<Employee> GetAll(string connectionString)

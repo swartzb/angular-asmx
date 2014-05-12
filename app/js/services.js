@@ -69,7 +69,7 @@ angular.module('myApp.services', []).
         });
 
         var secondPromise = firstPromise.success(function (data, status, headers, config) {
-          that.employees = data.d;
+          that.employees = data.d.employees;
           that.status = status;
           that.httpState = 'success';
           return;

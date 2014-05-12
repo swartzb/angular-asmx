@@ -14,7 +14,8 @@ namespace DataAccess
   {
     public class ReturnVal
     {
-      public int id { get; set; }
+      public int? id { get; set; }
+      public int? numRows { get; set; }
       public List<Employee> employees { get; set; }
     }
 
@@ -59,18 +60,21 @@ namespace DataAccess
 
     public string PhotoPath { get; set; }
 
-    static void Delete(SqlConnection conn, SqlTransaction txn, int id)
+    static int Delete(SqlConnection conn, SqlTransaction txn, int id)
     {
+      int numRows;
       string sqlCmd = "DELETE FROM Employees WHERE (EmployeeID = @id)";
       using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
       {
         cmd.Parameters.AddWithValue("@id", id);
-        int numRows = cmd.ExecuteNonQuery();
+        numRows = cmd.ExecuteNonQuery();
       }
+      return numRows;
     }
 
-    static int Insert(SqlConnection conn, SqlTransaction txn, Employee emp)
+    static int Insert(SqlConnection conn, SqlTransaction txn, Employee emp, out int newId)
     {
+      int numRows;
       string sqlCmd = "INSERT INTO Employees (LastName, FirstName, Title, TitleOfCourtesy, BirthDate, HireDate, Address, City, Region, PostalCode, Country, HomePhone, Extension, Notes, ReportsTo, PhotoPath)"
         + " VALUES (@LastName,@FirstName,@Title,@TitleOfCourtesy,@BirthDate,@HireDate,@Address,@City,@Region,@PostalCode,@Country,@HomePhone,@Extension,@Notes,@ReportsTo,@PhotoPath)"
         + " SELECT @id = SCOPE_IDENTITY()";
@@ -114,10 +118,10 @@ namespace DataAccess
         cmd.Parameters.AddWithValue("@PhotoPath",
           string.IsNullOrWhiteSpace(emp.PhotoPath) ? DBNull.Value : (object)emp.PhotoPath);
 
-        int numRows = cmd.ExecuteNonQuery();
-        emp.EmployeeID = (int)p.Value;
+        numRows = cmd.ExecuteNonQuery();
+        newId = (int)p.Value;
       }
-      return emp.EmployeeID;
+      return numRows;
     }
 
     static List<Employee> SelectAll(SqlConnection conn, SqlTransaction txn)
@@ -163,22 +167,22 @@ namespace DataAccess
       return employeeList;
     }
 
-    public static List<Employee> Remove(string connectionString, int id)
+    public static ReturnVal Remove(string connectionString, int id)
     {
-      List<Employee> employeeList = null;
+      ReturnVal retVal = new ReturnVal();
 
       using (SqlConnection conn = new SqlConnection(connectionString))
       {
         conn.Open();
         using (SqlTransaction txn = conn.BeginTransaction())
         {
-          Delete(conn, txn, id);
-          employeeList = SelectAll(conn, txn);
+          retVal.numRows = Delete(conn, txn, id);
+          retVal.employees = SelectAll(conn, txn);
           txn.Commit();
         }
       }
 
-      return employeeList;
+      return retVal;
     }
 
     public static ReturnVal Add(string connectionString, Employee emp)
@@ -190,7 +194,9 @@ namespace DataAccess
         conn.Open();
         using (SqlTransaction txn = conn.BeginTransaction())
         {
-          retVal.id = Insert(conn, txn, emp);
+          int newId;
+          retVal.numRows = Insert(conn, txn, emp, out newId);
+          retVal.id = newId;
           retVal.employees = SelectAll(conn, txn);
           txn.Commit();
         }

@@ -73,7 +73,7 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<BL.Employee> DeleteEmployee(int id)
+  public BL.Employee.ReturnVal DeleteEmployee(int id)
   {
     Debug.Print("DeleteEmployee");
     Thread.Sleep(TimeSpan.FromSeconds(2));
