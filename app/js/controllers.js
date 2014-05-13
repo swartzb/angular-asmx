@@ -47,6 +47,17 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services'])
         return;
       };
 
+      $scope.getDisplayName = function (employee) {
+        var displayName = employee.LastName + ', ' + employee.FirstName;
+        if (employee.TitleOfCourtesy) {
+          displayName += ', ' + employee.TitleOfCourtesy;
+        }
+        if (employee.Title) {
+          displayName += ', ' + employee.Title;
+        }
+        return displayName;
+      };
+
       $scope.toggleSelect = function (employee) {
         $scope.northwind.selectedEmployee = (employee == $scope.northwind.selectedEmployee) ? null : employee;
         return;

@@ -205,21 +205,21 @@ namespace DataAccess
       return retVal;
     }
 
-    public static List<Employee> GetAll(string connectionString)
+    public static ReturnVal GetAll(string connectionString)
     {
-      List<Employee> employeeList = null;
+      ReturnVal retVal = new ReturnVal();
 
       using (SqlConnection conn = new SqlConnection(connectionString))
       {
         conn.Open();
         using (SqlTransaction txn = conn.BeginTransaction())
         {
-          employeeList = SelectAll(conn, txn);
+          retVal.employees = SelectAll(conn, txn);
           txn.Commit();
         }
       }
 
-      return employeeList;
+      return retVal;
     }
   }
 }

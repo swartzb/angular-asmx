@@ -65,11 +65,11 @@ namespace BusinessLogic
       return retVal;
     }
 
-    public static new List<Employee> GetAll(string connectionString)
+    public static new ReturnVal GetAll(string connectionString)
     {
-      List<DA.Employee> daEmployeeList = DA.Employee.GetAll(connectionString);
-      List<Employee> blEmployeeList = FromDaList(daEmployeeList);
-      return blEmployeeList;
+      DA.Employee.ReturnVal daRetVal = DA.Employee.GetAll(connectionString);
+      ReturnVal retVal = new ReturnVal(daRetVal);
+      return retVal;
     }
 
     static List<Employee> FromDaList(List<DA.Employee> daEmployeeList)

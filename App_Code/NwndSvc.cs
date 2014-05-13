@@ -55,7 +55,7 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<BL.Employee> GetAllEmployees()
+  public BL.Employee.ReturnVal GetAllEmployees()
   {
     Debug.Print("GetAllEmployees");
     Thread.Sleep(TimeSpan.FromSeconds(2));

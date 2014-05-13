@@ -20,10 +20,10 @@
   <ul>
     <li data-ng-repeat="employee in northwind.employees | orderBy:'LastName'" data-ng-click="$parent.toggleSelect(employee)"
       data-ng-class="{selected: employee == $parent.northwind.selectedEmployee}">
-      [{{$index + 1}}] {{employee.LastName}}, {{employee.FirstName}}
+      [{{$index + 1}}] {{getDisplayName(employee)}}
     <dl>
       <dt>Supervisor</dt>
-      <dd data-ng-if="employee.Supervisor">{{employee.Supervisor.LastName}}, {{employee.Supervisor.FirstName}}
+      <dd data-ng-if="employee.Supervisor">{{getDisplayName(employee.Supervisor)}}
       </dd>
       <dd data-ng-if="!employee.Supervisor">none</dd>
       <dt>Notes</dt>
