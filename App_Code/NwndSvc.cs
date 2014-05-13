@@ -64,6 +64,15 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  public BL.Employee.ReturnVal EditEmployee(DA.Employee employee)
+  {
+    Debug.Print("AddEmployee");
+    Thread.Sleep(TimeSpan.FromSeconds(2));
+    return BL.Employee.Edit(_connectionString, employee);
+  }
+
+  [WebMethod]
+  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public BL.Employee.ReturnVal AddEmployee(DA.Employee employee)
   {
     Debug.Print("AddEmployee");

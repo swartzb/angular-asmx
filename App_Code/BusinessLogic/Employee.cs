@@ -51,6 +51,13 @@ namespace BusinessLogic
       this.PhotoPath = daEmployee.PhotoPath;
     }
 
+    public static new ReturnVal Edit(string connectionString, DA.Employee emp)
+    {
+      DA.Employee.ReturnVal daRetVal = DA.Employee.Edit(connectionString, emp);
+      ReturnVal retVal = new ReturnVal(daRetVal);
+      return retVal;
+    }
+
     public static new ReturnVal Add(string connectionString, DA.Employee emp)
     {
       DA.Employee.ReturnVal daRetVal = DA.Employee.Add(connectionString, emp);

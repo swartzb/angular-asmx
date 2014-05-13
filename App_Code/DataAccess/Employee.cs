@@ -72,6 +72,51 @@ namespace DataAccess
       return numRows;
     }
 
+    static int Update(SqlConnection conn, SqlTransaction txn, Employee emp)
+    {
+      int numRows = 0;
+      string sqlCmd = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, Title = @Title, TitleOfCourtesy = @TitleOfCourtesy, BirthDate = @BirthDate, HireDate = @HireDate,"
+        + " Address = @Address, City = @City, Region = @Region, PostalCode = @PostalCode, Country = @Country, HomePhone = @HomePhone, Extension = @Extension, Notes = @Notes,"
+        + " ReportsTo = @ReportsTo, PhotoPath = @PhotoPath WHERE (EmployeeID = @EmployeeID)";
+      using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+      {
+        cmd.Parameters.AddWithValue("@EmployeeID", emp.EmployeeID);
+        cmd.Parameters.AddWithValue("@LastName", emp.LastName);
+        cmd.Parameters.AddWithValue("@FirstName", emp.FirstName);
+        cmd.Parameters.AddWithValue("@Title",
+          string.IsNullOrWhiteSpace(emp.Title) ? DBNull.Value : (object)emp.Title);
+        cmd.Parameters.AddWithValue("@TitleOfCourtesy",
+          string.IsNullOrWhiteSpace(emp.TitleOfCourtesy) ? DBNull.Value : (object)emp.TitleOfCourtesy);
+        cmd.Parameters.AddWithValue("@BirthDate",
+          emp.BirthDate.HasValue ? (object)emp.BirthDate.Value : DBNull.Value);
+        cmd.Parameters.AddWithValue("@HireDate",
+          emp.HireDate.HasValue ? (object)emp.HireDate.Value : DBNull.Value);
+        cmd.Parameters.AddWithValue("@Address",
+          string.IsNullOrWhiteSpace(emp.Address) ? DBNull.Value : (object)emp.Address);
+        cmd.Parameters.AddWithValue("@City",
+          string.IsNullOrWhiteSpace(emp.City) ? DBNull.Value : (object)emp.City);
+        cmd.Parameters.AddWithValue("@Region",
+          string.IsNullOrWhiteSpace(emp.Region) ? DBNull.Value : (object)emp.Region);
+        cmd.Parameters.AddWithValue("@PostalCode",
+          string.IsNullOrWhiteSpace(emp.PostalCode) ? DBNull.Value : (object)emp.PostalCode);
+        cmd.Parameters.AddWithValue("@Country",
+          string.IsNullOrWhiteSpace(emp.Country) ? DBNull.Value : (object)emp.Country);
+        cmd.Parameters.AddWithValue("@HomePhone",
+          string.IsNullOrWhiteSpace(emp.HomePhone) ? DBNull.Value : (object)emp.HomePhone);
+        cmd.Parameters.AddWithValue("@Extension",
+          string.IsNullOrWhiteSpace(emp.Extension) ? DBNull.Value : (object)emp.Extension);
+        cmd.Parameters.AddWithValue("@Notes",
+          string.IsNullOrWhiteSpace(emp.Notes) ? DBNull.Value : (object)emp.Notes);
+        cmd.Parameters.AddWithValue("@ReportsTo",
+          emp.ReportsTo.HasValue ? (object)emp.ReportsTo.Value : DBNull.Value);
+        cmd.Parameters.AddWithValue("@PhotoPath",
+          string.IsNullOrWhiteSpace(emp.PhotoPath) ? DBNull.Value : (object)emp.PhotoPath);
+
+        numRows = cmd.ExecuteNonQuery();
+      }
+      return numRows;
+    }
+
     static int Insert(SqlConnection conn, SqlTransaction txn, Employee emp, out int newId)
     {
       int numRows;
@@ -177,6 +222,24 @@ namespace DataAccess
         using (SqlTransaction txn = conn.BeginTransaction())
         {
           retVal.numRows = Delete(conn, txn, id);
+          retVal.employees = SelectAll(conn, txn);
+          txn.Commit();
+        }
+      }
+
+      return retVal;
+    }
+
+    public static ReturnVal Edit(string connectionString, Employee emp)
+    {
+      ReturnVal retVal = new ReturnVal { id = emp.EmployeeID };
+
+      using (SqlConnection conn = new SqlConnection(connectionString))
+      {
+        conn.Open();
+        using (SqlTransaction txn = conn.BeginTransaction())
+        {
+          retVal.numRows = Update(conn, txn, emp);
           retVal.employees = SelectAll(conn, txn);
           txn.Commit();
         }
