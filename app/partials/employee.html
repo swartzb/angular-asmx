@@ -3,7 +3,7 @@
   <form name="form" role="form" novalidate>
     <div class="form-group" data-ng-class="getCssClasses(form.fName)">
       <label class="control-label" for="fName">First Name</label>
-      <input type="text" data-ng-model="employee.FirstName" class="form-control" id="fName"
+      <input type="text" data-ng-disabled="readOnly" data-ng-model="employee.FirstName" class="form-control" id="fName"
         placeholder="Enter First Name" required name="fName">
       <div data-ng-show="form.fName.$dirty && form.fName.$invalid">
         <span class="help-block" data-ng-show="form.fName.$error.required">First Name is Required.</span>
@@ -11,15 +11,15 @@
     </div>
     <div class="form-group" data-ng-class="getCssClasses(form.lName)">
       <label class="control-label" for="lName">Last Name</label>
-      <input type="text" data-ng-model="employee.LastName" class="form-control" id="lName"
+      <input type="text" data-ng-disabled="readOnly" data-ng-model="employee.LastName" class="form-control" id="lName"
         placeholder="Enter Last Name" required name="lName">
       <div data-ng-show="form.lName.$dirty && form.lName.$invalid">
         <span class="help-block" data-ng-show="form.lName.$error.required">Last Name is Required.</span>
       </div>
     </div>
     <div class="form-group">
-      <button class="btn btn-success" data-ng-disabled="form.$pristine || form.$invalid" data-ng-click="doOK()">{{okButtonText}}</button>
-      <button class="btn btn-primary" data-ng-click="doCancel()">Cancel</button>
+      <button class="btn btn-success" data-ng-disabled="isOkButtonDisabled(form)" data-ng-click="doOK()">{{okButtonText}}</button>
+      <button class="btn btn-primary" data-ng-if="!readOnly" data-ng-click="doCancel()">Cancel</button>
     </div>
   </form>
   <pre>employee = {{ employee | json }}</pre>

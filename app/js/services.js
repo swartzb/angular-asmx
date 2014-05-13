@@ -107,6 +107,48 @@ angular.module('myApp.services', []).
         this.httpState = 'inProgress';
 
         var firstPromise = $http({
+          url: '../NwndSvc.asmx/EditEmployee',
+          method: "POST",
+          data: JSON.stringify(inData),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        var secondPromise = firstPromise.
+          success(function (data, status, headers, config) {
+            that.employees = data.d.employees;
+            for (var i = 0, len = that.employees.length, id = empl.EmployeeID; i < len; ++i) {
+              if (id == that.employees[i].EmployeeID) {
+                that.selectedEmployee = that.employees[i];
+                break;
+              }
+            }
+            that.status = status;
+            that.httpState = 'success';
+            return;
+          }).
+          error(function (data, status, headers, config) {
+            that.errorInfo = data;
+            that.status = status;
+            that.httpState = 'error';
+            return;
+          });
+
+        return firstPromise;
+      },
+
+      addEmployee: function (empl) {
+        var that = this;
+        var inData = {
+          employee: empl
+        };
+
+        this.selectedEmployee = null;
+        this.employees = [];
+        this.errorInfo = {};
+        this.status = undefined;
+        this.httpState = 'inProgress';
+
+        var firstPromise = $http({
           url: '../NwndSvc.asmx/AddEmployee',
           method: "POST",
           data: JSON.stringify(inData),
@@ -115,7 +157,7 @@ angular.module('myApp.services', []).
 
         var secondPromise = firstPromise.success(function (data, status, headers, config) {
           that.employees = data.d.employees;
-          for (var i = 0, len = that.employees.length, id = empl.EmployeeID; i < len; ++i) {
+          for (var i = 0, len = that.employees.length, id = data.d.id; i < len; ++i) {
             if (id == that.employees[i].EmployeeID) {
               that.selectedEmployee = that.employees[i];
               break;
@@ -133,47 +175,7 @@ angular.module('myApp.services', []).
 
         return firstPromise;
       }
-
-      addEmployee: function (empl) {
-      var that = this;
-      var inData = {
-        employee: empl
-      };
-
-      this.selectedEmployee = null;
-      this.employees = [];
-      this.errorInfo = {};
-      this.status = undefined;
-      this.httpState = 'inProgress';
-
-      var firstPromise = $http({
-        url: '../NwndSvc.asmx/AddEmployee',
-        method: "POST",
-        data: JSON.stringify(inData),
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      var secondPromise = firstPromise.success(function (data, status, headers, config) {
-        that.employees = data.d.employees;
-        for (var i = 0, len = that.employees.length, id = data.d.id; i < len; ++i) {
-          if (id == that.employees[i].EmployeeID) {
-            that.selectedEmployee = that.employees[i];
-            break;
-          }
-        }
-        that.status = status;
-        that.httpState = 'success';
-        return;
-      }).error(function (data, status, headers, config) {
-        that.errorInfo = data;
-        that.status = status;
-        that.httpState = 'error';
-        return;
-      });
-
-      return firstPromise;
-    }
-  };
+    };
 
     return serviceInstance;
   }]);

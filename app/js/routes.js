@@ -9,5 +9,6 @@ angular.module('myApp.routes', ['ngRoute']).
     $routeProvider.when('/employees/load/:loadVal', { templateUrl: 'partials/employees.html', controller: 'EmployeesController' });
     $routeProvider.when('/employees/add', { templateUrl: 'partials/employee.html', controller: 'AddEmployeeController' });
     $routeProvider.when('/employees/edit', { templateUrl: 'partials/employee.html', controller: 'EditEmployeeController' });
+    $routeProvider.when('/employees/view', { templateUrl: 'partials/employee.html', controller: 'ViewEmployeeController' });
     $routeProvider.otherwise({ redirectTo: '/view1' });
   }]);
