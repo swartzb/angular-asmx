@@ -45,17 +45,19 @@ angular.module('myApp.services', []).
           headers: { 'Content-Type': 'application/json' }
         });
 
-        var secondPromise = firstPromise.success(function (data, status, headers, config) {
-          that.employees = data.d.employees;
-          that.status = status;
-          that.httpState = 'success';
-          return;
-        }).error(function (data, status, headers, config) {
-          that.errorInfo = data;
-          that.status = status;
-          that.httpState = 'error';
-          return;
-        });
+        var secondPromise = firstPromise.
+          success(function (data, status, headers, config) {
+            that.employees = data.d.employees;
+            that.status = status;
+            that.httpState = 'success';
+            return;
+          }).
+          error(function (data, status, headers, config) {
+            that.errorInfo = data;
+            that.status = status;
+            that.httpState = 'error';
+            return;
+          });
 
         return firstPromise;
       },

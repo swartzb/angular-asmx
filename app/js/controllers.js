@@ -64,10 +64,23 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.employee = {};
       $scope.headerText = 'Add New Employee';
       $scope.getCssClasses = function (ngModelContoller) {
-        return {
-          'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
-          'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
-        };
+        var classes = {};
+        switch (ngModelContoller.$name) {
+          case 'lName':
+          case 'fName':
+          case 'hDate':
+            classes = {
+              'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
+              'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
+            };
+            break;
+          default:
+            classes = {
+              'has-success': true
+            };
+            break;
+        }
+        return classes;
       };
       $scope.okButtonText = 'Add';
       $scope.isOkButtonDisabled = function (FormController) {
@@ -107,10 +120,23 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.employee = angular.copy($scope.northwind.selectedEmployee);
       $scope.headerText = 'Edit ' + $scope.northwind.getDisplayName($scope.northwind.selectedEmployee);
       $scope.getCssClasses = function (ngModelContoller) {
-        return {
-          'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
-          'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
-        };
+        var classes = {};
+        switch (ngModelContoller.$name) {
+          case 'lName':
+          case 'fName':
+          case 'hDate':
+            classes = {
+              'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
+              'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
+            };
+            break;
+          default:
+            classes = {
+              'has-success': true
+            };
+            break;
+        }
+        return classes;
       };
       $scope.okButtonText = 'Update';
       $scope.isOkButtonDisabled = function (FormController) {
