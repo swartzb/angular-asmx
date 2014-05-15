@@ -35,9 +35,11 @@
     <div class="form-group" data-ng-class="getCssClasses(form.hDate)">
       <label class="control-label" for="hDate">Date Hired</label>
       <input type="text" data-ng-disabled="readOnly" data-ng-model="employee.HireDate" class="form-control" id="hDate"
-        placeholder="Enter Date Hired" name="hDate" data-valid-date="">
+        placeholder="Enter Date Hired (month/day/year)" name="hDate" data-valid-date="">
       <div data-ng-show="form.hDate.$dirty && form.hDate.$invalid">
         <span class="help-block" data-ng-show="form.hDate.$error.validDate">Date Entered is Invalid.</span>
+        <span class="help-block" data-ng-show="form.hDate.$error.fullYear">Enter a 4-digit Year.</span>
+        <span class="help-block" data-ng-show="form.hDate.$error.futureDate">Hire Date Can't be in the Future.</span>
       </div>
     </div>
 

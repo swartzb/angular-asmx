@@ -28,22 +28,45 @@ angular.module('myApp.directives', ['myApp.services']).
             }
           });
           ctrl.$parsers.unshift(function (viewValue) {
+            ctrl.$setValidity('validDate', true);
+            ctrl.$setValidity('futureDate', true);
+            ctrl.$setValidity('fullYear', true);
+
+            // check for valid date
             if (!viewValue) {
               // empty is valid
-              ctrl.$setValidity('validDate', true);
               return viewValue;
-            } else {
-              var testDate = Date.parse(viewValue);
-              if (!Number.isNaN(testDate)) {
-                // it is valid
-                ctrl.$setValidity('validDate', true);
-                return viewValue;
-              } else {
-                // it is invalid, return undefined (no model update)
-                ctrl.$setValidity('validDate', false);
-                return undefined;
-              }
             }
+
+            var testDate = Date.parse(viewValue);
+            if (Number.isNaN(testDate)) {
+              // date invalid, return undefined (no model update)
+              ctrl.$setValidity('validDate', false);
+              return undefined;
+            }
+
+            // date is valid
+
+            // check for 4 digit year
+            var re = /\D\d{4}$/;
+            if (!re.test(viewValue)) {
+              ctrl.$setValidity('fullYear', false);
+              return undefined;
+            }
+
+            // date has 4-digit year
+
+            // check that date is not in future
+            var hireDate = new Date(viewValue);
+            var rightNow = new Date();
+            var today = new Date(rightNow.toDateString());
+            if (hireDate > today) {
+              ctrl.$setValidity('futureDate', false);
+              return undefined;
+            }
+
+            // date not in future
+            return viewValue;
           });
         }
       };
