@@ -21,7 +21,7 @@ angular.module('myApp.directives', ['myApp.services']).
               var s = val.slice(6, -2);
               var i = parseInt(s);
               var d = new Date(i);
-              var outVal = d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear();
+              var outVal = d.toLocaleDateString("en-US");
               return outVal;
             } else {
               return val;

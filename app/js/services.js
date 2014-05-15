@@ -18,6 +18,14 @@ angular.module('myApp.services', []).
       status: undefined,
 
       httpState: 'idle',
+
+      getDisplayDate: function (val) {
+        var s = val.slice(6, -2);
+        var i = parseInt(s);
+        var d = new Date(i);
+        var outVal = d.toLocaleDateString("en-US");
+        return outVal;
+      },
       
       getDisplayName: function (employee) {
         var displayName = employee.LastName + ', ' + employee.FirstName;

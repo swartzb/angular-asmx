@@ -22,9 +22,11 @@
       data-ng-class="{selected: employee == $parent.northwind.selectedEmployee}">
       [{{$index + 1}}] {{northwind.getDisplayName(employee)}}
     <dl>
+      <dt>Hire Date</dt>
+      <dd data-ng-if="employee.HireDate">{{northwind.getDisplayDate(employee.HireDate)}}</dd>
+      <dd data-ng-if="!employee.HireDate">unknown</dd>
       <dt>Supervisor</dt>
-      <dd data-ng-if="employee.Supervisor">{{northwind.getDisplayName(employee.Supervisor)}}
-      </dd>
+      <dd data-ng-if="employee.Supervisor">{{northwind.getDisplayName(employee.Supervisor)}}</dd>
       <dd data-ng-if="!employee.Supervisor">none</dd>
       <dt>Notes</dt>
       <dd>{{ employee.Notes }}
