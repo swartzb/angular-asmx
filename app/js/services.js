@@ -20,9 +20,18 @@ angular.module('myApp.services', []).
       httpState: 'idle',
 
       getDisplayDate: function (val) {
-        var s = val.slice(6, -2);
-        var i = parseInt(s);
+        var re = /-?\d+/;
+        var result = re.exec(val);
+        if (!result || result.length == 0) {
+          return val;
+        }
+
+        var i = parseInt(result[0]);
         var d = new Date(i);
+        if (Number.isNaN(d)) {
+          return val;
+        }
+
         var outVal = d.toLocaleDateString("en-US");
         return outVal;
       },

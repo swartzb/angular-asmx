@@ -16,3 +16,9 @@ var rightNow = new Date();
 console.log(rightNow);
 var today = new Date(rightNow.toDateString());
 console.log(today);
+
+var re = /-?\d+/;
+var result = re.exec("/Date(-713772000000)/");
+console.log(result);
+
+

@@ -17,15 +17,20 @@ angular.module('myApp.directives', ['myApp.services']).
         require: 'ngModel',
         link: function (scope, elm, attrs, ctrl) {
           ctrl.$formatters.unshift(function (val) {
-            if (val) {
-              var s = val.slice(6, -2);
-              var i = parseInt(s);
-              var d = new Date(i);
-              var outVal = d.toLocaleDateString("en-US");
-              return outVal;
-            } else {
+            var re = /-?\d+/;
+            var result = re.exec(val);
+            if (!result || result.length == 0) {
               return val;
             }
+
+            var i = parseInt(result[0]);
+            var d = new Date(i);
+            if (Number.isNaN(d)) {
+              return val;
+            }
+
+            var outVal = d.toLocaleDateString("en-US");
+            return outVal;
           });
           ctrl.$parsers.unshift(function (viewValue) {
             ctrl.$setValidity('validDate', true);
