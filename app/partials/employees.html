@@ -17,19 +17,22 @@
     <button class="btn btn-primary" data-ng-disabled="!northwind.selectedEmployee" data-ng-click="viewSelectedEmployeeDetails()">
       View Selected Employee Details</button>
   </div>
-  <ul>
+  <ul class="vertScroll" id="vertScrollList">
     <li data-ng-repeat="employee in northwind.employees | orderBy:'LastName'" data-ng-click="$parent.toggleSelect(employee)"
-      data-ng-class="{selected: employee == $parent.northwind.selectedEmployee}">
-      [{{$index + 1}}] {{northwind.getDisplayName(employee)}}
+      data-ng-class="{selected: employee == $parent.northwind.selectedEmployee}">[{{$index
+      + 1}}] {{northwind.getDisplayName(employee)}}
     <dl>
       <dt>Hire Date</dt>
-      <dd data-ng-if="employee.HireDate">{{northwind.getDisplayDate(employee.HireDate)}}</dd>
+      <dd data-ng-if="employee.HireDate">{{northwind.getDisplayDate(employee.HireDate)}}
+      </dd>
       <dd data-ng-if="!employee.HireDate">unknown</dd>
       <dt>Birth Date</dt>
-      <dd data-ng-if="employee.BirthDate">{{northwind.getDisplayDate(employee.BirthDate)}}</dd>
+      <dd data-ng-if="employee.BirthDate">{{northwind.getDisplayDate(employee.BirthDate)}}
+      </dd>
       <dd data-ng-if="!employee.BirthDate">unknown</dd>
       <dt>Supervisor</dt>
-      <dd data-ng-if="employee.Supervisor">{{northwind.getDisplayName(employee.Supervisor)}}</dd>
+      <dd data-ng-if="employee.Supervisor">{{northwind.getDisplayName(employee.Supervisor)}}
+      </dd>
       <dd data-ng-if="!employee.Supervisor">none</dd>
       <dt>Notes</dt>
       <dd>{{ employee.Notes }}
@@ -37,5 +40,5 @@
     </dl>
     </li>
   </ul>
-  <pre>employees = {{ northwind.employees | json }}</pre>
+  <!--  <pre>employees = {{ northwind.employees | json }}</pre>-->
 </div>

@@ -33,3 +33,7 @@ li.selected {
   color: white;
   background-color: blue;
 }
+
+ul.vertScroll {
+  overflow-y: scroll;
+}

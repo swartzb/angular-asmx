@@ -11,9 +11,40 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
     function () {
     }
   ]).
-  controller('EmployeesController', ['$scope', '$routeParams', '$location', 'northwindService',
-    function ($scope, $routeParams, $location, northwindService) {
+  controller('EmployeesController', ['$scope', '$routeParams', '$location', '$window', '$timeout', 'northwindService',
+    function ($scope, $routeParams, $location, $window, $timeout, northwindService) {
       $scope.northwind = northwindService;
+
+      var timeoutPromise = null;
+      var ulResizer = function () {
+        var ul = document.getElementById('vertScrollList');
+        if (ul) {
+          var windowInnerHeight = $window.innerHeight;
+          var ulTop = ul.offsetTop;
+          var ulBottomMargin = parseInt(window.getComputedStyle(ul, null).getPropertyValue("margin-bottom"));
+          var newHeight = windowInnerHeight - ulTop - ulBottomMargin;
+          ul.style.height = newHeight + 'px';
+          console.log(windowInnerHeight + ',' + ulTop + ',' + newHeight + ',' + ulBottomMargin);
+        }
+        timeoutPromise = null;
+      };
+      $scope.$watchCollection('northwind.employees',
+        function (newVal, oldVal) {
+          if (newVal.length === oldVal.length) {
+            return;
+          }
+
+          /* Wrapping the function inside a $timeout will ensure that
+           * the code is executed after the next browser rendering
+           * (thus after the modified list has been processed by ngRepeat) */
+          $timeout(ulResizer);
+        }
+      );
+      angular.element($window).on('resize', function () {
+        if (!timeoutPromise) {
+          timeoutPromise = $timeout(ulResizer, 1000);
+        }
+      });
 
       $scope.addNewEmployee = function () {
         $scope.setMainMenuEnabled(false);

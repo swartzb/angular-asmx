@@ -76,7 +76,7 @@ angular.module('myApp.services', []).
             return;
           });
 
-        return firstPromise;
+        return secondPromise;
       },
 
       deleteEmployee: function (empl) {
