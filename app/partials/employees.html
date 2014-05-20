@@ -17,9 +17,9 @@
     <button class="btn btn-primary" data-ng-disabled="!northwind.selectedEmployee" data-ng-click="viewSelectedEmployeeDetails()">
       View Selected Employee Details</button>
   </div>
-  <ul class="vertScroll" id="vertScrollList">
-    <li data-ng-repeat="employee in northwind.employees | orderBy:'LastName'" data-ng-click="$parent.toggleSelect(employee)"
-      data-ng-class="{selected: employee == $parent.northwind.selectedEmployee}">[{{$index
+  <ul class="vertScroll" id="vertScrollList" data-list-resizer="northwind">
+    <li data-ng-repeat="employee in northwind.employees | orderBy:'LastName'" data-ng-click="toggleSelect(employee)"
+      data-ng-class="{selected: employee == northwind.selectedEmployee}">[{{$index
       + 1}}] {{northwind.getDisplayName(employee)}}
     <dl>
       <dt>Hire Date</dt>
