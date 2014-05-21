@@ -77,8 +77,8 @@ angular.module('myApp.directives', ['myApp.services']).
       };
     }
   ]).
-  directive('listResizer', ['$window', '$timeout',
-    function ($window, $timeout) {
+  directive('employeesList', ['$window', '$timeout', 'northwindService',
+    function ($window, $timeout, northwindService) {
       var timeoutPromise = null;
       var ulResizer = function () {
         var windowInnerHeight = $window.innerHeight;
@@ -92,7 +92,7 @@ angular.module('myApp.directives', ['myApp.services']).
       };
       var directiveObject = {
         scope: {
-          northwind: '=listResizer'
+          northwind: '=employeesList'
         },
         link: function (scope, element, attrs) {
           $window.addEventListener('resize',
