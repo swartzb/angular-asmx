@@ -19,6 +19,11 @@ angular.module('myApp.services', []).
 
       httpState: 'idle',
 
+      toggleSelect: function (employee) {
+        this.selectedEmployee = (employee == this.selectedEmployee) ? null : employee;
+        return;
+      },
+
       getDisplayDate: function (val) {
         var re = /-?\d+/;
         var result = re.exec(val);
@@ -35,7 +40,7 @@ angular.module('myApp.services', []).
         var outVal = d.toLocaleDateString("en-US");
         return outVal;
       },
-      
+
       getDisplayName: function (employee) {
         var displayName = employee.LastName + ', ' + employee.FirstName;
         if (employee.TitleOfCourtesy) {

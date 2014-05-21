@@ -47,11 +47,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         return;
       };
 
-      $scope.toggleSelect = function (employee) {
-        $scope.northwind.selectedEmployee = (employee == $scope.northwind.selectedEmployee) ? null : employee;
-        return;
-      };
-
       if ($routeParams.loadVal == 'true') {
         $scope.northwind.getAllEmployees();
       }
