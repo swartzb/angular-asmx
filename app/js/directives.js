@@ -83,22 +83,30 @@ angular.module('myApp.directives', ['myApp.services']).
       var ulResizer = function () {
         var windowInnerHeight = $window.innerHeight;
         var ul = document.getElementById('vertScrollList');
-        var ulTop = ul.offsetTop;
-        var ulBottomMargin = parseInt(window.getComputedStyle(ul, null).getPropertyValue("margin-bottom"));
-        var newHeight = windowInnerHeight - ulTop - ulBottomMargin;
-        ul.style.height = newHeight + 'px';
-        console.log(windowInnerHeight + ',' + ulTop + ',' + newHeight + ',' + ulBottomMargin);
+        if (ul) {
+          var ulTop = ul.offsetTop;
+          var ulBottomMargin = parseInt(window.getComputedStyle(ul, null).getPropertyValue("margin-bottom"));
+          var newHeight = windowInnerHeight - ulTop - ulBottomMargin;
+          if (newHeight > 400) {
+            ul.style.height = newHeight + 'px';
+            console.log(windowInnerHeight + ',' + ulTop + ',' + newHeight + ',' + ulBottomMargin);
+          } else {
+            ul.style.height = null;
+            console.log('removed height');
+          }
+        }
         timeoutPromise = null;
       };
       var directiveObject = {
-        scope: {
-          northwind: '=employeesList'
-        },
+        templateUrl: 'partials/employeesList.html',
+        //scope: {
+        //  northwind: '=employeesList'
+        //},
         link: function (scope, element, attrs) {
           $window.addEventListener('resize',
             function () {
               if (!timeoutPromise) {
-                timeoutPromise = $timeout(ulResizer, 1000);
+                timeoutPromise = $timeout(ulResizer, 500);
               }
             }
           );
