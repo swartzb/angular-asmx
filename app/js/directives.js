@@ -81,15 +81,15 @@ angular.module('myApp.directives', ['myApp.services']).
     function ($window, $timeout, northwindService) {
       var timeoutPromise = null;
       var ulResizer = function () {
-        var windowInnerHeight = $window.innerHeight;
         var ul = document.getElementById('vertScrollList');
         if (ul) {
-          var ulTop = ul.offsetTop;
-          var ulBottomMargin = parseInt(window.getComputedStyle(ul, null).getPropertyValue("margin-bottom"));
-          var newHeight = windowInnerHeight - ulTop - ulBottomMargin;
+          var winHeight = $window.innerHeight;
+          var docHeight = $window.document.body.clientHeight;
+          var ulHeight = parseInt(window.getComputedStyle(ul, null).getPropertyValue("height"));
+          var newHeight = ulHeight - docHeight + winHeight;
           if (newHeight > 400) {
             ul.style.height = newHeight + 'px';
-            console.log(windowInnerHeight + ',' + ulTop + ',' + newHeight + ',' + ulBottomMargin);
+            console.log(winHeight + ',' + ulHeight + ',' + docHeight + ',' + newHeight);
           } else {
             ul.style.height = null;
             console.log('removed height');
