@@ -25,6 +25,8 @@ namespace BusinessLogic
 
     public Employee Supervisor { get; set; }
 
+    public string DisplayName { get; set; }
+
     public Employee()
     {
       this.Supervisor = null;
@@ -91,6 +93,16 @@ namespace BusinessLogic
           blEmp.Supervisor = blEmployeeList
             .Where(empl => empl.EmployeeID == blEmp.ReportsTo.Value)
             .Single();
+        }
+
+        blEmp.DisplayName = blEmp.LastName + ", " + blEmp.FirstName;
+        if (!string.IsNullOrWhiteSpace(blEmp.TitleOfCourtesy))
+        {
+          blEmp.DisplayName += ", " + blEmp.TitleOfCourtesy;
+        }
+        if (!string.IsNullOrWhiteSpace(blEmp.Title))
+        {
+          blEmp.DisplayName += ", " + blEmp.Title;
         }
       }
 

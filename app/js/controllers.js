@@ -113,7 +113,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.readOnly = false;
       $scope.northwind = northwindService;
       $scope.employee = angular.copy($scope.northwind.selectedEmployee);
-      $scope.headerText = 'Edit ' + $scope.northwind.getDisplayName($scope.northwind.selectedEmployee);
+      $scope.headerText = 'Edit ' + $scope.northwind.selectedEmployee.DisplayName;
       $scope.getCssClasses = function (ngModelContoller) {
         var classes = {};
         switch (ngModelContoller.$name) {
@@ -158,7 +158,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.readOnly = true;
       $scope.northwind = northwindService;
       $scope.employee = angular.copy($scope.northwind.selectedEmployee);
-      $scope.headerText = 'View ' + $scope.northwind.getDisplayName($scope.northwind.selectedEmployee);
+      $scope.headerText = 'View ' + $scope.northwind.selectedEmployee.DisplayName;
       $scope.getCssClasses = function (ngModelContoller) {
         return {
           'has-success': true

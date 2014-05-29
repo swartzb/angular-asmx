@@ -41,17 +41,6 @@ angular.module('myApp.services', []).
         return outVal;
       },
 
-      getDisplayName: function (employee) {
-        var displayName = employee.LastName + ', ' + employee.FirstName;
-        if (employee.TitleOfCourtesy) {
-          displayName += ', ' + employee.TitleOfCourtesy;
-        }
-        if (employee.Title) {
-          displayName += ', ' + employee.Title;
-        }
-        return displayName;
-      },
-
       getAllEmployees: function () {
         var that = this;
         this.selectedEmployee = null;
