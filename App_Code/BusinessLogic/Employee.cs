@@ -4,6 +4,24 @@ using DA = DataAccess;
 
 namespace BusinessLogic
 {
+  public class EmployeeLite
+  {
+    public string DisplayName { get; set; }
+    public int EmployeeID { get; set; }
+
+    public EmployeeLite(Employee e)
+    {
+      this.EmployeeID = e.EmployeeID;
+      this.DisplayName = e.DisplayName;
+    }
+
+    public static explicit operator EmployeeLite(Employee e)
+    {
+      EmployeeLite el = new EmployeeLite(e);
+      return el;
+    }
+  }
+
   /// <summary>
   /// Summary description for Employee
   /// </summary>
@@ -23,7 +41,7 @@ namespace BusinessLogic
       }
     }
 
-    public Employee Supervisor { get; set; }
+    public EmployeeLite Supervisor { get; set; }
 
     public string DisplayName { get; set; }
 
@@ -90,9 +108,10 @@ namespace BusinessLogic
       {
         if (blEmp.ReportsTo.HasValue)
         {
-          blEmp.Supervisor = blEmployeeList
+          Employee e = blEmployeeList
             .Where(empl => empl.EmployeeID == blEmp.ReportsTo.Value)
             .Single();
+          blEmp.Supervisor = (EmployeeLite)e;
         }
 
         blEmp.DisplayName = blEmp.LastName + ", " + blEmp.FirstName;
