@@ -43,11 +43,14 @@ namespace BusinessLogic
 
     public EmployeeLite Supervisor { get; set; }
 
+    public List<EmployeeLite> CanReportTo { get; set; }
+
     public string DisplayName { get; set; }
 
     public Employee()
     {
       this.Supervisor = null;
+      this.CanReportTo = new List<EmployeeLite>();
     }
 
     public void Init(DA.Employee daEmployee)
@@ -104,6 +107,20 @@ namespace BusinessLogic
       List<Employee> blEmployeeList = daEmployeeList
         .Select(daEmp => { Employee blEmp = new Employee(); blEmp.Init(daEmp); return blEmp; })
         .ToList();
+
+      foreach (Employee blEmp in blEmployeeList)
+      {
+        blEmp.DisplayName = blEmp.LastName + ", " + blEmp.FirstName;
+        if (!string.IsNullOrWhiteSpace(blEmp.TitleOfCourtesy))
+        {
+          blEmp.DisplayName += ", " + blEmp.TitleOfCourtesy;
+        }
+        if (!string.IsNullOrWhiteSpace(blEmp.Title))
+        {
+          blEmp.DisplayName += ", " + blEmp.Title;
+        }
+      }
+
       foreach (Employee blEmp in blEmployeeList)
       {
         if (blEmp.ReportsTo.HasValue)
@@ -113,15 +130,29 @@ namespace BusinessLogic
             .Single();
           blEmp.Supervisor = (EmployeeLite)e;
         }
+      }
 
-        blEmp.DisplayName = blEmp.LastName + ", " + blEmp.FirstName;
-        if (!string.IsNullOrWhiteSpace(blEmp.TitleOfCourtesy))
+      foreach (Employee blEmp in blEmployeeList)
+      {
+        foreach (Employee candidate in blEmployeeList)
         {
-          blEmp.DisplayName += ", " + blEmp.TitleOfCourtesy;
-        }
-        if (!string.IsNullOrWhiteSpace(blEmp.Title))
-        {
-          blEmp.DisplayName += ", " + blEmp.Title;
+          for
+          (
+            Employee testEmpl = candidate;
+            true;
+            testEmpl = testEmpl.ReportsTo.HasValue ? blEmployeeList.Where(empl => empl.EmployeeID == testEmpl.ReportsTo.Value).Single() : null
+          )
+          {
+            if (testEmpl == blEmp)
+            {
+              break;
+            }
+            else if (testEmpl == null)
+            {
+              blEmp.CanReportTo.Add((EmployeeLite)candidate);
+              break;
+            }
+          }
         }
       }
 
