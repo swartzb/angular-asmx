@@ -47,31 +47,26 @@ namespace BusinessLogic
 
     public string DisplayName { get; set; }
 
+    public Employee(DA.Employee e)
+      : base(e)
+    {
+      this.Supervisor = null;
+      this.CanReportTo = new List<EmployeeLite>();
+      DisplayName = LastName + ", " + FirstName;
+      if (!string.IsNullOrWhiteSpace(TitleOfCourtesy))
+      {
+        DisplayName += ", " + TitleOfCourtesy;
+      }
+      if (!string.IsNullOrWhiteSpace(Title))
+      {
+        DisplayName += ", " + Title;
+      }
+    }
+
     public Employee()
     {
       this.Supervisor = null;
       this.CanReportTo = new List<EmployeeLite>();
-    }
-
-    public void Init(DA.Employee daEmployee)
-    {
-      this.EmployeeID = daEmployee.EmployeeID;
-      this.LastName = daEmployee.LastName;
-      this.FirstName = daEmployee.FirstName;
-      this.Title = daEmployee.Title;
-      this.TitleOfCourtesy = daEmployee.TitleOfCourtesy;
-      this.BirthDate = daEmployee.BirthDate;
-      this.HireDate = daEmployee.HireDate;
-      this.Address = daEmployee.Address;
-      this.City = daEmployee.City;
-      this.Region = daEmployee.Region;
-      this.PostalCode = daEmployee.PostalCode;
-      this.Country = daEmployee.Country;
-      this.HomePhone = daEmployee.HomePhone;
-      this.Extension = daEmployee.Extension;
-      this.Notes = daEmployee.Notes;
-      this.ReportsTo = daEmployee.ReportsTo;
-      this.PhotoPath = daEmployee.PhotoPath;
     }
 
     public static new ReturnVal Edit(string connectionString, DA.Employee emp)
@@ -105,21 +100,8 @@ namespace BusinessLogic
     static List<Employee> FromDaList(List<DA.Employee> daEmployeeList)
     {
       List<Employee> blEmployeeList = daEmployeeList
-        .Select(daEmp => { Employee blEmp = new Employee(); blEmp.Init(daEmp); return blEmp; })
+        .Select(daEmp => { Employee blEmp = new Employee(daEmp); return blEmp; })
         .ToList();
-
-      foreach (Employee blEmp in blEmployeeList)
-      {
-        blEmp.DisplayName = blEmp.LastName + ", " + blEmp.FirstName;
-        if (!string.IsNullOrWhiteSpace(blEmp.TitleOfCourtesy))
-        {
-          blEmp.DisplayName += ", " + blEmp.TitleOfCourtesy;
-        }
-        if (!string.IsNullOrWhiteSpace(blEmp.Title))
-        {
-          blEmp.DisplayName += ", " + blEmp.Title;
-        }
-      }
 
       foreach (Employee blEmp in blEmployeeList)
       {

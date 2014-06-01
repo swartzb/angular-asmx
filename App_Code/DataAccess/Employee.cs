@@ -24,6 +24,27 @@ namespace DataAccess
 
     }
 
+    public Employee(Employee e)
+    {
+      EmployeeID = e.EmployeeID;
+      LastName = e.LastName;
+      FirstName = e.FirstName;
+      Title = e.Title;
+      TitleOfCourtesy = e.TitleOfCourtesy;
+      BirthDate = e.BirthDate;
+      HireDate = e.HireDate;
+      Address = e.Address;
+      City = e.City;
+      Region = e.Region;
+      PostalCode = e.PostalCode;
+      Country = e.Country;
+      HomePhone = e.HomePhone;
+      Extension = e.Extension;
+      Notes = e.Notes;
+      ReportsTo = e.ReportsTo;
+      PhotoPath = e.PhotoPath;
+    }
+
     public int EmployeeID { get; set; }
 
     public string LastName { get; set; }
