@@ -56,7 +56,11 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
     function ($scope, $location, northwindService) {
       $scope.readOnly = false;
       $scope.northwind = northwindService;
-      $scope.employee = {};
+      $scope.employee = { CanReportTo: [] };
+      for (var i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
+        var empl = $scope.northwind.employees[i], id = empl.EmployeeID, name = empl.DisplayName;
+        $scope.employee.CanReportTo.push({ EmployeeID: id, DisplayName: name });
+      }
       $scope.headerText = 'Add New Employee';
       $scope.getCssClasses = function (ngModelContoller) {
         var classes = {};
