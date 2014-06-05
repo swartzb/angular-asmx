@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DA = DataAccess;
+using System.Diagnostics;
 
 namespace BusinessLogic
 {
@@ -41,8 +42,6 @@ namespace BusinessLogic
       }
     }
 
-    public EmployeeLite Supervisor { get; set; }
-
     public List<EmployeeLite> CanReportTo { get; set; }
 
     public string DisplayName { get; set; }
@@ -50,7 +49,6 @@ namespace BusinessLogic
     public Employee(DA.Employee e)
       : base(e)
     {
-      this.Supervisor = null;
       this.CanReportTo = new List<EmployeeLite>();
       DisplayName = LastName + ", " + FirstName;
       if (!string.IsNullOrWhiteSpace(TitleOfCourtesy))
@@ -65,7 +63,6 @@ namespace BusinessLogic
 
     public Employee()
     {
-      this.Supervisor = null;
       this.CanReportTo = new List<EmployeeLite>();
     }
 
@@ -103,21 +100,14 @@ namespace BusinessLogic
         .Select(daEmp => { Employee blEmp = new Employee(daEmp); return blEmp; })
         .ToList();
 
-      foreach (Employee blEmp in blEmployeeList)
+      for (int i = 0, len = blEmployeeList.Count; i < len; ++i)
       {
-        if (blEmp.ReportsTo.HasValue)
+        Employee blEmp = blEmployeeList[i];
+        Debug.WriteLine("blEmp: {0}, {1}", blEmp.EmployeeID, blEmp.DisplayName);
+        for (int j = 0; j < len; ++j)
         {
-          Employee e = blEmployeeList
-            .Where(empl => empl.EmployeeID == blEmp.ReportsTo.Value)
-            .Single();
-          blEmp.Supervisor = (EmployeeLite)e;
-        }
-      }
-
-      foreach (Employee blEmp in blEmployeeList)
-      {
-        foreach (Employee candidate in blEmployeeList)
-        {
+          Employee candidate = blEmployeeList[j];
+          Debug.WriteLine("  candidate: {0}, {1}", candidate.EmployeeID, candidate.DisplayName);
           for
           (
             Employee testEmpl = candidate;
@@ -127,16 +117,42 @@ namespace BusinessLogic
           {
             if (testEmpl == blEmp)
             {
+              Debug.WriteLine("    testEmpl: {0}, {1}", testEmpl.EmployeeID, testEmpl.DisplayName);
               break;
             }
             else if (testEmpl == null)
             {
+              Debug.WriteLine("    testEmpl: null");
               blEmp.CanReportTo.Add((EmployeeLite)candidate);
               break;
+            }
+            else
+            {
+              Debug.WriteLine("    testEmpl: {0}, {1}", testEmpl.EmployeeID, testEmpl.DisplayName);
             }
           }
         }
       }
+
+      //foreach (Employee blEmp in blEmployeeList)
+      //{
+      //  foreach (Employee candidate in blEmployeeList)
+      //  {
+      //    for
+      //    (
+      //      Employee testEmpl = candidate;
+      //      testEmpl == blEmp;
+      //      testEmpl = testEmpl.ReportsTo.HasValue ? blEmployeeList.Where(empl => empl.EmployeeID == testEmpl.ReportsTo.Value).Single() : null
+      //    )
+      //    {
+      //      if (testEmpl == null)
+      //      {
+      //        blEmp.CanReportTo.Add((EmployeeLite)candidate);
+      //        break;
+      //      }
+      //    }
+      //  }
+      //}
 
       return blEmployeeList;
     }
