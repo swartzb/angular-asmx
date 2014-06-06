@@ -59,17 +59,6 @@ angular.module('myApp.services', []).
         var secondPromise = firstPromise.
           success(function (data, status, headers, config) {
             that.employees = data.d.employees;
-            for (var i = 0, len1 = that.employees.length; i < len1; ++i) {
-              var empli = that.employees[i];
-              if (empli.ReportsTo) {
-                for (var j = 0, len2 = empli.CanReportTo.length; j < len2; ++j) {
-                  if (empli.ReportsTo == empli.CanReportTo[j].EmployeeID) {
-                    empli.Supervisor = empli.CanReportTo[j];
-                    break;
-                  }
-                }
-              }
-            }
             that.status = status;
             that.httpState = 'success';
             return;

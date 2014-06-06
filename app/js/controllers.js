@@ -117,6 +117,34 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.readOnly = false;
       $scope.northwind = northwindService;
       $scope.employee = angular.copy($scope.northwind.selectedEmployee);
+      $scope.employee.CanReportTo = [];
+      for (var i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
+        var candidate = $scope.northwind.employees[i];
+        var testEmpl = candidate, done = false;
+        do {
+          if (testEmpl.EmployeeID == $scope.employee.EmployeeID) {
+            done = true;
+          } else if (testEmpl.ReportsTo) {
+            for (var j = 0; j < len; ++j) {
+              if ($scope.northwind.employees[j].EmployeeID == testEmpl.ReportsTo) {
+                testEmpl = $scope.northwind.employees[j];
+                break;
+              }
+            }
+          } else {
+            $scope.employee.CanReportTo.push({ EmployeeID: candidate.EmployeeID, DisplayName: candidate.DisplayName });
+            done = true;
+          }
+        }
+        while (!done);
+      }
+      if ($scope.employee.ReportsTo) {
+        for (var k = 0, len2 = $scope.employee.CanReportTo.length; k < len2; ++k) {
+          if ($scope.employee.CanReportTo[k].EmployeeID == $scope.employee.ReportsTo) {
+            $scope.employee.Supervisor = $scope.employee.CanReportTo[k];
+          }
+        }
+      }
       $scope.headerText = 'Edit ' + $scope.northwind.selectedEmployee.DisplayName;
       $scope.getCssClasses = function (ngModelContoller) {
         var classes = {};
