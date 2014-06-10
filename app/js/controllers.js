@@ -75,7 +75,8 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
             break;
           default:
             classes = {
-              'has-success': true
+              'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
+              'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
             };
             break;
         }
@@ -159,7 +160,8 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
             break;
           default:
             classes = {
-              'has-success': true
+              'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
+              'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
             };
             break;
         }
