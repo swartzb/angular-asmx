@@ -9,9 +9,19 @@ namespace DataAccess
   /// <summary>
   /// Summary description for Employee
   /// </summary>
-  [XmlType("Employee")]
+  [XmlType("BusinessLogicEmployee")]
   public class Employee
   {
+    public class Details
+    {
+      public List<Employee> employees { get; set; }
+
+      public Details()
+      {
+
+      }
+    }
+
     public class ReturnVal
     {
       public int? id { get; set; }
@@ -231,6 +241,23 @@ namespace DataAccess
       }
 
       return employeeList;
+    }
+
+    public static Details GetDetails(string connectionString, int? id)
+    {
+      Details details = new Details();
+
+      using (SqlConnection conn = new SqlConnection(connectionString))
+      {
+        conn.Open();
+        using (SqlTransaction txn = conn.BeginTransaction())
+        {
+          details.employees = SelectAll(conn, txn);
+          txn.Commit();
+        }
+      }
+
+      return details;
     }
 
     public static ReturnVal Remove(string connectionString, int id)

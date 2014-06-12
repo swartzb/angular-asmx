@@ -2,6 +2,7 @@
 using System.Linq;
 using DA = DataAccess;
 using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace BusinessLogic
 {
@@ -9,6 +10,11 @@ namespace BusinessLogic
   {
     public string DisplayName { get; set; }
     public int EmployeeID { get; set; }
+
+    public EmployeeLite()
+    {
+
+    }
 
     public EmployeeLite(Employee e)
     {
@@ -26,8 +32,56 @@ namespace BusinessLogic
   /// <summary>
   /// Summary description for Employee
   /// </summary>
+  [XmlType("DataAccessEmployee")]
   public class Employee : DA.Employee
   {
+    public new class Details
+    {
+      public List<EmployeeLite> canReportTo { get; set; }
+
+      public Details()
+      {
+
+      }
+
+      public Details(DA.Employee.Details daDetails, int? id)
+      {
+        canReportTo = new List<EmployeeLite>();
+        foreach (DA.Employee candidate in daDetails.employees)
+        {
+          if (id.HasValue)
+          {
+            DA.Employee tmp = candidate;
+            bool done = false;
+            do
+            {
+              if (tmp == candidate)
+              {
+                done = true;
+              }
+              else if (!tmp.ReportsTo.HasValue)
+              {
+                Employee blEmp = new Employee(candidate);
+                canReportTo.Add((EmployeeLite)blEmp);
+                done = true;
+              }
+              else
+              {
+                tmp = daDetails.employees.
+                  Where(e => e.EmployeeID == tmp.ReportsTo.Value).
+                  Single();
+              }
+            } while (!done);
+          }
+          else
+          {
+            Employee blEmp = new Employee(candidate);
+            canReportTo.Add((EmployeeLite)blEmp);
+          }
+        }
+      }
+    }
+
     public new class ReturnVal
     {
       public int? id { get; set; }
@@ -39,6 +93,11 @@ namespace BusinessLogic
         id = daRetVal.id;
         numRows = daRetVal.numRows;
         employees = FromDaList(daRetVal.employees);
+      }
+
+      public ReturnVal()
+      {
+
       }
     }
 
@@ -63,6 +122,13 @@ namespace BusinessLogic
     public Employee()
     {
 
+    }
+
+    public static new Details GetDetails(string connectionString, int? id)
+    {
+      DA.Employee.Details daDetails = DA.Employee.GetDetails(connectionString, id);
+
+      return new Details(daDetails, id);
     }
 
     public static new ReturnVal Edit(string connectionString, DA.Employee emp)

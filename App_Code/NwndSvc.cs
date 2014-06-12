@@ -34,12 +34,6 @@ public class NwndSvc : System.Web.Services.WebService
   }
 
   [WebMethod]
-  public string HelloWorld()
-  {
-    return "Hello World";
-  }
-
-  [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public args InputArgsTest(args inArgs)
   {
@@ -78,6 +72,15 @@ public class NwndSvc : System.Web.Services.WebService
     Debug.Print("AddEmployee");
     Thread.Sleep(TimeSpan.FromSeconds(2));
     return BL.Employee.Add(_connectionString, employee);
+  }
+
+  [WebMethod]
+  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  public BL.Employee.Details GetEmployeeDetails(int? id)
+  {
+    Debug.Print("GetEmployeeDetails");
+    Thread.Sleep(TimeSpan.FromSeconds(2));
+    return BL.Employee.GetDetails(_connectionString, id);
   }
 
   [WebMethod]
