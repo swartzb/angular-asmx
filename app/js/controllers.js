@@ -56,12 +56,9 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
     function ($scope, $location, northwindService) {
       $scope.readOnly = false;
       $scope.northwind = northwindService;
-      $scope.employee = { CanReportTo: [] };
-      for (var i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
-        var empl = $scope.northwind.employees[i], id = empl.EmployeeID, name = empl.DisplayName;
-        $scope.employee.CanReportTo.push({ EmployeeID: id, DisplayName: name });
-      }
+      $scope.employee = {};
       $scope.headerText = 'Add New Employee';
+
       $scope.getCssClasses = function (ngModelContoller) {
         var classes = {};
         switch (ngModelContoller.$name) {
@@ -82,14 +79,17 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         }
         return classes;
       };
+
       $scope.okButtonText = 'Add';
       $scope.isOkButtonDisabled = function (FormController) {
         return FormController.$pristine || FormController.$invalid;
       };
+
       $scope.doCancel = function () {
         $scope.setMainMenuEnabled(true);
         $location.path('/employees/load/false');
       };
+
       $scope.doOK = function () {
         $scope.northwind.addEmployee($scope.employee).
           success(function (data, status, headers, config, statusText) {
@@ -100,6 +100,8 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
             $scope.setMainMenuEnabled(true);
           });
       };
+
+      $scope.northwind.getEmployeesDetails(0, true);
     }
   ]).
   controller('IndexController', ['$scope', '$location',
@@ -118,63 +120,41 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.readOnly = false;
       $scope.northwind = northwindService;
       $scope.employee = angular.copy($scope.northwind.selectedEmployee);
-      $scope.employee.CanReportTo = [];
-      for (var i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
-        var candidate = $scope.northwind.employees[i];
-        var testEmpl = candidate, done = false;
-        do {
-          if (testEmpl.EmployeeID == $scope.employee.EmployeeID) {
-            done = true;
-          } else if (testEmpl.ReportsTo) {
-            for (var j = 0; j < len; ++j) {
-              if ($scope.northwind.employees[j].EmployeeID == testEmpl.ReportsTo) {
-                testEmpl = $scope.northwind.employees[j];
-                break;
-              }
-            }
-          } else {
-            $scope.employee.CanReportTo.push({ EmployeeID: candidate.EmployeeID, DisplayName: candidate.DisplayName });
-            done = true;
-          }
-        }
-        while (!done);
-      }
-      if ($scope.employee.ReportsTo) {
-        for (var k = 0, len2 = $scope.employee.CanReportTo.length; k < len2; ++k) {
-          if ($scope.employee.CanReportTo[k].EmployeeID == $scope.employee.ReportsTo) {
-            $scope.employee.Supervisor = $scope.employee.CanReportTo[k];
-          }
-        }
-      }
       $scope.headerText = 'Edit ' + $scope.northwind.selectedEmployee.DisplayName;
+
       $scope.getCssClasses = function (ngModelContoller) {
         var classes = {};
-        switch (ngModelContoller.$name) {
-          case 'lName':
-          case 'fName':
-          case 'hDate':
-            classes = {
-              'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
-              'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
-            };
-            break;
-          default:
-            classes = {
-              'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
-              'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
-            };
-            break;
+        if (ngModelContoller) {
+          switch (ngModelContoller.$name) {
+            case 'lName':
+            case 'fName':
+            case 'hDate':
+              classes = {
+                'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
+                'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
+              };
+              break;
+            default:
+              classes = {
+                'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
+                'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
+              };
+              break;
+          }
         }
         return classes;
       };
+
       $scope.okButtonText = 'Update';
       $scope.isOkButtonDisabled = function (FormController) {
         return FormController.$pristine || FormController.$invalid;
       };
+
       $scope.doCancel = function () {
         $scope.setMainMenuEnabled(true);
         $location.path('/employees/load/false');
       };
+
       $scope.doOK = function () {
         $scope.northwind.editEmployee($scope.employee).
           success(function (data, status, headers, config, statusText) {
@@ -185,6 +165,18 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
             $scope.setMainMenuEnabled(true);
           });
       };
+
+      var myPromise = $scope.northwind.getEmployeeDetails($scope.employee.EmployeeID, false);
+      myPromise.success(function (data, status, headers, config) {
+        if ($scope.employee.ReportsTo) {
+          for (var k = 0, len2 = $scope.northwind.details.canReportTo.length; k < len2; ++k) {
+            if ($scope.northwind.details.canReportTo[k].EmployeeID == $scope.employee.ReportsTo) {
+              $scope.employee.Supervisor = $scope.northwind.details.canReportTo[k];
+              break;
+            }
+          }
+        }
+      });
     }
   ]).
   controller('ViewEmployeeController', ['$scope', '$location', 'northwindService',

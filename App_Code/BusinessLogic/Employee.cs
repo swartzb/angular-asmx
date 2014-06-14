@@ -55,7 +55,7 @@ namespace BusinessLogic
             bool done = false;
             do
             {
-              if (tmp == candidate)
+              if (tmp.EmployeeID == id.Value)
               {
                 done = true;
               }

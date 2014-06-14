@@ -11,6 +11,8 @@ angular.module('myApp.services', []).
     var serviceInstance = {
       selectedEmployee: null,
 
+      details: null,
+
       employees: [],
 
       errorInfo: {},
@@ -59,6 +61,42 @@ angular.module('myApp.services', []).
         var secondPromise = firstPromise.
           success(function (data, status, headers, config) {
             that.employees = data.d.employees;
+            that.status = status;
+            that.httpState = 'success';
+            return;
+          }).
+          error(function (data, status, headers, config) {
+            that.errorInfo = data;
+            that.status = status;
+            that.httpState = 'error';
+            return;
+          });
+
+        return secondPromise;
+      },
+
+      getEmployeeDetails: function (empId, newEmp) {
+        var that = this;
+        var inData = {
+          id: empId,
+          newEmployee: newEmp
+        };
+
+        this.employee = null;
+        this.errorInfo = {};
+        this.status = undefined;
+        this.httpState = 'inProgress';
+
+        var firstPromise = $http({
+          url: '../NwndSvc.asmx/GetEmployeeDetails',
+          method: "POST",
+          data: JSON.stringify(inData),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        var secondPromise = firstPromise.
+          success(function (data, status, headers, config) {
+            that.details = data.d;
             that.status = status;
             that.httpState = 'success';
             return;

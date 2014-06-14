@@ -38,7 +38,7 @@
 
     <div data-ng-if="!readOnly" class="form-group" data-ng-class="getCssClasses(form.supervisor)">
       <label class="control-label" for="supervisor1">Supervisor</label>
-      <select class="form-control" data-ng-model="employee.Supervisor" data-ng-options="e.DisplayName for e in employee.CanReportTo | orderBy: 'DisplayName'"
+      <select class="form-control" data-ng-model="employee.Supervisor" data-ng-options="e.DisplayName for e in northwind.details.canReportTo | orderBy: 'DisplayName'"
         id="supervisor1" name="supervisor">
         <option value="">-- Select Supervisor --</option>
       </select>
