@@ -21,4 +21,10 @@ var re = /-?\d+/;
 var result = re.exec("/Date(-713772000000)/");
 console.log(result);
 
+var ds = "/Date(750837600000)/";
+var re2 = /^\/Date\(-?d+\)\/$/;
+var res2 = re2.exec(ds);
+console.log(res2);
+
+
 
