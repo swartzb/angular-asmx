@@ -27,13 +27,13 @@ angular.module('myApp.services', []).
       },
 
       getDisplayDate: function (val) {
-        var re = /-?\d+/;
+        var re = /^\/Date\((-?\d+)\)\/$/;
         var result = re.exec(val);
-        if (!result || result.length == 0) {
+        if (!result || result.length < 2) {
           return val;
         }
 
-        var i = parseInt(result[0]);
+        var i = parseInt(result[1]);
         var d = new Date(i);
         if (Number.isNaN(d)) {
           return val;
