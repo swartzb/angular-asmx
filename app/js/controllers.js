@@ -101,7 +101,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
           });
       };
 
-      $scope.northwind.getEmployeesDetails(0, true);
+      $scope.northwind.getEmployeeDetails(0, true);
     }
   ]).
   controller('IndexController', ['$scope', '$location',
