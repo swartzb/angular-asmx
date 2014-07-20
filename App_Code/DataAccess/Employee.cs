@@ -9,7 +9,7 @@ namespace DataAccess
   /// <summary>
   /// Summary description for Employee
   /// </summary>
-  [XmlType("BusinessLogicEmployee")]
+  [XmlType("DataAccessEmployee")]
   public class Employee
   {
     public class Details

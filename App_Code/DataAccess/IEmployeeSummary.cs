@@ -5,7 +5,7 @@ namespace DataAccess
   /// <summary>
   /// Summary description for IEmployeeSummary
   /// </summary>
-  interface IEmployeeSummary
+  public interface IEmployeeSummary
   {
     int EmployeeID { get; set; }
     string LastName { get; set; }

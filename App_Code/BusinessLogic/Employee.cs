@@ -32,7 +32,7 @@ namespace BusinessLogic
   /// <summary>
   /// Summary description for Employee
   /// </summary>
-  [XmlType("DataAccessEmployee")]
+  [XmlType("BusinessLogicEmployee")]
   public class Employee : DA.Employee
   {
     public new class Details
