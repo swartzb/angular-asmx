@@ -18,17 +18,6 @@ namespace DataAccess
 
     }
 
-    public EmployeeSummary(EmployeeSummary es)
-    {
-      this.EmployeeID = es.EmployeeID;
-      this.LastName = es.LastName;
-      this.FirstName = es.FirstName;
-      this.Title = es.Title;
-      this.TitleOfCourtesy = es.TitleOfCourtesy;
-      this.HireDate = es.HireDate;
-      this.Notes = es.Notes;
-    }
-
     public int EmployeeID { get; set; }
 
     public string LastName { get; set; }
@@ -43,12 +32,13 @@ namespace DataAccess
 
     public string Notes { get; set; }
 
+    public System.Nullable<int> ReportsTo { get; set; }
+
     static List<EmployeeSummary> SelectAll(SqlConnection conn, SqlTransaction txn)
     {
       List<EmployeeSummary> esList = new List<EmployeeSummary>();
 
-      string sqlCmd = "SELECT EmployeeID, LastName, FirstName, Title, TitleOfCourtesy, BirthDate, HireDate, Address, City, Region, PostalCode," +
-        " Country, HomePhone, Extension, Photo, Notes, ReportsTo, PhotoPath FROM Employees";
+      string sqlCmd = "SELECT EmployeeID, LastName, FirstName, Title, TitleOfCourtesy, HireDate, Notes, ReportsTo FROM Employees";
       using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
       {
         using (SqlDataReader rdr = cmd.ExecuteReader())
@@ -65,6 +55,8 @@ namespace DataAccess
               HireDate = rdr.IsDBNull(rdr.GetOrdinal("HireDate"))
                   ? (DateTime?)null : rdr.GetDateTime(rdr.GetOrdinal("HireDate")),
               Notes = rdr.IsDBNull(rdr.GetOrdinal("Notes")) ? "" : rdr.GetString(rdr.GetOrdinal("Notes")),
+              ReportsTo = rdr.IsDBNull(rdr.GetOrdinal("ReportsTo"))
+                  ? (int?)null : rdr.GetInt32(rdr.GetOrdinal("ReportsTo")),
             };
             esList.Add(es);
           }
@@ -72,6 +64,23 @@ namespace DataAccess
       }
 
       return esList;
+    }
+
+    public static EmployeeSummaryRetVal GetAll(string connectionString)
+    {
+      EmployeeSummaryRetVal retVal = new EmployeeSummaryRetVal();
+
+      using (SqlConnection conn = new SqlConnection(connectionString))
+      {
+        conn.Open();
+        using (SqlTransaction txn = conn.BeginTransaction())
+        {
+          retVal.employees = SelectAll(conn, txn);
+          txn.Commit();
+        }
+      }
+
+      return retVal;
     }
   }
 }

@@ -47,13 +47,22 @@ public class NwndSvc : System.Web.Services.WebService
     return outArgs;
   }
 
+  //[WebMethod]
+  //[ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  //public BL.Employee.ReturnVal GetAllEmployees()
+  //{
+  //  Debug.Print("GetAllEmployees");
+  //  Thread.Sleep(TimeSpan.FromSeconds(2));
+  //  return BL.Employee.GetAll(_connectionString);
+  //}
+
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public BL.Employee.ReturnVal GetAllEmployees()
+  public BL.EmployeeSummaryRetVal GetAllEmployees()
   {
     Debug.Print("GetAllEmployees");
     Thread.Sleep(TimeSpan.FromSeconds(2));
-    return BL.Employee.GetAll(_connectionString);
+    return BL.EmployeeSummary.GetAll(_connectionString);
   }
 
   [WebMethod]

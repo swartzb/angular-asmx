@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Serialization;
 
 namespace DataAccess
 {
   /// <summary>
-  /// Summary description for EmployeeRetVal
+  /// Summary description for EmployeeSummaryRetVal
   /// </summary>
-  public class EmployeeRetVal
+  [XmlType("DataAccessEmployeeSummaryRetVal")]
+  public class EmployeeSummaryRetVal
   {
-    public EmployeeRetVal()
+    public EmployeeSummaryRetVal()
     {
 
     }

@@ -14,5 +14,6 @@ namespace DataAccess
     string TitleOfCourtesy { get; set; }
     Nullable<DateTime> HireDate { get; set; }
     string Notes { get; set; }
+    System.Nullable<int> ReportsTo { get; set; }
   }
 }
