@@ -158,13 +158,6 @@ namespace BusinessLogic
       return retVal;
     }
 
-    public static new ReturnVal GetAll(string connectionString)
-    {
-      DA.Employee.ReturnVal daRetVal = DA.Employee.GetAll(connectionString);
-      ReturnVal retVal = new ReturnVal(daRetVal);
-      return retVal;
-    }
-
     static List<Employee> FromDaList(List<DA.Employee> daEmployeeList)
     {
       List<Employee> blEmployeeList = daEmployeeList

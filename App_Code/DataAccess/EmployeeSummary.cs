@@ -34,7 +34,7 @@ namespace DataAccess
 
     public System.Nullable<int> ReportsTo { get; set; }
 
-    static List<EmployeeSummary> SelectAll(SqlConnection conn, SqlTransaction txn)
+    public static List<EmployeeSummary> SelectAll(SqlConnection conn, SqlTransaction txn)
     {
       List<EmployeeSummary> esList = new List<EmployeeSummary>();
 

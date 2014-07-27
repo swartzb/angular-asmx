@@ -315,22 +315,5 @@ namespace DataAccess
 
       return retVal;
     }
-
-    public static ReturnVal GetAll(string connectionString)
-    {
-      ReturnVal retVal = new ReturnVal();
-
-      using (SqlConnection conn = new SqlConnection(connectionString))
-      {
-        conn.Open();
-        using (SqlTransaction txn = conn.BeginTransaction())
-        {
-          retVal.employees = SelectAll(conn, txn);
-          txn.Commit();
-        }
-      }
-
-      return retVal;
-    }
   }
 }
