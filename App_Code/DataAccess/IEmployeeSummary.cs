@@ -15,5 +15,6 @@ namespace DataAccess
     Nullable<DateTime> HireDate { get; set; }
     string Notes { get; set; }
     System.Nullable<int> ReportsTo { get; set; }
+    bool canDelete { get; set; }
   }
 }

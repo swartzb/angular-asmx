@@ -47,6 +47,8 @@ namespace DataAccess
 
     public int? ReportsTo { get; set; }
 
+    public bool canDelete { get; set; }
+
     public static EmployeeDetails Get(string connectionString, int? id)
     {
       EmployeeDetails ed;
@@ -82,8 +84,7 @@ namespace DataAccess
         " FROM Employees WHERE (EmployeeID = @EmployeeID)";
       using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
       {
-        SqlParameter p = new SqlParameter("@EmployeeID", id);
-        cmd.Parameters.Add(p);
+        cmd.Parameters.AddWithValue("@EmployeeID", id);
         using (SqlDataReader rdr = cmd.ExecuteReader())
         {
           rdr.Read();

@@ -60,6 +60,8 @@ namespace BusinessLogic
 
     public System.Nullable<int> ReportsTo { get; set; }
 
+    public bool canDelete { get; set; }
+
     public static EmployeeSummaryRetVal GetAll(string connectionString)
     {
       DA.EmployeeSummaryRetVal daRetVal = DA.EmployeeSummary.GetAll(connectionString);

@@ -34,6 +34,8 @@ namespace DataAccess
 
     public System.Nullable<int> ReportsTo { get; set; }
 
+    public bool canDelete { get; set; }
+
     public static List<EmployeeSummary> SelectAll(SqlConnection conn, SqlTransaction txn)
     {
       List<EmployeeSummary> esList = new List<EmployeeSummary>();
@@ -61,6 +63,11 @@ namespace DataAccess
             esList.Add(es);
           }
         }
+      }
+
+      foreach (EmployeeSummary es in esList)
+      {
+        es.canDelete = esList.Where(e => e.ReportsTo == es.EmployeeID).Any();
       }
 
       return esList;
