@@ -25,7 +25,7 @@ namespace DataAccess
 
     public string HomePhone { get; set; }
 
-    public List<string> territoryId { get; set; }
+    public List<string> territoryIds { get; set; }
 
     public List<Territory> territories { get; set; }
 

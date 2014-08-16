@@ -12,7 +12,7 @@ namespace DataAccess
   {
     System.Nullable<System.DateTime> BirthDate { get; set; }
     string HomePhone { get; set; }
-    List<string> territoryId { get; set; }
+    List<string> territoryIds { get; set; }
     List<Territory> territories { get; set; }
     List<EmployeeSummary> employees { get; set; }
   } 
