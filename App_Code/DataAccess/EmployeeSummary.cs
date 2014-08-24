@@ -18,23 +18,17 @@ namespace DataAccess
 
     }
 
+#region IEmployeeSummary
     public int EmployeeID { get; set; }
-
     public string LastName { get; set; }
-
     public string FirstName { get; set; }
-
     public string Title { get; set; }
-
     public string TitleOfCourtesy { get; set; }
-
     public DateTime? HireDate { get; set; }
-
     public string Notes { get; set; }
-
     public System.Nullable<int> ReportsTo { get; set; }
-
     public bool canDelete { get; set; }
+#endregion
 
     public static List<EmployeeSummary> SelectAll(SqlConnection conn, SqlTransaction txn)
     {
