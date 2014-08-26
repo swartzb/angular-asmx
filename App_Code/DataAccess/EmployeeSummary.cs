@@ -18,7 +18,7 @@ namespace DataAccess
 
     }
 
-#region IEmployeeSummary
+#region DA.IEmployeeSummary
     public int EmployeeID { get; set; }
     public string LastName { get; set; }
     public string FirstName { get; set; }
@@ -61,7 +61,7 @@ namespace DataAccess
 
       foreach (EmployeeSummary es in esList)
       {
-        es.canDelete = esList.Where(e => e.ReportsTo == es.EmployeeID).Any();
+        es.canDelete = !esList.Any(e => e.ReportsTo == es.EmployeeID);
       }
 
       return esList;

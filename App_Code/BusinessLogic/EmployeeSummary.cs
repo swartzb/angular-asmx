@@ -18,16 +18,17 @@ namespace BusinessLogic
 
     }
 
-    public EmployeeSummary(DA.EmployeeSummary daEs)
+    public EmployeeSummary(DA.IEmployeeSummary IDaEs)
     {
-      this.EmployeeID = daEs.EmployeeID;
-      this.LastName = daEs.LastName;
-      this.FirstName = daEs.FirstName;
-      this.Title = daEs.Title;
-      this.TitleOfCourtesy = daEs.TitleOfCourtesy;
-      this.HireDate = daEs.HireDate;
-      this.Notes = daEs.Notes;
-      this.ReportsTo = daEs.ReportsTo;
+      this.EmployeeID = IDaEs.EmployeeID;
+      this.LastName = IDaEs.LastName;
+      this.FirstName = IDaEs.FirstName;
+      this.Title = IDaEs.Title;
+      this.TitleOfCourtesy = IDaEs.TitleOfCourtesy;
+      this.HireDate = IDaEs.HireDate;
+      this.Notes = IDaEs.Notes;
+      this.ReportsTo = IDaEs.ReportsTo;
+      this.canDelete = IDaEs.canDelete;
 
       DisplayName = LastName + ", " + FirstName;
       if (!string.IsNullOrWhiteSpace(TitleOfCourtesy))
@@ -40,27 +41,21 @@ namespace BusinessLogic
       }
     }
 
+#region BL.IEmployeeSummary
     public EmployeeLite Supervisor { get; set; }
-
     public string DisplayName { get; set; }
-
+#region DA.IEmployeeSummary
     public int EmployeeID { get; set; }
-
     public string LastName { get; set; }
-
     public string FirstName { get; set; }
-
     public string Title { get; set; }
-
     public string TitleOfCourtesy { get; set; }
-
     public DateTime? HireDate { get; set; }
-
     public string Notes { get; set; }
-
     public System.Nullable<int> ReportsTo { get; set; }
-
     public bool canDelete { get; set; }
+#endregion
+#endregion
 
     public static EmployeeSummaryRetVal GetAll(string connectionString)
     {

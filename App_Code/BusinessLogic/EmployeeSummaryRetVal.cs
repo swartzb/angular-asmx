@@ -30,7 +30,7 @@ namespace BusinessLogic
     static List<EmployeeSummary> FromDaList(List<DA.EmployeeSummary> daList)
     {
       List<EmployeeSummary> blList = daList
-        .Select(daEs => new EmployeeSummary(daEs))
+        .Select(daEs => new EmployeeSummary(daEs as DA.IEmployeeSummary))
         .ToList();
 
       foreach (EmployeeSummary blEs in blList)
