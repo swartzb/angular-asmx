@@ -18,7 +18,7 @@ namespace DataAccess
 
     }
 
-#region DA.IEmployeeSummary
+    #region DA.IEmployeeSummary
     public int EmployeeID { get; set; }
     public string LastName { get; set; }
     public string FirstName { get; set; }
@@ -28,7 +28,7 @@ namespace DataAccess
     public string Notes { get; set; }
     public System.Nullable<int> ReportsTo { get; set; }
     public bool canDelete { get; set; }
-#endregion
+    #endregion
 
     public static List<EmployeeSummary> SelectAll(SqlConnection conn, SqlTransaction txn)
     {

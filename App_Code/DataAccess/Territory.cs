@@ -14,6 +14,8 @@ namespace DataAccess
 
     public string TerritoryDescription { set; get; }
 
+    public bool EmployeeHas { get; set; }
+
     public Territory()
     {
 
@@ -23,6 +25,7 @@ namespace DataAccess
     {
       this.TerritoryDescription = t.TerritoryDescription;
       this.TerritoryID = t.TerritoryID;
+      this.EmployeeHas = t.EmployeeHas;
     }
   }
 

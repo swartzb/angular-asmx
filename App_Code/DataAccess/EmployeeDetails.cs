@@ -21,33 +21,28 @@ namespace DataAccess
       //
     }
 
-    public DateTime? BirthDate { get; set; }
-
-    public string HomePhone { get; set; }
 
     public List<string> territoryIds { get; set; }
 
-    public List<Territory> territories { get; set; }
-
     public List<EmployeeSummary> employees { get; set; }
 
+    #region DA.IEmployeeDetails
+    public DateTime? BirthDate { get; set; }
+    public string HomePhone { get; set; }
+    public List<Territory> territories { get; set; }
+    #endregion
+
+    #region DA.IEmployeeSummary
     public int EmployeeID { get; set; }
-
     public string LastName { get; set; }
-
     public string FirstName { get; set; }
-
     public string Title { get; set; }
-
     public string TitleOfCourtesy { get; set; }
-
     public DateTime? HireDate { get; set; }
-
     public string Notes { get; set; }
-
     public int? ReportsTo { get; set; }
-
     public bool canDelete { get; set; }
+    #endregion
 
     public static EmployeeDetails Get(string connectionString, int? id)
     {

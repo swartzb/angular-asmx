@@ -41,10 +41,12 @@ namespace BusinessLogic
       }
     }
 
-#region BL.IEmployeeSummary
+    #region BL.IEmployeeSummary
     public EmployeeLite Supervisor { get; set; }
     public string DisplayName { get; set; }
-#region DA.IEmployeeSummary
+    #endregion
+
+    #region DA.IEmployeeSummary
     public int EmployeeID { get; set; }
     public string LastName { get; set; }
     public string FirstName { get; set; }
@@ -54,8 +56,7 @@ namespace BusinessLogic
     public string Notes { get; set; }
     public System.Nullable<int> ReportsTo { get; set; }
     public bool canDelete { get; set; }
-#endregion
-#endregion
+    #endregion
 
     public static EmployeeSummaryRetVal GetAll(string connectionString)
     {
