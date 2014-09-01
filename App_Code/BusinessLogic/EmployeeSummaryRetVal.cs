@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Serialization;
 using DA = DataAccess;
 
 namespace BusinessLogic
@@ -9,6 +10,7 @@ namespace BusinessLogic
   /// <summary>
   /// Summary description for EmployeeSummaryRetVal
   /// </summary>
+  [XmlType("BusinessLogicEmployeeSummaryRetVal")]
   public class EmployeeSummaryRetVal
   {
     public EmployeeSummaryRetVal()

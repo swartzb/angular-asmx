@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Serialization;
 using DA = DataAccess;
 
 namespace BusinessLogic
@@ -9,6 +10,7 @@ namespace BusinessLogic
   /// <summary>
   /// Summary description for EmployeeDetails
   /// </summary>
+  [XmlType("BusinessLogicEmployeeDetails")]
   public class EmployeeDetails : IEmployeeSummary, DA.IEmployeeDetails
   {
     public EmployeeDetails()
@@ -16,6 +18,22 @@ namespace BusinessLogic
       //
       // TODO: Add constructor logic here
       //
+    }
+
+    public EmployeeDetails(DA.EmployeeDetails daDetails, int? id)
+    {
+      //
+      // TODO: Add constructor logic here
+      //
+    }
+
+    public static EmployeeDetails Get(string connectionString, int? id)
+    {
+      DA.EmployeeDetails daDetails = DA.EmployeeDetails.Get(connectionString, id);
+
+      EmployeeDetails ed = new EmployeeDetails(daDetails, id);
+
+      return ed;
     }
 
     #region BL.IEmployeeSummary
@@ -42,5 +60,5 @@ namespace BusinessLogic
     #endregion
 
     public List<DataAccess.EmployeeSummary> canReportTo { get; set; }
-  } 
+  }
 }
