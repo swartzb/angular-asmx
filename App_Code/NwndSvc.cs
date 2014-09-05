@@ -8,12 +8,6 @@ using System;
 using System.Diagnostics;
 using DA = DataAccess;
 
-public class args
-{
-  public int id { get; set; }
-  public string val { get; set; }
-  public int? supervisorId { get; set; }
-}
 /// <summary>
 /// Summary description for NwndSvc
 /// </summary>
@@ -31,20 +25,6 @@ public class NwndSvc : System.Web.Services.WebService
 
     //Uncomment the following line if using designed components 
     //InitializeComponent(); 
-  }
-
-  [WebMethod]
-  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public args InputArgsTest(args inArgs)
-  {
-    Thread.Sleep(TimeSpan.FromSeconds(2));
-    args outArgs = new args
-    {
-      id = -inArgs.id,
-      val = inArgs.val + " and output",
-      supervisorId = inArgs.supervisorId
-    };
-    return outArgs;
   }
 
   [WebMethod]

@@ -110,6 +110,12 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.setMainMenuEnabled = function (enabled) {
         $scope.isMainMenuEnabled = enabled;
       };
+      $scope.view1ClickHandler = function () {
+        $location.path('/view1');
+      };
+      $scope.view2ClickHandler = function () {
+        $location.path('/view2');
+      };
       $scope.employeesClickHandler = function () {
         $location.path('/employees/load/true');
       };
