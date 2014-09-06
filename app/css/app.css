@@ -1,5 +1,9 @@
 /* app css stylesheet */
 
+.btn {
+  margin: 6px 3px;
+}
+
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;

@@ -20,20 +20,14 @@
 </head>
 <body>
   <div class="container" data-ng-controller="IndexController">
-    <ul class="menu">
-      <li>
-        <button class="btn btn-link" data-ng-disabled="!isMainMenuEnabled" data-ng-click="view1ClickHandler()">
-          view1</button>
-      </li>
-      <li>
-        <button class="btn btn-link" data-ng-disabled="!isMainMenuEnabled" data-ng-click="view2ClickHandler()">
+    <div>
+        <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="homeClickHandler()">
+          Home</button>
+        <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="view2ClickHandler()">
           view2</button>
-      </li>
-      <li>
-        <button class="btn btn-link" data-ng-disabled="!isMainMenuEnabled" data-ng-click="employeesClickHandler()">
+        <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="employeesClickHandler()">
           Employees</button>
-      </li>
-    </ul>
+    </div>
 
     <div data-ng-view=""></div>
 
