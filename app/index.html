@@ -21,17 +21,22 @@
 <body>
   <div class="container" data-ng-controller="IndexController">
     <div>
-        <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="homeClickHandler()">
-          Home</button>
-        <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="view2ClickHandler()">
-          view2</button>
-        <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="employeesClickHandler()">
-          Employees</button>
+      <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="homeClickHandler()">
+        Home</button>
+      <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="employeesClickHandler()">
+        Employees</button>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          Test <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="#/employeesTest/load/true">Employees</a></li>
+        </ul>
+      </div>
     </div>
 
     <div data-ng-view=""></div>
 
-    <!--    <div>Angular seed app: v<span data-app-version=""></span></div>-->
   </div>
 </body>
 </html>

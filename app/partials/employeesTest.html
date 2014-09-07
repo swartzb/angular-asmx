@@ -1,0 +1,12 @@
+<h1>Employees Test</h1>
+<div data-ng-if="northwind.httpState =='inProgress'">
+  <h2>In Progress</h2>
+</div>
+<div data-ng-if="northwind.httpState =='error'">
+  <h2>Error</h2>
+  <pre>status = {{ northwind.status | json }}</pre>
+  <pre>errorInfo = {{ northwind.errorInfo | json }}</pre>
+</div>
+<div data-ng-if="northwind.httpState =='success'">
+  <pre>employees = {{ northwind.employees | json }}</pre>
+</div>

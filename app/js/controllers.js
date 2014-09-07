@@ -7,10 +7,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
     function () {
     }
   ]).
-  controller('MyCtrl2', [
-    function () {
-    }
-  ]).
   controller('EmployeesController', ['$scope', '$routeParams', '$location', 'northwindService',
     function ($scope, $routeParams, $location, northwindService) {
       $scope.northwind = northwindService;
@@ -112,9 +108,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       };
       $scope.homeClickHandler = function () {
         $location.path('/home');
-      };
-      $scope.view2ClickHandler = function () {
-        $location.path('/view2');
       };
       $scope.employeesClickHandler = function () {
         $location.path('/employees/load/true');

@@ -6,10 +6,6 @@
       <dd data-ng-if="employee.HireDate">{{northwind.getDisplayDate(employee.HireDate)}}
       </dd>
       <dd data-ng-if="!employee.HireDate">unknown</dd>
-      <dt>Birth Date</dt>
-      <dd data-ng-if="employee.BirthDate">{{northwind.getDisplayDate(employee.BirthDate)}}
-      </dd>
-      <dd data-ng-if="!employee.BirthDate">unknown</dd>
       <dt>Supervisor</dt>
       <dd data-ng-if="employee.Supervisor">{{employee.Supervisor.DisplayName}}
       </dd>
