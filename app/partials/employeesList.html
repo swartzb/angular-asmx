@@ -1,6 +1,9 @@
 ﻿<li data-ng-repeat="employee in northwind.employees | orderBy:'LastName'" data-ng-click="northwind.toggleSelect(employee)"
-  data-ng-class="{selected: employee == northwind.selectedEmployee}">[{{$index
-      + 1}}] {{employee.DisplayName}}
+  data-ng-class="{selected: employee == northwind.selectedEmployee}">[{{$index + 1}}]
+  <button class="btn btn-danger btn-xs" data-ng-disabled="!employee.canDelete" data-ng-click="deleteEmployee(employee)">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+  {{employee.DisplayName}}
     <dl>
       <dt>Hire Date</dt>
       <dd data-ng-if="employee.HireDate">{{northwind.getDisplayDate(employee.HireDate)}}

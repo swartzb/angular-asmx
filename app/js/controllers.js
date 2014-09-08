@@ -23,6 +23,18 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         return;
       };
 
+      $scope.deleteEmployee = function (employee) {
+        $scope.setMainMenuEnabled(false);
+        $scope.northwind.deleteEmployee(employee).
+          success(function (data, status, headers, config, statusText) {
+            $scope.setMainMenuEnabled(true);
+          }).
+          error(function (data, status, headers, config, statusText) {
+            $scope.setMainMenuEnabled(true);
+          });
+        return;
+      };
+
       $scope.deleteSelectedEmployee = function () {
         if ($scope.northwind.selectedEmployee) {
           $scope.setMainMenuEnabled(false);
