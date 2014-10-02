@@ -22,6 +22,65 @@ IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[Employe
 DROP VIEW [dbo].[EmployeeSummaries]
 GO
 
+/****** Object:  UserDefinedFunction [dbo].[EmployeeDisplayName]    Script Date: 10/01/2014 20:52:25 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EmployeeDisplayName]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [dbo].[EmployeeDisplayName]
+GO
+
+/****** Object:  UserDefinedFunction [dbo].[EmployeeDisplayName]    Script Date: 10/01/2014 20:52:25 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		me
+-- Create date: 10/1/14
+-- Description:	
+-- =============================================
+CREATE FUNCTION [dbo].[EmployeeDisplayName] 
+(
+	-- Add the parameters for the function here
+	@id int
+)
+RETURNS VARCHAR(MAX)
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Result VARCHAR(MAX)
+
+	-- Add the T-SQL statements to compute the return value here
+	IF @id IS NULL
+	BEGIN
+		SELECT @Result = 'none'
+	END
+	ELSE
+	BEGIN
+		DECLARE @LastName NVARCHAR(20)
+		DECLARE @FirstName NVARCHAR(10)
+		DECLARE @Title NVARCHAR(30)
+		DECLARE @TitleOfCourtesy NVARCHAR(25)
+		SELECT @LastName = LastName, @FirstName = FirstName, @Title = Title, @TitleOfCourtesy = TitleOfCourtesy
+			FROM Employees WHERE (EmployeeID = @id)
+		SELECT @Result = @LastName + ', ' + @FirstName
+		IF @TitleOfCourtesy IS NOT NULL
+		BEGIN
+			SELECT @Result = @Result + ', ' + @TitleOfCourtesy
+		END
+		IF @Title IS NOT NULL
+		BEGIN
+			SELECT @Result = @Result + ', ' + @Title
+		END
+	END
+
+	-- Return the result of the function
+	RETURN @Result
+
+END
+
+GO
+
 /****** Object:  UserDefinedFunction [dbo].[CanBeDeleted]    Script Date: 09/30/2014 19:32:27 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CanBeDeleted]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 DROP FUNCTION [dbo].[CanBeDeleted]
@@ -69,7 +128,7 @@ END
 
 GO
 
-/****** Object:  View [dbo].[EmployeeSummaries]    Script Date: 09/30/2014 19:50:18 ******/
+/****** Object:  View [dbo].[EmployeeSummaries]    Script Date: 10/01/2014 20:59:10 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -78,7 +137,8 @@ GO
 
 CREATE VIEW [dbo].[EmployeeSummaries]
 AS
-SELECT     EmployeeID, LastName, FirstName, Title, TitleOfCourtesy, HireDate, Notes, ReportsTo, dbo.CanBeDeleted(EmployeeID) AS CanBeDeleted
+SELECT     EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Employee, HireDate, Notes, ReportsTo, dbo.EmployeeDisplayName(ReportsTo) AS Supervisor, 
+                      dbo.CanBeDeleted(EmployeeID) AS CanBeDeleted
 FROM         dbo.Employees
 
 GO
