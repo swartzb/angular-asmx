@@ -22,12 +22,6 @@ namespace BusinessLogic
       this.DisplayName = e.DisplayName;
     }
 
-    public EmployeeLite(EmployeeSummary es)
-    {
-      this.EmployeeID = es.EmployeeID;
-      this.DisplayName = es.DisplayName;
-    }
-
     public static explicit operator EmployeeLite(Employee e)
     {
       EmployeeLite el = new EmployeeLite(e);

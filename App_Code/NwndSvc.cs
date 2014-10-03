@@ -29,11 +29,11 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public BL.EmployeeSummaryRetVal GetAllEmployees()
+  public DA.EmployeeSummaryRetVal GetAllEmployees()
   {
     Debug.Print("GetAllEmployees");
     Thread.Sleep(TimeSpan.FromSeconds(2));
-    return BL.EmployeeSummary.GetAll(_connectionString);
+    return DA.EmployeeSummary.GetAll(_connectionString);
   }
 
   [WebMethod]
@@ -65,10 +65,10 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public BL.Employee.ReturnVal DeleteEmployee(int id)
+  public DA.EmployeeSummaryRetVal DeleteEmployee(int id)
   {
     Debug.Print("DeleteEmployee");
     Thread.Sleep(TimeSpan.FromSeconds(2));
-    return BL.Employee.Remove(_connectionString, id);
+    return DA.EmployeeSummary.Remove(_connectionString, id);
   }
 }

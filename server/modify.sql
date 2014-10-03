@@ -137,7 +137,7 @@ GO
 
 CREATE VIEW [dbo].[EmployeeSummaries]
 AS
-SELECT     EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Employee, HireDate, Notes, ReportsTo, dbo.EmployeeDisplayName(ReportsTo) AS Supervisor, 
+SELECT     EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Name, HireDate, Notes, ReportsTo, dbo.EmployeeDisplayName(ReportsTo) AS SupervisorName, 
                       dbo.CanBeDeleted(EmployeeID) AS CanBeDeleted
 FROM         dbo.Employees
 

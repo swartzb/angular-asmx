@@ -11,30 +11,60 @@ namespace DataAccess
   /// Summary description for EmployeeSummary
   /// </summary>
   [XmlType("DataAccessEmployeeSummary")]
-  public class EmployeeSummary : IEmployeeSummary
+  public class EmployeeSummary
   {
     public EmployeeSummary()
     {
 
     }
 
-    #region DA.IEmployeeSummary
     public int EmployeeID { get; set; }
     public string LastName { get; set; }
     public string FirstName { get; set; }
     public string Title { get; set; }
     public string TitleOfCourtesy { get; set; }
+    public string Name { get; set; }
     public DateTime? HireDate { get; set; }
     public string Notes { get; set; }
     public System.Nullable<int> ReportsTo { get; set; }
-    public bool canDelete { get; set; }
-    #endregion
+    public string SupervisorName { get; set; }
+    public System.Nullable<bool> CanBeDeleted { get; set; }
+
+    public static EmployeeSummaryRetVal Remove(string connectionString, int id)
+    {
+      EmployeeSummaryRetVal retVal = new EmployeeSummaryRetVal();
+
+      using (SqlConnection conn = new SqlConnection(connectionString))
+      {
+        conn.Open();
+        using (SqlTransaction txn = conn.BeginTransaction())
+        {
+          retVal.numRows = Delete(conn, txn, id);
+          retVal.employees = SelectAll(conn, txn);
+          txn.Commit();
+        }
+      }
+
+      return retVal;
+    }
+
+    static int Delete(SqlConnection conn, SqlTransaction txn, int id)
+    {
+      int numRows;
+      string sqlCmd = "DELETE FROM Employees WHERE (EmployeeID = @id)";
+      using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+      {
+        cmd.Parameters.AddWithValue("@id", id);
+        numRows = cmd.ExecuteNonQuery();
+      }
+      return numRows;
+    }
 
     public static List<EmployeeSummary> SelectAll(SqlConnection conn, SqlTransaction txn)
     {
       List<EmployeeSummary> esList = new List<EmployeeSummary>();
 
-      string sqlCmd = "SELECT EmployeeID, LastName, FirstName, Title, TitleOfCourtesy, HireDate, Notes, ReportsTo FROM Employees";
+      string sqlCmd = "SELECT EmployeeID, Name, HireDate, Notes, ReportsTo, SupervisorName, CanBeDeleted FROM EmployeeSummaries";
       using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
       {
         using (SqlDataReader rdr = cmd.ExecuteReader())
@@ -44,24 +74,19 @@ namespace DataAccess
             EmployeeSummary es = new EmployeeSummary
             {
               EmployeeID = rdr.GetInt32(rdr.GetOrdinal("EmployeeID")),
-              LastName = rdr.GetString(rdr.GetOrdinal("LastName")),
-              FirstName = rdr.GetString(rdr.GetOrdinal("FirstName")),
-              Title = rdr.IsDBNull(rdr.GetOrdinal("Title")) ? "" : rdr.GetString(rdr.GetOrdinal("Title")),
-              TitleOfCourtesy = rdr.IsDBNull(rdr.GetOrdinal("TitleOfCourtesy")) ? "" : rdr.GetString(rdr.GetOrdinal("TitleOfCourtesy")),
+              Name = rdr.GetString(rdr.GetOrdinal("Name")),
               HireDate = rdr.IsDBNull(rdr.GetOrdinal("HireDate"))
                   ? (DateTime?)null : rdr.GetDateTime(rdr.GetOrdinal("HireDate")),
               Notes = rdr.IsDBNull(rdr.GetOrdinal("Notes")) ? "" : rdr.GetString(rdr.GetOrdinal("Notes")),
               ReportsTo = rdr.IsDBNull(rdr.GetOrdinal("ReportsTo"))
                   ? (int?)null : rdr.GetInt32(rdr.GetOrdinal("ReportsTo")),
+              SupervisorName = rdr.GetString(rdr.GetOrdinal("SupervisorName")),
+              CanBeDeleted = rdr.IsDBNull(rdr.GetOrdinal("CanBeDeleted"))
+                  ? false : rdr.GetBoolean(rdr.GetOrdinal("CanBeDeleted")),
             };
             esList.Add(es);
           }
         }
-      }
-
-      foreach (EmployeeSummary es in esList)
-      {
-        es.canDelete = !esList.Any(e => e.ReportsTo == es.EmployeeID);
       }
 
       return esList;
