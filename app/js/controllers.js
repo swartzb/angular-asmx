@@ -5,6 +5,7 @@
 angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
   controller('HomeController', [
     function () {
+      console.log('HomeController');
     }
   ]).
   controller('EmployeesController', ['$scope', '$routeParams', '$location', 'northwindService',

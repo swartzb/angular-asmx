@@ -53,7 +53,7 @@ BEGIN
 	-- Add the T-SQL statements to compute the return value here
 	IF @id IS NULL
 	BEGIN
-		SELECT @Result = 'none'
+		SELECT @Result = NULL
 	END
 	ELSE
 	BEGIN

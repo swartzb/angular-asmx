@@ -1,18 +1,18 @@
-﻿<li data-ng-repeat="employee in northwind.employees | orderBy:'LastName'" data-ng-click="northwind.toggleSelect(employee)"
+﻿<li data-ng-repeat="employee in northwind.employees | orderBy:'Name'" data-ng-click="northwind.toggleSelect(employee)"
   data-ng-class="{selected: employee == northwind.selectedEmployee}">[{{$index + 1}}]
-  <button class="btn btn-danger btn-xs" data-ng-disabled="!employee.canDelete" data-ng-click="deleteEmployee(employee)">
+  <button class="btn btn-danger btn-xs" data-ng-disabled="!employee.CanBeDeleted" data-ng-click="deleteEmployee(employee)">
     <span class="glyphicon glyphicon-remove"></span>
   </button>
-  {{employee.DisplayName}}
+  {{employee.Name}}
     <dl>
       <dt>Hire Date</dt>
       <dd data-ng-if="employee.HireDate">{{northwind.getDisplayDate(employee.HireDate)}}
       </dd>
       <dd data-ng-if="!employee.HireDate">unknown</dd>
       <dt>Supervisor</dt>
-      <dd data-ng-if="employee.Supervisor">{{employee.Supervisor.DisplayName}}
+      <dd data-ng-if="employee.SupervisorName">{{employee.SupervisorName}}
       </dd>
-      <dd data-ng-if="!employee.Supervisor">none</dd>
+      <dd data-ng-if="!employee.SupervisorName">none</dd>
       <dt>Notes</dt>
       <dd>{{ employee.Notes }}
       </dd>

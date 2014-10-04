@@ -76,7 +76,9 @@ namespace DataAccess
               Notes = rdr.IsDBNull(rdr.GetOrdinal("Notes")) ? "" : rdr.GetString(rdr.GetOrdinal("Notes")),
               ReportsTo = rdr.IsDBNull(rdr.GetOrdinal("ReportsTo"))
                   ? (int?)null : rdr.GetInt32(rdr.GetOrdinal("ReportsTo")),
-              SupervisorName = rdr.GetString(rdr.GetOrdinal("SupervisorName")),
+              //SupervisorName = rdr.GetString(rdr.GetOrdinal("SupervisorName")),
+              SupervisorName = rdr.IsDBNull(rdr.GetOrdinal("SupervisorName"))
+                  ? null : rdr.GetString(rdr.GetOrdinal("SupervisorName")),
               CanBeDeleted = rdr.IsDBNull(rdr.GetOrdinal("CanBeDeleted"))
                   ? false : rdr.GetBoolean(rdr.GetOrdinal("CanBeDeleted")),
             };
