@@ -22,6 +22,59 @@ IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[Employe
 DROP VIEW [dbo].[EmployeeSummaries]
 GO
 
+/****** Object:  UserDefinedFunction [dbo].[EmployeeCoversTerritory]    Script Date: 10/05/2014 16:07:04 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EmployeeCoversTerritory]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [dbo].[EmployeeCoversTerritory]
+GO
+
+/****** Object:  UserDefinedFunction [dbo].[EmployeeCoversTerritory]    Script Date: 10/05/2014 16:07:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		me
+-- Create date: 
+-- Description:	
+-- =============================================
+CREATE FUNCTION [dbo].[EmployeeCoversTerritory] 
+(
+	-- Add the parameters for the function here
+	@employeeId int,
+	@territoryId int
+)
+RETURNS bit
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Result bit
+
+	-- Add the T-SQL statements to compute the return value here
+	IF @employeeId IS NULL
+	BEGIN
+		SELECT @Result = 0
+	END
+	ELSE
+	BEGIN
+		IF EXISTS (SELECT EmployeeID, TerritoryID FROM EmployeeTerritories WHERE ((EmployeeID = @employeeId) AND (TerritoryID = @territoryId)))
+		BEGIN
+			SELECT @Result = 1
+		END
+		ELSE
+		BEGIN
+			SELECT @Result = 0
+		END
+	END
+
+	-- Return the result of the function
+	RETURN @Result
+
+END
+
+GO
+
 /****** Object:  UserDefinedFunction [dbo].[EmployeeDisplayName]    Script Date: 10/01/2014 20:52:25 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EmployeeDisplayName]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 DROP FUNCTION [dbo].[EmployeeDisplayName]
