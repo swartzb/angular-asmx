@@ -17,6 +17,11 @@ GO
 ALTER TABLE [dbo].[EmployeeTerritories] CHECK CONSTRAINT [FK_EmployeeTerritories_Employees]
 GO
 
+/****** Object:  UserDefinedFunction [dbo].[TerritoriesForEmployee]    Script Date: 10/05/2014 16:43:56 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TerritoriesForEmployee]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [dbo].[TerritoriesForEmployee]
+GO
+
 /****** Object:  View [dbo].[EmployeeSummaries]    Script Date: 09/30/2014 19:50:17 ******/
 IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[EmployeeSummaries]'))
 DROP VIEW [dbo].[EmployeeSummaries]
@@ -307,5 +312,33 @@ End
 GO
 
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'EmployeeSummaries'
+GO
+
+/****** Object:  UserDefinedFunction [dbo].[TerritoriesForEmployee]    Script Date: 10/05/2014 16:43:56 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		me
+-- Create date: 
+-- Description:	
+-- =============================================
+CREATE FUNCTION [dbo].[TerritoriesForEmployee] 
+(	
+	-- Add the parameters for the function here
+	@employeeID int
+)
+RETURNS TABLE 
+AS
+RETURN 
+(
+	-- Add the SELECT statement with parameter references here
+	SELECT     TerritoryID, TerritoryDescription, dbo.EmployeeCoversTerritory(@employeeID, TerritoryID) AS EmployeeCoversTerritory
+	FROM         Territories
+)
+
 GO
 
