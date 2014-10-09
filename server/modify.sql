@@ -27,6 +27,56 @@ IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[Employe
 DROP VIEW [dbo].[EmployeeSummaries]
 GO
 
+/****** Object:  UserDefinedFunction [dbo].[CanReportTo]    Script Date: 10/08/2014 20:22:26 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CanReportTo]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [dbo].[CanReportTo]
+GO
+
+/****** Object:  UserDefinedFunction [dbo].[CanReportTo]    Script Date: 10/08/2014 20:22:26 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		me
+-- Create date: 
+-- Description:	Test if employee 1 can report to employee 2 without creating
+-- loops in the org chart
+-- =============================================
+CREATE FUNCTION [dbo].[CanReportTo] 
+(
+	-- Add the parameters for the function here
+	@empId1 int,
+	@empId2 int
+)
+RETURNS bit
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Result bit
+	DECLARE @thisEmpId int
+
+	-- Add the T-SQL statements to compute the return value here
+	SELECT @thisEmpId = @empId2
+	WHILE @thisEmpId IS NOT NULL
+	BEGIN
+		IF @thisEmpId = @empId1
+		BEGIN
+			RETURN 0
+		END
+		ELSE
+		BEGIN
+			SELECT @thisEmpId = ReportsTo FROM Employees WHERE (@thisEmpId = EmployeeID)
+		END
+	END
+	RETURN 1
+
+END
+
+GO
+
 /****** Object:  UserDefinedFunction [dbo].[EmployeeCoversTerritory]    Script Date: 10/05/2014 16:07:04 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EmployeeCoversTerritory]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 DROP FUNCTION [dbo].[EmployeeCoversTerritory]
