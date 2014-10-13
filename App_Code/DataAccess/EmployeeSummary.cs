@@ -22,7 +22,6 @@ namespace DataAccess
     public string Name { get; set; }
     public DateTime? HireDate { get; set; }
     public string Notes { get; set; }
-    public System.Nullable<int> ReportsTo { get; set; }
     public string SupervisorName { get; set; }
     public System.Nullable<bool> CanBeDeleted { get; set; }
 
@@ -60,7 +59,9 @@ namespace DataAccess
     {
       List<EmployeeSummary> esList = new List<EmployeeSummary>();
 
-      string sqlCmd = "SELECT EmployeeID, Name, HireDate, Notes, ReportsTo, SupervisorName, CanBeDeleted FROM EmployeeSummaries";
+      string sqlCmd = "SELECT EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Name, HireDate, Notes," +
+        " dbo.EmployeeDisplayName(ReportsTo) AS SupervisorName, dbo.CanBeDeleted(EmployeeID) AS CanBeDeleted" +
+        " FROM Employees ORDER BY LastName";
       using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
       {
         using (SqlDataReader rdr = cmd.ExecuteReader())
@@ -74,9 +75,6 @@ namespace DataAccess
               HireDate = rdr.IsDBNull(rdr.GetOrdinal("HireDate"))
                   ? (DateTime?)null : rdr.GetDateTime(rdr.GetOrdinal("HireDate")),
               Notes = rdr.IsDBNull(rdr.GetOrdinal("Notes")) ? "" : rdr.GetString(rdr.GetOrdinal("Notes")),
-              ReportsTo = rdr.IsDBNull(rdr.GetOrdinal("ReportsTo"))
-                  ? (int?)null : rdr.GetInt32(rdr.GetOrdinal("ReportsTo")),
-              //SupervisorName = rdr.GetString(rdr.GetOrdinal("SupervisorName")),
               SupervisorName = rdr.IsDBNull(rdr.GetOrdinal("SupervisorName"))
                   ? null : rdr.GetString(rdr.GetOrdinal("SupervisorName")),
               CanBeDeleted = rdr.IsDBNull(rdr.GetOrdinal("CanBeDeleted"))

@@ -17,16 +17,20 @@ GO
 ALTER TABLE [dbo].[EmployeeTerritories] CHECK CONSTRAINT [FK_EmployeeTerritories_Employees]
 GO
 
-/****** Object:  UserDefinedFunction [dbo].[TerritoriesForEmployee]    Script Date: 10/05/2014 16:43:56 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TerritoriesForEmployee]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[TerritoriesForEmployee]
+/****** Object:  StoredProcedure [dbo].[TerritoriesForEmployeeTest]    Script Date: 10/12/2014 20:36:06 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TerritoriesForEmployeeTest]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[TerritoriesForEmployeeTest]
 GO
 
-/****** Object:  View [dbo].[EmployeeSummaries]    Script Date: 09/30/2014 19:50:17 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[EmployeeSummaries]'))
-DROP VIEW [dbo].[EmployeeSummaries]
+/****** Object:  StoredProcedure [dbo].[EmployeeSummariesTest]    Script Date: 10/12/2014 20:07:27 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EmployeeSummariesTest]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[EmployeeSummariesTest]
 GO
 
+/****** Object:  StoredProcedure [dbo].[CanReportToTest]    Script Date: 10/12/2014 19:49:29 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CanReportToTest]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[CanReportToTest]
+GO
 /****** Object:  UserDefinedFunction [dbo].[CanReportTo]    Script Date: 10/08/2014 20:22:26 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CanReportTo]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 DROP FUNCTION [dbo].[CanReportTo]
@@ -236,135 +240,7 @@ END
 
 GO
 
-/****** Object:  View [dbo].[EmployeeSummaries]    Script Date: 10/01/2014 20:59:10 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE VIEW [dbo].[EmployeeSummaries]
-AS
-SELECT     EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Name, HireDate, Notes, ReportsTo, dbo.EmployeeDisplayName(ReportsTo) AS SupervisorName, 
-                      dbo.CanBeDeleted(EmployeeID) AS CanBeDeleted
-FROM         dbo.Employees
-
-GO
-
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-      Begin PaneConfiguration = 0
-         NumPanes = 4
-         Configuration = "(H (1[35] 4[26] 2[20] 3) )"
-      End
-      Begin PaneConfiguration = 1
-         NumPanes = 3
-         Configuration = "(H (1 [50] 4 [25] 3))"
-      End
-      Begin PaneConfiguration = 2
-         NumPanes = 3
-         Configuration = "(H (1 [50] 2 [25] 3))"
-      End
-      Begin PaneConfiguration = 3
-         NumPanes = 3
-         Configuration = "(H (4 [30] 2 [40] 3))"
-      End
-      Begin PaneConfiguration = 4
-         NumPanes = 2
-         Configuration = "(H (1 [56] 3))"
-      End
-      Begin PaneConfiguration = 5
-         NumPanes = 2
-         Configuration = "(H (2 [66] 3))"
-      End
-      Begin PaneConfiguration = 6
-         NumPanes = 2
-         Configuration = "(H (4 [50] 3))"
-      End
-      Begin PaneConfiguration = 7
-         NumPanes = 1
-         Configuration = "(V (3))"
-      End
-      Begin PaneConfiguration = 8
-         NumPanes = 3
-         Configuration = "(H (1[56] 4[18] 2) )"
-      End
-      Begin PaneConfiguration = 9
-         NumPanes = 2
-         Configuration = "(H (1 [75] 4))"
-      End
-      Begin PaneConfiguration = 10
-         NumPanes = 2
-         Configuration = "(H (1[66] 2) )"
-      End
-      Begin PaneConfiguration = 11
-         NumPanes = 2
-         Configuration = "(H (4 [60] 2))"
-      End
-      Begin PaneConfiguration = 12
-         NumPanes = 1
-         Configuration = "(H (1) )"
-      End
-      Begin PaneConfiguration = 13
-         NumPanes = 1
-         Configuration = "(V (4))"
-      End
-      Begin PaneConfiguration = 14
-         NumPanes = 1
-         Configuration = "(V (2))"
-      End
-      ActivePaneConfig = 0
-   End
-   Begin DiagramPane = 
-      Begin Origin = 
-         Top = 0
-         Left = 0
-      End
-      Begin Tables = 
-         Begin Table = "Employees"
-            Begin Extent = 
-               Top = 6
-               Left = 38
-               Bottom = 370
-               Right = 203
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-      End
-   End
-   Begin SQLPane = 
-   End
-   Begin DataPane = 
-      Begin ParameterDefaults = ""
-      End
-   End
-   Begin CriteriaPane = 
-      Begin ColumnWidths = 11
-         Column = 2715
-         Alias = 3105
-         Table = 1170
-         Output = 720
-         Append = 1400
-         NewValue = 1170
-         SortType = 1350
-         SortOrder = 1410
-         GroupBy = 1350
-         Filter = 1350
-         Or = 1350
-         Or = 1350
-         Or = 1350
-      End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'EmployeeSummaries'
-GO
-
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'EmployeeSummaries'
-GO
-
-/****** Object:  UserDefinedFunction [dbo].[TerritoriesForEmployee]    Script Date: 10/05/2014 16:43:56 ******/
+/****** Object:  StoredProcedure [dbo].[CanReportToTest]    Script Date: 10/12/2014 19:49:29 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -374,21 +250,82 @@ GO
 -- =============================================
 -- Author:		me
 -- Create date: 
--- Description:	
+-- Description:	test the CanReportTo function
 -- =============================================
-CREATE FUNCTION [dbo].[TerritoriesForEmployee] 
-(	
-	-- Add the parameters for the function here
-	@employeeID int
-)
-RETURNS TABLE 
+CREATE PROCEDURE [dbo].[CanReportToTest] 
+	-- Add the parameters for the stored procedure here
+	@Id int = 0
 AS
-RETURN 
-(
-	-- Add the SELECT statement with parameter references here
-	SELECT     TerritoryID, TerritoryDescription, dbo.EmployeeCoversTerritory(@employeeID, TerritoryID) AS EmployeeCoversTerritory
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT     EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Name
+	FROM         Employees
+	WHERE     (dbo.CanReportTo(@Id, EmployeeID) = 1)
+	ORDER BY EmployeeID
+END
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[EmployeeSummariesTest]    Script Date: 10/12/2014 20:07:27 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		me
+-- Create date: 
+-- Description:	test employee summaries
+-- =============================================
+CREATE PROCEDURE [dbo].[EmployeeSummariesTest] 
+	-- Add the parameters for the stored procedure here
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT     EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Name, HireDate, Notes, dbo.EmployeeDisplayName(ReportsTo) AS SupervisorName, 
+						  dbo.CanBeDeleted(EmployeeID) AS CanBeDeleted
+	FROM         Employees
+	ORDER BY LastName
+
+END
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[TerritoriesForEmployeeTest]    Script Date: 10/12/2014 20:36:06 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		me
+-- Create date: 
+-- Description:	test territories for employee
+-- =============================================
+CREATE PROCEDURE [dbo].[TerritoriesForEmployeeTest] 
+	-- Add the parameters for the stored procedure here
+	@id int = 0
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT     TerritoryID, TerritoryDescription, dbo.EmployeeCoversTerritory(@id, TerritoryID) AS EmployeeCoversTerritory
 	FROM         Territories
-)
+	ORDER BY TerritoryDescription
+END
 
 GO
 
