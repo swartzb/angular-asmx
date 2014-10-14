@@ -56,11 +56,11 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public BL.Employee.Details GetEmployeeDetails(int id, bool newEmployee)
+  public DA.Employee.Details GetEmployeeDetails(int id, bool newEmployee)
   {
     Debug.Print("GetEmployeeDetails");
     Thread.Sleep(TimeSpan.FromSeconds(2));
-    return BL.Employee.GetDetails(_connectionString, newEmployee ? (int?)null : id);
+    return DA.Employee.GetDetails(_connectionString, newEmployee ? (int?)null : id);
   }
 
   [WebMethod]

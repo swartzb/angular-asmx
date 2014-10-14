@@ -37,48 +37,9 @@ namespace BusinessLogic
   {
     public new class Details
     {
-      public List<EmployeeLite> canReportTo { get; set; }
-
       public Details()
       {
 
-      }
-
-      public Details(DA.Employee.Details daDetails, int? id)
-      {
-        canReportTo = new List<EmployeeLite>();
-        foreach (DA.Employee candidate in daDetails.employees)
-        {
-          if (id.HasValue)
-          {
-            DA.Employee tmp = candidate;
-            bool done = false;
-            do
-            {
-              if (tmp.EmployeeID == id.Value)
-              {
-                done = true;
-              }
-              else if (!tmp.ReportsTo.HasValue)
-              {
-                Employee blEmp = new Employee(candidate);
-                canReportTo.Add((EmployeeLite)blEmp);
-                done = true;
-              }
-              else
-              {
-                tmp = daDetails.employees.
-                  Where(e => e.EmployeeID == tmp.ReportsTo.Value).
-                  Single();
-              }
-            } while (!done);
-          }
-          else
-          {
-            Employee blEmp = new Employee(candidate);
-            canReportTo.Add((EmployeeLite)blEmp);
-          }
-        }
       }
     }
 
@@ -122,13 +83,6 @@ namespace BusinessLogic
     public Employee()
     {
 
-    }
-
-    public static new Details GetDetails(string connectionString, int? id)
-    {
-      DA.Employee.Details daDetails = DA.Employee.GetDetails(connectionString, id);
-
-      return new Details(daDetails, id);
     }
 
     public static new ReturnVal Edit(string connectionString, DA.Employee emp)

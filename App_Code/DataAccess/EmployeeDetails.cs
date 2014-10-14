@@ -21,9 +21,6 @@ namespace DataAccess
       //
     }
 
-
-    public List<string> territoryIds { get; set; }
-
     public List<EmployeeSummary> allEmployees { get; set; }
 
     #region DA.IEmployeeDetails
@@ -56,15 +53,12 @@ namespace DataAccess
           if (id.HasValue)
           {
             ed = Select(conn, txn, id.Value);
-            ed.territoryIds = Territory.SelectIdsForEmployee(conn, txn, id.Value);
           }
           else
           {
             ed = new EmployeeDetails();
-            ed.territoryIds = new List<string>();
           }
           ed.allEmployees = EmployeeSummary.SelectAll(conn, txn);
-          ed.territories = Territory.SelectAll(conn, txn);
           txn.Commit();
         }
       }
