@@ -15,7 +15,7 @@ namespace DataAccess
   {
     public EmployeeSummary()
     {
-
+      Territories = new List<string>();
     }
 
     public int EmployeeID { get; set; }
@@ -24,6 +24,7 @@ namespace DataAccess
     public string Notes { get; set; }
     public string SupervisorName { get; set; }
     public System.Nullable<bool> CanBeDeleted { get; set; }
+    public List<string> Territories { get; set; }
 
     public static EmployeeSummaryRetVal Remove(string connectionString, int id)
     {
@@ -88,6 +89,28 @@ namespace DataAccess
       return esList;
     }
 
+    static List<string> GetTerritories(SqlConnection conn, SqlTransaction txn, int id)
+    {
+      List<string> territories = new List<string>();
+
+      string sqlCmd = "SELECT T.TerritoryDescription FROM Territories AS T INNER JOIN EmployeeTerritories AS ET" +
+        " ON T.TerritoryID = ET.TerritoryID WHERE (ET.EmployeeID = @id) ORDER BY T.TerritoryDescription";
+      using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+      {
+        cmd.Parameters.AddWithValue("@id", id);
+        using (SqlDataReader rdr = cmd.ExecuteReader())
+        {
+          while (rdr.Read())
+          {
+            string desc = rdr.GetString(rdr.GetOrdinal("TerritoryDescription"));
+            territories.Add(desc.Trim());
+          }
+        }
+      }
+
+      return territories;
+    }
+
     public static EmployeeSummaryRetVal GetAll(string connectionString)
     {
       EmployeeSummaryRetVal retVal = new EmployeeSummaryRetVal();
@@ -98,6 +121,10 @@ namespace DataAccess
         using (SqlTransaction txn = conn.BeginTransaction())
         {
           retVal.employees = SelectAll(conn, txn);
+          foreach (EmployeeSummary es in retVal.employees)
+          {
+            es.Territories = GetTerritories(conn, txn, es.EmployeeID);
+          }
           txn.Commit();
         }
       }

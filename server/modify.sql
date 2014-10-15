@@ -17,6 +17,11 @@ GO
 ALTER TABLE [dbo].[EmployeeTerritories] CHECK CONSTRAINT [FK_EmployeeTerritories_Employees]
 GO
 
+/****** Object:  StoredProcedure [dbo].[EmployeeTerritoriesTest]    Script Date: 10/14/2014 20:07:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EmployeeTerritoriesTest]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[EmployeeTerritoriesTest]
+GO
+
 /****** Object:  StoredProcedure [dbo].[TerritoriesForEmployeeTest]    Script Date: 10/12/2014 20:36:06 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TerritoriesForEmployeeTest]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[TerritoriesForEmployeeTest]
@@ -325,6 +330,37 @@ BEGIN
 	SELECT     TerritoryID, TerritoryDescription, dbo.EmployeeCoversTerritory(@id, TerritoryID) AS EmployeeCoversTerritory
 	FROM         Territories
 	ORDER BY TerritoryDescription
+END
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[EmployeeTerritoriesTest]    Script Date: 10/14/2014 20:07:10 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		me
+-- Create date: 
+-- Description:	test employee territories
+-- =============================================
+CREATE PROCEDURE [dbo].[EmployeeTerritoriesTest] 
+	-- Add the parameters for the stored procedure here
+	@id int = NULL
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT     T.TerritoryDescription
+	FROM         Territories AS T INNER JOIN
+						  EmployeeTerritories AS ET ON T.TerritoryID = ET.TerritoryID
+	WHERE     (ET.EmployeeID = @id)
+	ORDER BY T.TerritoryDescription
 END
 
 GO
