@@ -21,12 +21,15 @@
 <body>
   <div class="container" data-ng-controller="IndexController">
     <div>
-      <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="homeClickHandler()">
+      <button class="btn btn-primary" data-ng-disabled="northwind.httpState == 'inProgress'"
+        data-ng-click="location.path('/home')">
         Home</button>
-      <button class="btn btn-primary" data-ng-disabled="!isMainMenuEnabled" data-ng-click="employeesClickHandler()">
+      <button class="btn btn-primary" data-ng-disabled="northwind.httpState == 'inProgress'"
+        data-ng-click="location.path('/employees/load/true')">
         Employees</button>
       <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+          data-ng-disabled="northwind.httpState == 'inProgress'">
           Test <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">

@@ -10,34 +10,29 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
   ]).
   controller('EmployeesController', ['$scope', '$routeParams', '$location', 'northwindService',
     function ($scope, $routeParams, $location, northwindService) {
-      $scope.northwind = northwindService;
 
       $scope.addNewEmployee = function () {
-        $scope.setMainMenuEnabled(false);
         $location.path('/employees/add');
         return;
       };
 
       $scope.editSelectedEmployee = function () {
-        $scope.setMainMenuEnabled(false);
         $location.path('/employees/edit');
         return;
       };
 
       $scope.deleteEmployee = function (employee) {
-        $scope.setMainMenuEnabled(false);
         $scope.northwind.deleteEmployee(employee).
           success(function (data, status, headers, config, statusText) {
-            $scope.setMainMenuEnabled(true);
+
           }).
           error(function (data, status, headers, config, statusText) {
-            $scope.setMainMenuEnabled(true);
+
           });
         return;
       };
 
       $scope.viewSelectedEmployeeDetails = function () {
-        $scope.setMainMenuEnabled(false);
         $location.path('/employees/view');
         return;
       };
@@ -50,7 +45,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
   controller('AddEmployeeController', ['$scope', '$location', 'northwindService',
     function ($scope, $location, northwindService) {
       $scope.readOnly = false;
-      $scope.northwind = northwindService;
       $scope.employee = {};
       $scope.headerText = 'Add New Employee';
 
@@ -81,42 +75,31 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       };
 
       $scope.doCancel = function () {
-        $scope.setMainMenuEnabled(true);
         $location.path('/employees/load/false');
       };
 
       $scope.doOK = function () {
         $scope.northwind.addEmployee($scope.employee).
           success(function (data, status, headers, config, statusText) {
-            $scope.setMainMenuEnabled(true);
             $location.path('/employees/load/false');
           }).
           error(function (data, status, headers, config, statusText) {
-            $scope.setMainMenuEnabled(true);
+
           });
       };
 
       $scope.northwind.getEmployeeDetails(0, true);
     }
   ]).
-  controller('IndexController', ['$scope', '$location',
-    function ($scope, $location) {
-      $scope.isMainMenuEnabled = true;
-      $scope.setMainMenuEnabled = function (enabled) {
-        $scope.isMainMenuEnabled = enabled;
-      };
-      $scope.homeClickHandler = function () {
-        $location.path('/home');
-      };
-      $scope.employeesClickHandler = function () {
-        $location.path('/employees/load/true');
-      };
+  controller('IndexController', ['$scope', '$location', 'northwindService',
+    function ($scope, $location, northwindService) {
+      $scope.northwind = northwindService;
+      $scope.location = $location;
     }
   ]).
   controller('EditEmployeeController', ['$scope', '$location', 'northwindService',
     function ($scope, $location, northwindService) {
       $scope.readOnly = false;
-      $scope.northwind = northwindService;
       $scope.employee = angular.copy($scope.northwind.selectedEmployee);
       $scope.headerText = 'Edit ' + $scope.northwind.selectedEmployee.DisplayName;
 
@@ -149,18 +132,16 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       };
 
       $scope.doCancel = function () {
-        $scope.setMainMenuEnabled(true);
         $location.path('/employees/load/false');
       };
 
       $scope.doOK = function () {
         $scope.northwind.editEmployee($scope.employee).
           success(function (data, status, headers, config, statusText) {
-            $scope.setMainMenuEnabled(true);
             $location.path('/employees/load/false');
           }).
           error(function (data, status, headers, config, statusText) {
-            $scope.setMainMenuEnabled(true);
+
           });
       };
 
@@ -180,7 +161,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
   controller('ViewEmployeeController', ['$scope', '$location', 'northwindService',
     function ($scope, $location, northwindService) {
       $scope.readOnly = true;
-      $scope.northwind = northwindService;
       $scope.employee = angular.copy($scope.northwind.selectedEmployee);
       $scope.headerText = 'View ' + $scope.northwind.selectedEmployee.DisplayName;
       $scope.getCssClasses = function (ngModelContoller) {
@@ -193,11 +173,9 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         return false;
       };
       $scope.doCancel = function () {
-        $scope.setMainMenuEnabled(true);
         $location.path('/employees/load/false');
       };
       $scope.doOK = function () {
-        $scope.setMainMenuEnabled(true);
         $location.path('/employees/load/false');
       };
     }

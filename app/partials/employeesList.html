@@ -19,7 +19,10 @@
       <dt>Territories</dt>
       <dd>
         <select data-ng-model="employee.selectedTerritory" data-ng-options="territory for territory in employee.Territories">
-        </select><br />
+        </select>
+        <button class="btn btn-primary btn-xs" data-ng-click="deleteEmployee(employee)">
+          <span class="glyphicon glyphicon-edit"></span>
+        </button>
       </dd>
     </dl>
 </li>
