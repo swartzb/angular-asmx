@@ -3,6 +3,12 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
+  controller('TerritoriesForEmployeeController', ['$scope', '$routeParams',
+    function ($scope, $routeParams) {
+      console.log('TerritoriesForEmployeeController');
+      $scope.id = $routeParams.id;
+    }
+  ]).
   controller('HomeController', [
     function () {
       console.log('HomeController');
