@@ -11,9 +11,13 @@ angular.module('myApp.services', []).
     var serviceInstance = {
       selectedEmployee: null,
 
-      details: null,
+      details: {},
+
+      employee: null,
 
       employees: [],
+
+      territories: [],
 
       errorInfo: {},
 
@@ -65,6 +69,41 @@ angular.module('myApp.services', []).
             for (i = 0, len = that.employees.length; i < len; ++i) {
               that.employees[i].selectedTerritory = that.employees[i].Territories[0];
             }
+            that.status = status;
+            that.httpState = 'success';
+            return;
+          }).
+          error(function (data, status, headers, config) {
+            that.errorInfo = data;
+            that.status = status;
+            that.httpState = 'error';
+            return;
+          });
+
+        return secondPromise;
+      },
+
+      getTerritoriesForEmployee: function (empId) {
+        var that = this;
+        var inData = {
+          id: empId
+        };
+
+        this.territories = [];
+        this.errorInfo = {};
+        this.status = undefined;
+        this.httpState = 'inProgress';
+
+        var firstPromise = $http({
+          url: '../NwndSvc.asmx/GetTerritoriesForEmployee',
+          method: "POST",
+          data: JSON.stringify(inData),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        var secondPromise = firstPromise.
+          success(function (data, status, headers, config) {
+            that.territories = data.d;
             that.status = status;
             that.httpState = 'success';
             return;

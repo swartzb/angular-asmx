@@ -29,6 +29,15 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  public List<DA.Territory> GetTerritoriesForEmployee(int id)
+  {
+    Debug.Print("GetTerritoriesForEmployee");
+    Thread.Sleep(TimeSpan.FromSeconds(2));
+    return DA.Territory.GetTerritoriesForEmployee(_connectionString, id);
+  }
+
+  [WebMethod]
+  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public DA.EmployeeSummaryRetVal GetAllEmployees()
   {
     Debug.Print("GetAllEmployees");

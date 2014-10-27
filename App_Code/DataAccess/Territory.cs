@@ -20,7 +20,24 @@ namespace DataAccess
 
     }
 
-    public static List<Territory> TerritoriesForEmployee(SqlConnection conn, SqlTransaction txn, int? id)
+    public static List<Territory> GetTerritoriesForEmployee(string connectionString, int id)
+    {
+      List<Territory> tList;
+
+      using (SqlConnection conn = new SqlConnection(connectionString))
+      {
+        conn.Open();
+        using (SqlTransaction txn = conn.BeginTransaction())
+        {
+          tList = TerritoriesForEmployee(conn, txn, id);
+          txn.Commit();
+        }
+      }
+
+      return tList;
+    }
+
+    static List<Territory> TerritoriesForEmployee(SqlConnection conn, SqlTransaction txn, int? id)
     {
       List<Territory> tList = new List<Territory>();
 

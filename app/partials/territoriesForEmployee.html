@@ -1,4 +1,4 @@
-<h1>Territories For Employee</h1>
+<h2>Territories For {{ employeeName }}</h2>
 <div data-ng-if="northwind.httpState =='inProgress'">
   <h2>In Progress</h2>
 </div>
@@ -9,5 +9,5 @@
 </div>
 <div data-ng-if="northwind.httpState =='success'">
   <pre>id = {{ id | json }}</pre>
-  <pre>id = {{ northwind.employees | json }}</pre>
+  <pre>id = {{ northwind.territories | json }}</pre>
 </div>

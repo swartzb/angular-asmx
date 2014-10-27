@@ -5,8 +5,18 @@
 angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
   controller('TerritoriesForEmployeeController', ['$scope', '$routeParams',
     function ($scope, $routeParams) {
+      var i, len;
+
       console.log('TerritoriesForEmployeeController');
       $scope.id = $routeParams.id;
+
+      for (i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
+        if ($scope.northwind.employees[i].EmployeeID == $scope.id) {
+          $scope.employeeName = $scope.northwind.employees[i].Name;
+        }
+      }
+
+      $scope.northwind.getTerritoriesForEmployee($scope.id);
     }
   ]).
   controller('HomeController', [
