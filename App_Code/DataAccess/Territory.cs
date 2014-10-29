@@ -20,6 +20,24 @@ namespace DataAccess
 
     }
 
+    public static EmployeeSummaryRetVal UpdateTerritoriesForEmployee(string connectionString, int id, List<string> territoryIDs)
+    {
+      List<Territory> tList;
+      EmployeeSummaryRetVal retVal = new EmployeeSummaryRetVal();
+
+      using (SqlConnection conn = new SqlConnection(connectionString))
+      {
+        conn.Open();
+        using (SqlTransaction txn = conn.BeginTransaction())
+        {
+
+          txn.Commit();
+        }
+      }
+
+      return retVal;
+    }
+
     public static List<Territory> GetTerritoriesForEmployee(string connectionString, int id)
     {
       List<Territory> tList;

@@ -38,6 +38,15 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  public DA.EmployeeSummaryRetVal UpdateTerritoriesForEmployee(int id, List<string> territoryIDs)
+  {
+    Debug.Print("UpdateTerritoriesForEmployee");
+    Thread.Sleep(TimeSpan.FromSeconds(2));
+    return DA.EmployeeSummary.GetAll(_connectionString);
+  }
+
+  [WebMethod]
+  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public DA.EmployeeSummaryRetVal GetAllEmployees()
   {
     Debug.Print("GetAllEmployees");

@@ -8,6 +8,17 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       var i, len;
 
       console.log('TerritoriesForEmployeeController');
+
+      $scope.doOK = function () {
+        var territoryIDs = [];
+        for (i = 0, len = $scope.northwind.territories.length; i < len; ++i) {
+          if ($scope.northwind.territories[i].EmployeeCoversTerritory) {
+            territoryIDs.push($scope.northwind.territories[i].TerritoryID);
+          }
+        }
+        return;
+      };
+
       $scope.id = $routeParams.id;
 
       for (i = 0, len = $scope.northwind.employees.length; i < len; ++i) {

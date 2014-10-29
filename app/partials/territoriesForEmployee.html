@@ -1,4 +1,5 @@
-<h2>Territories For {{ employeeName }}</h2>
+<h1>Territories For</h1>
+<h2>{{ employeeName }}</h2>
 <div data-ng-if="northwind.httpState =='inProgress'">
   <h2>In Progress</h2>
 </div>
@@ -8,6 +9,21 @@
   <pre>errorInfo = {{ northwind.errorInfo | json }}</pre>
 </div>
 <div data-ng-if="northwind.httpState =='success'">
-  <pre>id = {{ id | json }}</pre>
-  <pre>id = {{ northwind.territories | json }}</pre>
+  <form novalidate name="t4eForm">
+    <ul>
+      <li data-ng-repeat="t in northwind.territories" class="list-unstyled">
+        <input type="checkbox" data-ng-model="t.EmployeeCoversTerritory" />
+        {{t.TerritoryDescription}}
+      </li>
+    </ul>
+
+    <div class="form-group">
+      <button class="btn btn-success" data-ng-disabled="t4eForm.$pristine" data-ng-click="doOK()">
+        OK</button>
+      <button class="btn btn-primary" data-ng-click="location.path('/employees/load/false')">
+        Cancel</button>
+    </div>
+  </form>
+  <!--  <pre>id = {{ id | json }}</pre>-->
+  <!--  <pre>id = {{ northwind.territories | json }}</pre>-->
 </div>
