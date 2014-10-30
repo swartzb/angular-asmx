@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
-  controller('TerritoriesForEmployeeController', ['$scope', '$routeParams',
-    function ($scope, $routeParams) {
+  controller('TerritoriesForEmployeeController', ['$scope', '$routeParams', '$location',
+    function ($scope, $routeParams, $location) {
       var i, len;
 
       console.log('TerritoriesForEmployeeController');
@@ -16,6 +16,13 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
             territoryIDs.push($scope.northwind.territories[i].TerritoryID);
           }
         }
+        $scope.northwind.updateTerritoriesForEmployee($scope.id, territoryIDs).
+          success(function (data, status, headers, config, statusText) {
+            $location.path('/employees/load/false');
+          }).
+          error(function (data, status, headers, config, statusText) {
+
+          });
         return;
       };
 

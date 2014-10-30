@@ -42,7 +42,7 @@ public class NwndSvc : System.Web.Services.WebService
   {
     Debug.Print("UpdateTerritoriesForEmployee");
     Thread.Sleep(TimeSpan.FromSeconds(2));
-    return DA.EmployeeSummary.GetAll(_connectionString);
+    return DA.Territory.UpdateTerritoriesForEmployee(_connectionString, id, territoryIDs);
   }
 
   [WebMethod]

@@ -89,7 +89,7 @@ namespace DataAccess
       return esList;
     }
 
-    static List<string> GetTerritories(SqlConnection conn, SqlTransaction txn, int id)
+    public static List<string> GetTerritories(SqlConnection conn, SqlTransaction txn, int id)
     {
       List<string> territories = new List<string>();
 

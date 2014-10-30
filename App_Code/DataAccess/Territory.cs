@@ -22,7 +22,6 @@ namespace DataAccess
 
     public static EmployeeSummaryRetVal UpdateTerritoriesForEmployee(string connectionString, int id, List<string> territoryIDs)
     {
-      List<Territory> tList;
       EmployeeSummaryRetVal retVal = new EmployeeSummaryRetVal();
 
       using (SqlConnection conn = new SqlConnection(connectionString))
@@ -30,6 +29,30 @@ namespace DataAccess
         conn.Open();
         using (SqlTransaction txn = conn.BeginTransaction())
         {
+          string delCmdStr = "DELETE FROM EmployeeTerritories WHERE (EmployeeID = @id)";
+          using (SqlCommand cmd = new SqlCommand(delCmdStr, conn, txn))
+          {
+            cmd.Parameters.AddWithValue("@id", id);
+            retVal.numRows = cmd.ExecuteNonQuery();
+          }
+
+          foreach (string tId in territoryIDs)
+          {
+            string insCmdStr = "INSERT INTO EmployeeTerritories (EmployeeID, TerritoryID) VALUES (@eId, @tId)";
+            using (SqlCommand cmd = new SqlCommand(insCmdStr, conn, txn))
+            {
+              cmd.Parameters.AddWithValue("@eId", id);
+              cmd.Parameters.AddWithValue("@tId", tId);
+              retVal.numRows = cmd.ExecuteNonQuery();
+            }
+          }
+
+          retVal.employees = EmployeeSummary.SelectAll(conn, txn);
+
+          foreach (EmployeeSummary es in retVal.employees)
+          {
+            es.Territories = EmployeeSummary.GetTerritories(conn, txn, es.EmployeeID);
+          }
 
           txn.Commit();
         }
