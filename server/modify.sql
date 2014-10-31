@@ -361,6 +361,11 @@ BEGIN
 						  EmployeeTerritories AS ET ON T.TerritoryID = ET.TerritoryID
 	WHERE     (ET.EmployeeID = @id)
 	ORDER BY T.TerritoryDescription
+
+	SELECT     TerritoryDescription
+	FROM         Territories
+	WHERE     (dbo.EmployeeCoversTerritory(@id, TerritoryID) = 1)
+	ORDER BY TerritoryDescription
 END
 
 GO

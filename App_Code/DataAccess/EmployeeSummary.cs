@@ -81,34 +81,18 @@ namespace DataAccess
               CanBeDeleted = rdr.IsDBNull(rdr.GetOrdinal("CanBeDeleted"))
                   ? false : rdr.GetBoolean(rdr.GetOrdinal("CanBeDeleted")),
             };
+
             esList.Add(es);
           }
         }
       }
 
-      return esList;
-    }
-
-    public static List<string> GetTerritories(SqlConnection conn, SqlTransaction txn, int id)
-    {
-      List<string> territories = new List<string>();
-
-      string sqlCmd = "SELECT T.TerritoryDescription FROM Territories AS T INNER JOIN EmployeeTerritories AS ET" +
-        " ON T.TerritoryID = ET.TerritoryID WHERE (ET.EmployeeID = @id) ORDER BY T.TerritoryDescription";
-      using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+      foreach (EmployeeSummary es in esList)
       {
-        cmd.Parameters.AddWithValue("@id", id);
-        using (SqlDataReader rdr = cmd.ExecuteReader())
-        {
-          while (rdr.Read())
-          {
-            string desc = rdr.GetString(rdr.GetOrdinal("TerritoryDescription"));
-            territories.Add(desc.Trim());
-          }
-        }
+        es.Territories = Territory.GetForEmployee(conn, txn, es.EmployeeID);
       }
 
-      return territories;
+      return esList;
     }
 
     public static EmployeeSummaryRetVal GetAll(string connectionString)
@@ -121,10 +105,6 @@ namespace DataAccess
         using (SqlTransaction txn = conn.BeginTransaction())
         {
           retVal.employees = SelectAll(conn, txn);
-          foreach (EmployeeSummary es in retVal.employees)
-          {
-            es.Territories = GetTerritories(conn, txn, es.EmployeeID);
-          }
           txn.Commit();
         }
       }

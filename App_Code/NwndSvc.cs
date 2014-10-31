@@ -31,18 +31,18 @@ public class NwndSvc : System.Web.Services.WebService
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<DA.Territory> GetTerritoriesForEmployee(int id)
   {
-    Debug.Print("GetTerritoriesForEmployee");
+    Debug.Print("Get");
     Thread.Sleep(TimeSpan.FromSeconds(2));
-    return DA.Territory.GetTerritoriesForEmployee(_connectionString, id);
+    return DA.Territory.Get(_connectionString, id);
   }
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public DA.EmployeeSummaryRetVal UpdateTerritoriesForEmployee(int id, List<string> territoryIDs)
   {
-    Debug.Print("UpdateTerritoriesForEmployee");
+    Debug.Print("Update");
     Thread.Sleep(TimeSpan.FromSeconds(2));
-    return DA.Territory.UpdateTerritoriesForEmployee(_connectionString, id, territoryIDs);
+    return DA.Territory.Update(_connectionString, id, territoryIDs);
   }
 
   [WebMethod]

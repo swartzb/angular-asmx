@@ -20,7 +20,28 @@ namespace DataAccess
 
     }
 
-    public static EmployeeSummaryRetVal UpdateTerritoriesForEmployee(string connectionString, int id, List<string> territoryIDs)
+    public static List<string> GetForEmployee(SqlConnection conn, SqlTransaction txn, int id)
+    {
+      List<string> territories = new List<string>();
+
+      string sqlCmd = "SELECT TerritoryDescription FROM Territories WHERE (dbo.EmployeeCoversTerritory(@id, TerritoryID) = 1) ORDER BY TerritoryDescription";
+      using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+      {
+        cmd.Parameters.AddWithValue("@id", id);
+        using (SqlDataReader rdr = cmd.ExecuteReader())
+        {
+          while (rdr.Read())
+          {
+            string desc = rdr.GetString(rdr.GetOrdinal("TerritoryDescription"));
+            territories.Add(desc.Trim());
+          }
+        }
+      }
+
+      return territories;
+    }
+
+    public static EmployeeSummaryRetVal Update(string connectionString, int id, List<string> territoryIDs)
     {
       EmployeeSummaryRetVal retVal = new EmployeeSummaryRetVal();
 
@@ -49,11 +70,6 @@ namespace DataAccess
 
           retVal.employees = EmployeeSummary.SelectAll(conn, txn);
 
-          foreach (EmployeeSummary es in retVal.employees)
-          {
-            es.Territories = EmployeeSummary.GetTerritories(conn, txn, es.EmployeeID);
-          }
-
           txn.Commit();
         }
       }
@@ -61,44 +77,36 @@ namespace DataAccess
       return retVal;
     }
 
-    public static List<Territory> GetTerritoriesForEmployee(string connectionString, int id)
+    public static List<Territory> Get(string connectionString, int id)
     {
-      List<Territory> tList;
+      List<Territory> tList = new List<Territory>();
 
       using (SqlConnection conn = new SqlConnection(connectionString))
       {
         conn.Open();
         using (SqlTransaction txn = conn.BeginTransaction())
         {
-          tList = TerritoriesForEmployee(conn, txn, id);
-          txn.Commit();
-        }
-      }
-
-      return tList;
-    }
-
-    static List<Territory> TerritoriesForEmployee(SqlConnection conn, SqlTransaction txn, int? id)
-    {
-      List<Territory> tList = new List<Territory>();
-
-      string sqlCmd = "SELECT TerritoryID, TerritoryDescription, dbo.EmployeeCoversTerritory(@id, TerritoryID) AS EmployeeCoversTerritory FROM Territories ORDER BY TerritoryDescription";
-      using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
-      {
-        cmd.Parameters.AddWithValue("@id", id);
-        using (SqlDataReader rdr = cmd.ExecuteReader())
-        {
-          while (rdr.Read())
+          string sqlCmd = "SELECT TerritoryID, TerritoryDescription, dbo.EmployeeCoversTerritory(@id, TerritoryID) AS EmployeeCoversTerritory FROM Territories ORDER BY TerritoryDescription";
+          using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
           {
-            Territory t = new Territory
+            cmd.Parameters.AddWithValue("@id", id);
+            using (SqlDataReader rdr = cmd.ExecuteReader())
             {
-              TerritoryID = rdr.GetString(rdr.GetOrdinal("TerritoryID")),
-              TerritoryDescription = rdr.GetString(rdr.GetOrdinal("TerritoryDescription")),
-              EmployeeCoversTerritory = rdr.IsDBNull(rdr.GetOrdinal("EmployeeCoversTerritory"))
-                  ? false : rdr.GetBoolean(rdr.GetOrdinal("EmployeeCoversTerritory")),
-            };
-            tList.Add(t);
+              while (rdr.Read())
+              {
+                Territory t = new Territory
+                {
+                  TerritoryID = rdr.GetString(rdr.GetOrdinal("TerritoryID")),
+                  TerritoryDescription = rdr.GetString(rdr.GetOrdinal("TerritoryDescription")),
+                  EmployeeCoversTerritory = rdr.IsDBNull(rdr.GetOrdinal("EmployeeCoversTerritory"))
+                      ? false : rdr.GetBoolean(rdr.GetOrdinal("EmployeeCoversTerritory")),
+                };
+                tList.Add(t);
+              }
+            }
           }
+
+          txn.Commit();
         }
       }
 

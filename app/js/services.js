@@ -65,6 +65,7 @@ angular.module('myApp.services', []).
         var secondPromise = firstPromise.
           success(function (data, status, headers, config) {
             var i, len;
+
             that.employees = data.d.employees;
             for (i = 0, len = that.employees.length; i < len; ++i) {
               that.employees[i].selectedTerritory = that.employees[i].Territories[0];
@@ -103,7 +104,12 @@ angular.module('myApp.services', []).
 
         var secondPromise = firstPromise.
           success(function (data, status, headers, config) {
+            var i, len;
+
             that.employees = data.d.employees;
+            for (i = 0, len = that.employees.length; i < len; ++i) {
+              that.employees[i].selectedTerritory = that.employees[i].Territories[0];
+            }
             that.status = status;
             that.httpState = 'success';
             return;
