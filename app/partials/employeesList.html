@@ -1,5 +1,5 @@
 ﻿<li data-ng-repeat="employee in northwind.employees | orderBy:'Name'"
-  data-ng-class="{selected: employee == northwind.selectedEmployee}">[{{$index + 1}}]
+  data-ng-class="{selected: employee == northwind.selectedEmployee}" class="list-unstyled">
   <button class="btn btn-danger btn-xs" data-ng-disabled="!employee.CanBeDeleted" data-ng-click="deleteEmployee(employee)">
     <span class="glyphicon glyphicon-remove"></span>
   </button>
@@ -18,11 +18,11 @@
       </dd>
       <dt>Territories</dt>
       <dd>
-        <select data-ng-model="employee.selectedTerritory" data-ng-options="territory for territory in employee.Territories">
-        </select>
         <button class="btn btn-primary btn-xs" data-ng-click="location.path('/territoriesForEmployee/' + employee.EmployeeID)">
           <span class="glyphicon glyphicon-edit"></span>
         </button>
+        <select data-ng-model="employee.selectedTerritory" data-ng-options="territory for territory in employee.Territories">
+        </select>
       </dd>
     </dl>
 </li>
