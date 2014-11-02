@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
-  controller('TerritoriesForEmployeeController', ['$scope', '$routeParams', '$location',
-    function ($scope, $routeParams, $location) {
+  controller('TerritoriesForEmployeeController', ['$scope', '$routeParams',
+    function ($scope, $routeParams) {
       var i, len;
 
       console.log('TerritoriesForEmployeeController');
@@ -18,7 +18,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         }
         $scope.northwind.updateTerritoriesForEmployee($scope.id, territoryIDs).
           success(function (data, status, headers, config, statusText) {
-            $location.path('/employees/load/false');
+            $scope.location.path('/employees/load/false');
           }).
           error(function (data, status, headers, config, statusText) {
 
@@ -42,16 +42,16 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       console.log('HomeController');
     }
   ]).
-  controller('EmployeesController', ['$scope', '$routeParams', '$location', 'northwindService',
-    function ($scope, $routeParams, $location, northwindService) {
+  controller('EmployeesController', ['$scope', '$routeParams',
+    function ($scope, $routeParams) {
 
       $scope.addNewEmployee = function () {
-        $location.path('/employees/add');
+        $scope.location.path('/employees/add');
         return;
       };
 
       $scope.editSelectedEmployee = function () {
-        $location.path('/employees/edit');
+        $scope.location.path('/employees/edit');
         return;
       };
 
@@ -67,7 +67,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       };
 
       $scope.viewSelectedEmployeeDetails = function () {
-        $location.path('/employees/view');
+        $scope.location.path('/employees/view');
         return;
       };
 
@@ -76,8 +76,8 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       }
     }
   ]).
-  controller('AddEmployeeController', ['$scope', '$location', 'northwindService',
-    function ($scope, $location, northwindService) {
+  controller('AddEmployeeController', ['$scope', '$location',
+    function ($scope, $location) {
       $scope.readOnly = false;
       $scope.employee = {};
       $scope.headerText = 'Add New Employee';
@@ -131,8 +131,8 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.location = $location;
     }
   ]).
-  controller('EditEmployeeController', ['$scope', '$location', 'northwindService',
-    function ($scope, $location, northwindService) {
+  controller('EditEmployeeController', ['$scope', '$location',
+    function ($scope, $location) {
       $scope.readOnly = false;
       $scope.employee = angular.copy($scope.northwind.selectedEmployee);
       $scope.headerText = 'Edit ' + $scope.northwind.selectedEmployee.DisplayName;
@@ -192,8 +192,8 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       });
     }
   ]).
-  controller('ViewEmployeeController', ['$scope', '$location', 'northwindService',
-    function ($scope, $location, northwindService) {
+  controller('ViewEmployeeController', ['$scope', '$location',
+    function ($scope, $location) {
       $scope.readOnly = true;
       $scope.employee = angular.copy($scope.northwind.selectedEmployee);
       $scope.headerText = 'View ' + $scope.northwind.selectedEmployee.DisplayName;
