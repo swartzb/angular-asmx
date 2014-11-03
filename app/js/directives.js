@@ -4,6 +4,46 @@
 
 
 angular.module('myApp.directives', ['myApp.services']).
+  directive('mySizer', ['$window', '$timeout',
+    function ($window, $timeout) {
+      var timeoutPromise = null;
+      var elemSizer = function (elem) {
+        var winHeight = $window.innerHeight;
+        var docHeight = $window.document.body.clientHeight;
+        var elemHeight = parseInt(window.getComputedStyle(elem, null).getPropertyValue("height"));
+        var newHeight = elemHeight - docHeight + winHeight;
+        if (newHeight > 400) {
+          elem.style.height = newHeight + 'px';
+          console.log(winHeight + ',' + elemHeight + ',' + docHeight + ',' + newHeight);
+        } else {
+          elem.style.height = null;
+          console.log('removed height');
+        }
+        timeoutPromise = null;
+      };
+      var directiveDefinitionObject = {
+        link: function (scope, iElement, iAttrs) {
+          var coll = iAttrs.mySizer;
+          $window.addEventListener('resize',
+            function () {
+              if (!timeoutPromise) {
+                timeoutPromise = $timeout(ulResizer, 500);
+              }
+            }
+          );
+          scope.$on('$destroy', function () {
+            $window.removeEventListener('resize', ulResizer);
+          });
+          scope.$watchCollection(coll,
+            function (newVal, oldVal) {
+              $timeout(ulResizer);
+            }
+          );
+        }
+      };
+      return directiveDefinitionObject;
+    }
+  ]).
   directive('appVersion', ['version',
     function (version) {
       return function (scope, elm, attrs) {
