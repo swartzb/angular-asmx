@@ -7,7 +7,9 @@ angular.module('myApp.directives', ['myApp.services']).
   directive('mySizer', ['$window', '$timeout',
     function ($window, $timeout) {
       var timeoutPromise = null;
-      var elemSizer = function (elem) {
+      var elem;
+
+      var elemSizer = function () {
         var winHeight = $window.innerHeight;
         var docHeight = $window.document.body.clientHeight;
         var elemHeight = parseInt(window.getComputedStyle(elem, null).getPropertyValue("height"));
@@ -21,34 +23,33 @@ angular.module('myApp.directives', ['myApp.services']).
         }
         timeoutPromise = null;
       };
+
       var directiveDefinitionObject = {
         link: function (scope, iElement, iAttrs) {
+          elem = iElement[0];
           var coll = iAttrs.mySizer;
+
           $window.addEventListener('resize',
             function () {
               if (!timeoutPromise) {
-                timeoutPromise = $timeout(ulResizer, 500);
+                timeoutPromise = $timeout(elemSizer, 500);
               }
             }
           );
+
           scope.$on('$destroy', function () {
-            $window.removeEventListener('resize', ulResizer);
+            $window.removeEventListener('resize', elemSizer);
           });
+
           scope.$watchCollection(coll,
             function (newVal, oldVal) {
-              $timeout(ulResizer);
+              $timeout(elemSizer);
             }
           );
         }
       };
+
       return directiveDefinitionObject;
-    }
-  ]).
-  directive('appVersion', ['version',
-    function (version) {
-      return function (scope, elm, attrs) {
-        elm.text(version);
-      };
     }
   ]).
   directive('validDate', [
@@ -115,58 +116,5 @@ angular.module('myApp.directives', ['myApp.services']).
           });
         }
       };
-    }
-  ]).
-  directive('employeesList', ['$window', '$timeout', 'northwindService',
-    function ($window, $timeout, northwindService) {
-      var timeoutPromise = null;
-      var ulResizer = function () {
-        var ul = document.getElementById('vertScrollList');
-        if (ul) {
-          var winHeight = $window.innerHeight;
-          var docHeight = $window.document.body.clientHeight;
-          var ulHeight = parseInt(window.getComputedStyle(ul, null).getPropertyValue("height"));
-          var newHeight = ulHeight - docHeight + winHeight;
-          if (newHeight > 400) {
-            ul.style.height = newHeight + 'px';
-            console.log(winHeight + ',' + ulHeight + ',' + docHeight + ',' + newHeight);
-          } else {
-            ul.style.height = null;
-            console.log('removed height');
-          }
-        }
-        timeoutPromise = null;
-      };
-      var directiveObject = {
-        templateUrl: 'partials/employeesList.html',
-        //scope: {
-        //  northwind: '=employeesList'
-        //},
-        link: function (scope, element, attrs) {
-          $window.addEventListener('resize',
-            function () {
-              if (!timeoutPromise) {
-                timeoutPromise = $timeout(ulResizer, 500);
-              }
-            }
-          );
-          scope.$on('$destroy', function () {
-            $window.removeEventListener('resize', ulResizer);
-          });
-          scope.$watchCollection('northwind.employees',
-            function (newVal, oldVal) {
-              //if (newVal.length === oldVal.length) {
-              //  return;
-              //}
-
-              /* Wrapping the function inside a $timeout will ensure that
-               * the code is executed after the next browser rendering
-               * (thus after the modified list has been processed by ngRepeat) */
-              $timeout(ulResizer);
-            }
-          );
-        }
-      };
-      return directiveObject;
     }
   ]);
