@@ -38,6 +38,6 @@ li.selected {
   background-color: blue;
 }
 
-div.vertScroll {
+div[data-my-sizer] {
   overflow-y: scroll;
 }

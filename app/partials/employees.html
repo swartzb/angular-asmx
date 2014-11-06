@@ -15,7 +15,7 @@
     <button class="btn btn-primary" data-ng-disabled="!northwind.selectedEmployee" data-ng-click="viewSelectedEmployeeDetails()">
       View Selected Employee Details</button>
   </div>
-  <div class="vertScroll" data-my-sizer="northwind.employees">
+  <div data-my-sizer="northwind.employees">
     <ul>
       <li data-ng-repeat="employee in northwind.employees | orderBy:'Name'"
         data-ng-class="{selected: employee == northwind.selectedEmployee}" class="list-unstyled">
