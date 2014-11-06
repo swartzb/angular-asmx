@@ -1,0 +1,31 @@
+﻿<h1>Supervisor For</h1>
+<h2>{{ employeeName }}</h2>
+<div data-ng-if="northwind.httpState =='inProgress'">
+  <h2>In Progress</h2>
+</div>
+<div data-ng-if="northwind.httpState =='error'">
+  <h2>Error</h2>
+  <pre>status = {{ northwind.status | json }}</pre>
+  <pre>errorInfo = {{ northwind.errorInfo | json }}</pre>
+</div>
+<div data-ng-if="northwind.httpState =='success'">
+  <form novalidate name="form">
+    <div data-my-sizer="northwind.territories">
+      <ul>
+        <li data-ng-repeat="t in northwind.territories" class="list-unstyled">
+          <input type="checkbox" data-ng-model="t.EmployeeCoversTerritory" />
+          {{t.TerritoryDescription}}
+        </li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-success" data-ng-disabled="form.$pristine" data-ng-click="doOK()">
+        OK</button>
+      <button class="btn btn-primary" data-ng-click="location.path('/employees/load/false')">
+        Cancel</button>
+    </div>
+  </form>
+  <!--  <pre>id = {{ id | json }}</pre>-->
+  <!--  <pre>id = {{ northwind.territories | json }}</pre>-->
+</div>

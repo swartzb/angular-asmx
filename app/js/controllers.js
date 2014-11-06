@@ -3,6 +3,40 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
+  controller('CanReportToController', ['$scope', '$routeParams',
+    function ($scope, $routeParams) {
+      var i, len;
+
+      console.log('CanReportToController');
+
+      $scope.doOK = function () {
+        var territoryIDs = [];
+        for (i = 0, len = $scope.northwind.territories.length; i < len; ++i) {
+          if ($scope.northwind.territories[i].EmployeeCoversTerritory) {
+            territoryIDs.push($scope.northwind.territories[i].TerritoryID);
+          }
+        }
+        $scope.northwind.updateTerritoriesForEmployee($scope.id, territoryIDs).
+          success(function (data, status, headers, config, statusText) {
+            $scope.location.path('/employees/load/false');
+          }).
+          error(function (data, status, headers, config, statusText) {
+
+          });
+        return;
+      };
+
+      $scope.id = $routeParams.id;
+
+      for (i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
+        if ($scope.northwind.employees[i].EmployeeID == $scope.id) {
+          $scope.employeeName = $scope.northwind.employees[i].Name;
+        }
+      }
+
+      $scope.northwind.getTerritoriesForEmployee($scope.id);
+    }
+  ]).
   controller('TerritoriesForEmployeeController', ['$scope', '$routeParams',
     function ($scope, $routeParams) {
       var i, len;

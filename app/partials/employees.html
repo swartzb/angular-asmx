@@ -29,7 +29,11 @@
           </dd>
           <dd data-ng-if="!employee.HireDate">unknown</dd>
           <dt>Supervisor</dt>
-          <dd data-ng-if="employee.SupervisorName">{{employee.SupervisorName}}
+          <dd data-ng-if="employee.SupervisorName">
+            <button class="btn btn-primary btn-xs" data-ng-click="location.path('/canReportTo/' + employee.EmployeeID)">
+              <span class="glyphicon glyphicon-edit"></span>
+            </button>
+            {{employee.SupervisorName}}
           </dd>
           <dd data-ng-if="!employee.SupervisorName">none</dd>
           <dt>Notes</dt>
