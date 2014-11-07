@@ -270,7 +270,7 @@ BEGIN
 	SELECT     EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Name
 	FROM         Employees
 	WHERE     (dbo.CanReportTo(@Id, EmployeeID) = 1)
-	ORDER BY EmployeeID
+	ORDER BY Name
 END
 
 GO

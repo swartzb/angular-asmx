@@ -123,6 +123,41 @@ angular.module('myApp.services', []).
         return secondPromise;
       },
 
+      getCanReportTo: function (empId) {
+        var that = this;
+        var inData = {
+          id: empId
+        };
+
+        this.canReportTo = [];
+        this.errorInfo = {};
+        this.status = undefined;
+        this.httpState = 'inProgress';
+
+        var firstPromise = $http({
+          url: '../NwndSvc.asmx/GetCanReportTo',
+          method: "POST",
+          data: JSON.stringify(inData),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        var secondPromise = firstPromise.
+          success(function (data, status, headers, config) {
+            that.canReportTo = data.d;
+            that.status = status;
+            that.httpState = 'success';
+            return;
+          }).
+          error(function (data, status, headers, config) {
+            that.errorInfo = data;
+            that.status = status;
+            that.httpState = 'error';
+            return;
+          });
+
+        return secondPromise;
+      },
+
       getTerritoriesForEmployee: function (empId) {
         var that = this;
         var inData = {

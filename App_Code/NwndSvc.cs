@@ -29,6 +29,14 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  public List<DA.EmployeeSummary> GetCanReportTo(int id)
+  {
+    Thread.Sleep(TimeSpan.FromSeconds(2));
+    return DA.EmployeeSummary.GetCanReportTo(_connectionString, id);
+  }
+
+  [WebMethod]
+  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<DA.Territory> GetTerritoriesForEmployee(int id)
   {
     Debug.Print("Get");

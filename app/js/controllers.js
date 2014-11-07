@@ -34,7 +34,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         }
       }
 
-      $scope.northwind.getTerritoriesForEmployee($scope.id);
+      $scope.northwind.getCanReportTo($scope.id);
     }
   ]).
   controller('TerritoriesForEmployeeController', ['$scope', '$routeParams',

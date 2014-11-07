@@ -25,6 +25,45 @@ namespace DataAccess
     public string SupervisorName { get; set; }
     public System.Nullable<bool> CanBeDeleted { get; set; }
     public List<string> Territories { get; set; }
+    public int? ReportsTo { get; set; }
+
+    public static List<EmployeeSummary> GetCanReportTo(string connectionString, int id)
+    {
+      List<EmployeeSummary> esList = new List<EmployeeSummary>();
+
+      using (SqlConnection conn = new SqlConnection(connectionString))
+      {
+        conn.Open();
+        using (SqlTransaction txn = conn.BeginTransaction())
+        {
+          string sqlCmd = "SELECT EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Name, ReportsTo FROM Employees" +
+            " WHERE (dbo.CanReportTo(@id, EmployeeID) = 1) ORDER BY Name";
+          using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+          {
+            cmd.Parameters.AddWithValue("@id", id);
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+              while (rdr.Read())
+              {
+                EmployeeSummary es = new EmployeeSummary
+                {
+                  EmployeeID = rdr.GetInt32(rdr.GetOrdinal("EmployeeID")),
+                  Name = rdr.GetString(rdr.GetOrdinal("Name")),
+                  ReportsTo = rdr.IsDBNull(rdr.GetOrdinal("ReportsTo"))
+                      ? (int?)null : rdr.GetInt32(rdr.GetOrdinal("ReportsTo")),
+                };
+
+                esList.Add(es);
+              }
+            }
+          }
+
+          txn.Commit();
+        }
+      }
+
+      return esList;
+    }
 
     public static EmployeeSummaryRetVal Remove(string connectionString, int id)
     {

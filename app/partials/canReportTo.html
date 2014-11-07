@@ -10,11 +10,10 @@
 </div>
 <div data-ng-if="northwind.httpState =='success'">
   <form novalidate name="form">
-    <div data-my-sizer="northwind.territories">
+    <div data-my-sizer="northwind.canReportTo">
       <ul>
-        <li data-ng-repeat="t in northwind.territories" class="list-unstyled">
-          <input type="checkbox" data-ng-model="t.EmployeeCoversTerritory" />
-          {{t.TerritoryDescription}}
+        <li data-ng-repeat="t in northwind.canReportTo" class="list-unstyled">
+          {{t.Name}}
         </li>
       </ul>
     </div>

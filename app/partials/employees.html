@@ -22,20 +22,23 @@
         <button class="btn btn-danger btn-xs" data-ng-disabled="!employee.CanBeDeleted" data-ng-click="deleteEmployee(employee)">
           <span class="glyphicon glyphicon-remove"></span>
         </button>
-        {{employee.Name}}
+        <strong>{{employee.Name}}
+        </strong>
         <dl>
           <dt>Hire Date</dt>
           <dd data-ng-if="employee.HireDate">{{northwind.getDisplayDate(employee.HireDate)}}
           </dd>
           <dd data-ng-if="!employee.HireDate">unknown</dd>
           <dt>Supervisor</dt>
-          <dd data-ng-if="employee.SupervisorName">
+          <dd>
             <button class="btn btn-primary btn-xs" data-ng-click="location.path('/canReportTo/' + employee.EmployeeID)">
               <span class="glyphicon glyphicon-edit"></span>
             </button>
-            {{employee.SupervisorName}}
+            <span data-ng-if="employee.SupervisorName">{{employee.SupervisorName}}
+            </span>
+            <span data-ng-if="!employee.SupervisorName">none
+            </span>
           </dd>
-          <dd data-ng-if="!employee.SupervisorName">none</dd>
           <dt>Notes</dt>
           <dd>{{ employee.Notes }}
           </dd>
