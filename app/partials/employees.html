@@ -47,7 +47,7 @@
             <button class="btn btn-primary btn-xs" data-ng-click="location.path('/territoriesForEmployee/' + employee.EmployeeID)">
               <span class="glyphicon glyphicon-edit"></span>
             </button>
-            <select data-ng-model="employee.selectedTerritory" data-ng-options="territory for territory in employee.Territories">
+            <select data-ng-model="employee.selectedTerritory" data-ng-options="territory for territory in employee.TerritoryNames">
             </select>
           </dd>
         </dl>

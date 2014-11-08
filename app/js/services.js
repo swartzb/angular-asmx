@@ -55,7 +55,7 @@ angular.module('myApp.services', []).
         this.httpState = 'inProgress';
 
         var firstPromise = $http({
-          url: '../NwndSvc.asmx/GetAllEmployees',
+          url: '../NwndSvc.asmx/GetEmployees',
           method: "POST",
           data: "{}",
           headers: { 'Content-Type': 'application/json' }
@@ -65,9 +65,9 @@ angular.module('myApp.services', []).
           success(function (data, status, headers, config) {
             var i, len;
 
-            that.employees = data.d.employees;
+            that.employees = data.d;
             for (i = 0, len = that.employees.length; i < len; ++i) {
-              that.employees[i].selectedTerritory = that.employees[i].Territories[0];
+              that.employees[i].selectedTerritory = that.employees[i].TerritoryNames[0];
             }
             that.status = status;
             that.httpState = 'success';
@@ -107,7 +107,9 @@ angular.module('myApp.services', []).
 
             that.employees = data.d.employees;
             for (i = 0, len = that.employees.length; i < len; ++i) {
-              that.employees[i].selectedTerritory = that.employees[i].Territories[0];
+              if (that.employees[i].TerritoryNames.length > 0) {
+                that.employees[i].selectedTerritory = that.employees[i].TerritoryNames[0];
+              }
             }
             that.status = status;
             that.httpState = 'success';

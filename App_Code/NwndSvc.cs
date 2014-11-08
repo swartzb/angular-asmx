@@ -7,6 +7,7 @@ using System.Threading;
 using System;
 using System.Diagnostics;
 using DA = DataAccess;
+using System.Data.SqlClient;
 
 /// <summary>
 /// Summary description for NwndSvc
@@ -55,11 +56,23 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public DA.EmployeeSummaryRetVal GetAllEmployees()
+  public List<Employee> GetEmployees()
   {
-    Debug.Print("GetAllEmployees");
+    List<Employee> eList;
+
     Thread.Sleep(TimeSpan.FromSeconds(2));
-    return DA.EmployeeSummary.GetAll(_connectionString);
+
+    using (SqlConnection conn = new SqlConnection(_connectionString))
+    {
+      conn.Open();
+      using (SqlTransaction txn = conn.BeginTransaction())
+      {
+        eList = GetEmployeesInner(conn, txn);
+        txn.Commit();
+      }
+    }
+
+    return eList;
   }
 
   [WebMethod]
@@ -97,4 +110,86 @@ public class NwndSvc : System.Web.Services.WebService
     Thread.Sleep(TimeSpan.FromSeconds(2));
     return DA.EmployeeSummary.Remove(_connectionString, id);
   }
+
+  List<Employee> GetEmployeesInner(SqlConnection conn, SqlTransaction txn)
+  {
+    List<Employee> eList = new List<Employee>();
+
+    string sqlCmd = "SELECT EmployeeID, Name, HireDate, Notes, SupervisorName, CanBeDeleted FROM vwEmployees ORDER BY LastName";
+    using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+    {
+      using (SqlDataReader rdr = cmd.ExecuteReader())
+      {
+        while (rdr.Read())
+        {
+          Employee e = new Employee
+          {
+            EmployeeID = rdr.GetInt32(rdr.GetOrdinal("EmployeeID")),
+            Name = rdr.GetString(rdr.GetOrdinal("Name")),
+            HireDate = rdr.IsDBNull(rdr.GetOrdinal("HireDate"))
+                ? (DateTime?)null : rdr.GetDateTime(rdr.GetOrdinal("HireDate")),
+            Notes = rdr.IsDBNull(rdr.GetOrdinal("Notes")) ? "" : rdr.GetString(rdr.GetOrdinal("Notes")),
+            SupervisorName = rdr.IsDBNull(rdr.GetOrdinal("SupervisorName"))
+                ? null : rdr.GetString(rdr.GetOrdinal("SupervisorName")),
+            CanBeDeleted = rdr.IsDBNull(rdr.GetOrdinal("CanBeDeleted"))
+                ? false : rdr.GetBoolean(rdr.GetOrdinal("CanBeDeleted")),
+          };
+
+          eList.Add(e);
+        }
+      }
+    }
+
+    foreach (Employee e in eList)
+    {
+      e.TerritoryNames = GetTerritoryNames(conn, txn, e.EmployeeID);
+    }
+
+    return eList;
+  }
+
+  public static List<string> GetTerritoryNames(SqlConnection conn, SqlTransaction txn, int id)
+  {
+    List<string> names = new List<string>();
+
+    string sqlCmd = "SELECT TerritoryDescription FROM Territories WHERE (dbo.EmployeeCoversTerritory(@id, TerritoryID) = 1) ORDER BY TerritoryDescription";
+    using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+    {
+      cmd.Parameters.AddWithValue("@id", id);
+      using (SqlDataReader rdr = cmd.ExecuteReader())
+      {
+        while (rdr.Read())
+        {
+          string name = rdr.GetString(rdr.GetOrdinal("TerritoryDescription"));
+          names.Add(name.Trim());
+        }
+      }
+    }
+
+    return names;
+  }
+}
+
+public class Employee
+{
+  public int EmployeeID { get; set; }
+  public string LastName { get; set; }
+  public string FirstName { get; set; }
+  public string Title { get; set; }
+  public string TitleOfCourtesy { get; set; }
+  public string Name { get; set; }
+  public System.Nullable<System.DateTime> BirthDate { get; set; }
+  public System.Nullable<System.DateTime> HireDate { get; set; }
+  public string Address { get; set; }
+  public string City { get; set; }
+  public string Region { get; set; }
+  public string PostalCode { get; set; }
+  public string Country { get; set; }
+  public string HomePhone { get; set; }
+  public string Extension { get; set; }
+  public string Notes { get; set; }
+  public System.Nullable<int> ReportsTo { get; set; }
+  public string SupervisorName { get; set; }
+  public System.Nullable<bool> CanBeDeleted { get; set; }
+  public List<string> TerritoryNames { get; set; }
 }
