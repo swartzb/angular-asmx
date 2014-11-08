@@ -36,6 +36,12 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CanReportToTest]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[CanReportToTest]
 GO
+
+/****** Object:  View [dbo].[vwEmployees]    Script Date: 11/08/2014 15:07:51 ******/
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vwEmployees]'))
+DROP VIEW [dbo].[vwEmployees]
+GO
+
 /****** Object:  UserDefinedFunction [dbo].[CanReportTo]    Script Date: 10/08/2014 20:22:26 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CanReportTo]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 DROP FUNCTION [dbo].[CanReportTo]
@@ -245,6 +251,22 @@ END
 
 GO
 
+/****** Object:  View [dbo].[vwEmployees]    Script Date: 11/08/2014 15:07:51 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[vwEmployees]
+AS
+SELECT     EmployeeID, LastName, FirstName, Title, TitleOfCourtesy, dbo.EmployeeDisplayName(EmployeeID) AS Name, BirthDate, HireDate, Address,
+					 City, Region, PostalCode, Country, HomePhone, Extension, Notes, 
+                      ReportsTo, dbo.EmployeeDisplayName(ReportsTo) AS SupervisorName, dbo.CanBeDeleted(EmployeeID) AS CanBeDeleted
+FROM         Employees
+
+GO
+
 /****** Object:  StoredProcedure [dbo].[CanReportToTest]    Script Date: 10/12/2014 19:49:29 ******/
 SET ANSI_NULLS ON
 GO
@@ -267,8 +289,8 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT     EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Name
-	FROM         Employees
+	SELECT     EmployeeID, Name
+	FROM         vwEmployees
 	WHERE     (dbo.CanReportTo(@Id, EmployeeID) = 1)
 	ORDER BY Name
 END
@@ -296,9 +318,9 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT     EmployeeID, dbo.EmployeeDisplayName(EmployeeID) AS Name, HireDate, Notes, dbo.EmployeeDisplayName(ReportsTo) AS SupervisorName, 
-						  dbo.CanBeDeleted(EmployeeID) AS CanBeDeleted
-	FROM         Employees
+	SELECT     EmployeeID, Name, HireDate, Notes, SupervisorName, 
+						  CanBeDeleted
+	FROM         vwEmployees
 	ORDER BY LastName
 
 END
@@ -354,13 +376,6 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
-
-    -- Insert statements for procedure here
-	SELECT     T.TerritoryDescription
-	FROM         Territories AS T INNER JOIN
-						  EmployeeTerritories AS ET ON T.TerritoryID = ET.TerritoryID
-	WHERE     (ET.EmployeeID = @id)
-	ORDER BY T.TerritoryDescription
 
 	SELECT     TerritoryDescription
 	FROM         Territories
