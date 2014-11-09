@@ -16,7 +16,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
             territoryIDs.push($scope.northwind.territories[i].TerritoryID);
           }
         }
-        $scope.northwind.updateTerritoriesForEmployee($scope.id, territoryIDs).
+        $scope.northwind.updateTerritories($scope.id, territoryIDs).
           success(function (data, status, headers, config, statusText) {
             $scope.location.path('/employees/load/false');
           }).
@@ -50,7 +50,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
             territoryIDs.push($scope.northwind.territories[i].TerritoryID);
           }
         }
-        $scope.northwind.updateTerritoriesForEmployee($scope.id, territoryIDs).
+        $scope.northwind.updateTerritories($scope.id, territoryIDs).
           success(function (data, status, headers, config, statusText) {
             $scope.location.path('/employees/load/false');
           }).
@@ -68,7 +68,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         }
       }
 
-      $scope.northwind.getTerritoriesForEmployee($scope.id);
+      $scope.northwind.getTerritories($scope.id);
     }
   ]).
   controller('HomeController', [

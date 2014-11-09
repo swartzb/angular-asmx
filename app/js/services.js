@@ -84,7 +84,7 @@ angular.module('myApp.services', []).
         return secondPromise;
       },
 
-      updateTerritoriesForEmployee: function(empId, territoryIDs) {
+      updateTerritories: function(empId, territoryIDs) {
         var that = this;
         var inData = {
           id: empId,
@@ -96,7 +96,7 @@ angular.module('myApp.services', []).
         this.httpState = 'inProgress';
 
         var firstPromise = $http({
-          url: '../NwndSvc.asmx/UpdateTerritoriesForEmployee',
+          url: '../NwndSvc.asmx/UpdateTerritories',
           method: "POST",
           data: JSON.stringify(inData),
           headers: { 'Content-Type': 'application/json' }
@@ -106,7 +106,7 @@ angular.module('myApp.services', []).
           success(function (data, status, headers, config) {
             var i, len;
 
-            that.employees = data.d.employees;
+            that.employees = data.d;
             for (i = 0, len = that.employees.length; i < len; ++i) {
               if (that.employees[i].TerritoryNames.length > 0) {
                 that.employees[i].selectedTerritory = that.employees[i].TerritoryNames[0];
@@ -161,7 +161,7 @@ angular.module('myApp.services', []).
         return secondPromise;
       },
 
-      getTerritoriesForEmployee: function (empId) {
+      getTerritories: function (empId) {
         var that = this;
         var inData = {
           id: empId
@@ -173,7 +173,7 @@ angular.module('myApp.services', []).
         this.httpState = 'inProgress';
 
         var firstPromise = $http({
-          url: '../NwndSvc.asmx/GetTerritoriesForEmployee',
+          url: '../NwndSvc.asmx/GetTerritories',
           method: "POST",
           data: JSON.stringify(inData),
           headers: { 'Content-Type': 'application/json' }
