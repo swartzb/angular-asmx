@@ -60,7 +60,7 @@ public class NwndSvc : System.Web.Services.WebService
   {
     List<Employee> eList;
 
-    Thread.Sleep(TimeSpan.FromSeconds(2));
+    Thread.Sleep(TimeSpan.FromSeconds(1));
 
     using (SqlConnection conn = new SqlConnection(_connectionString))
     {
@@ -104,11 +104,31 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public DA.EmployeeSummaryRetVal DeleteEmployee(int id)
+  public List<Employee> DeleteEmployee(int id)
   {
-    Debug.Print("DeleteEmployee");
-    Thread.Sleep(TimeSpan.FromSeconds(2));
-    return DA.EmployeeSummary.Remove(_connectionString, id);
+    List<Employee> eList;
+
+    Thread.Sleep(TimeSpan.FromSeconds(1));
+
+    using (SqlConnection conn = new SqlConnection(_connectionString))
+    {
+      conn.Open();
+      using (SqlTransaction txn = conn.BeginTransaction())
+      {
+        int numRows;
+        string sqlCmd = "DELETE FROM Employees WHERE (EmployeeID = @id)";
+        using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+        {
+          cmd.Parameters.AddWithValue("@id", id);
+          numRows = cmd.ExecuteNonQuery();
+        }
+
+        eList = GetEmployeesInner(conn, txn);
+        txn.Commit();
+      }
+    }
+
+    return eList;
   }
 
   List<Employee> GetEmployeesInner(SqlConnection conn, SqlTransaction txn)
@@ -148,7 +168,7 @@ public class NwndSvc : System.Web.Services.WebService
     return eList;
   }
 
-  public static List<string> GetTerritoryNames(SqlConnection conn, SqlTransaction txn, int id)
+  List<string> GetTerritoryNames(SqlConnection conn, SqlTransaction txn, int id)
   {
     List<string> names = new List<string>();
 

@@ -106,7 +106,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       };
 
       if ($routeParams.loadVal == 'true') {
-        $scope.northwind.getAllEmployees();
+        $scope.northwind.getEmployees();
       }
     }
   ]).

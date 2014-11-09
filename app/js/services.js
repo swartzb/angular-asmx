@@ -46,7 +46,7 @@ angular.module('myApp.services', []).
         return outVal;
       },
 
-      getAllEmployees: function () {
+      getEmployees: function () {
         var that = this;
         this.selectedEmployee = null;
         this.employees = [];
@@ -69,6 +69,7 @@ angular.module('myApp.services', []).
             for (i = 0, len = that.employees.length; i < len; ++i) {
               that.employees[i].selectedTerritory = that.employees[i].TerritoryNames[0];
             }
+
             that.status = status;
             that.httpState = 'success';
             return;
@@ -251,7 +252,13 @@ angular.module('myApp.services', []).
         });
 
         var secondPromise = firstPromise.success(function (data, status, headers, config) {
-          that.employees = data.d.employees;
+          var i, len;
+
+          that.employees = data.d;
+          for (i = 0, len = that.employees.length; i < len; ++i) {
+            that.employees[i].selectedTerritory = that.employees[i].TerritoryNames[0];
+          }
+
           that.status = status;
           that.httpState = 'success';
           return;
