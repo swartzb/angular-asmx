@@ -30,10 +30,44 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<DA.EmployeeSummary> GetCanReportTo(int id)
+  public List<Employee> GetCanReportTo(int id)
   {
-    Thread.Sleep(TimeSpan.FromSeconds(2));
-    return DA.EmployeeSummary.GetCanReportTo(_connectionString, id);
+    List<Employee> eList = new List<Employee>();
+
+    Thread.Sleep(TimeSpan.FromSeconds(1));
+
+    using (SqlConnection conn = new SqlConnection(_connectionString))
+    {
+      conn.Open();
+      using (SqlTransaction txn = conn.BeginTransaction())
+      {
+        string sqlCmd = "SELECT EmployeeID, Name, ReportsTo FROM vwEmployees" +
+          " WHERE (dbo.CanReportTo(@id, EmployeeID) = 1) ORDER BY Name";
+        using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+        {
+          cmd.Parameters.AddWithValue("@id", id);
+          using (SqlDataReader rdr = cmd.ExecuteReader())
+          {
+            while (rdr.Read())
+            {
+              Employee e = new Employee
+              {
+                EmployeeID = rdr.GetInt32(rdr.GetOrdinal("EmployeeID")),
+                Name = rdr.GetString(rdr.GetOrdinal("Name")),
+                ReportsTo = rdr.IsDBNull(rdr.GetOrdinal("ReportsTo"))
+                    ? (int?)null : rdr.GetInt32(rdr.GetOrdinal("ReportsTo")),
+              };
+
+              eList.Add(e);
+            }
+          }
+        }
+
+        txn.Commit();
+      }
+    }
+
+    return eList;
   }
 
   [WebMethod]
