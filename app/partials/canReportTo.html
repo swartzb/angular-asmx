@@ -11,9 +11,14 @@
 <div data-ng-if="northwind.httpState =='success'">
   <form novalidate name="form">
     <div data-my-sizer="northwind.canReportTo">
-      <ul>
-        <li data-ng-repeat="t in northwind.canReportTo" class="list-unstyled">
-          {{t.Name}}
+      <ul class="list-unstyled">
+        <li>
+          <input type="radio" name="radio" data-ng-model="$parent.reportsTo" data-ng-value="" />
+          None
+        </li>
+        <li data-ng-repeat="item in northwind.canReportTo">
+          <input type="radio" name="radio" data-ng-model="$parent.reportsTo" data-ng-value="item.EmployeeID" />
+          {{item.Name}}
         </li>
       </ul>
     </div>
@@ -25,6 +30,6 @@
         Cancel</button>
     </div>
   </form>
-  <!--  <pre>id = {{ id | json }}</pre>-->
-  <!--  <pre>id = {{ northwind.territories | json }}</pre>-->
+  <pre>reportsTo = {{ reportsTo | json }}</pre>
+  <pre>northwind.canReportTo = {{ northwind.canReportTo | json }}</pre>
 </div>

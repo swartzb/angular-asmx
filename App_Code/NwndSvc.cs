@@ -230,7 +230,7 @@ public class NwndSvc : System.Web.Services.WebService
   {
     List<Employee> eList = new List<Employee>();
 
-    string sqlCmd = "SELECT EmployeeID, Name, HireDate, Notes, SupervisorName, CanBeDeleted FROM vwEmployees ORDER BY LastName";
+    string sqlCmd = "SELECT EmployeeID, Name, HireDate, Notes, SupervisorName, ReportsTo, CanBeDeleted FROM vwEmployees ORDER BY LastName";
     using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
     {
       using (SqlDataReader rdr = cmd.ExecuteReader())
@@ -246,6 +246,8 @@ public class NwndSvc : System.Web.Services.WebService
             Notes = rdr.IsDBNull(rdr.GetOrdinal("Notes")) ? "" : rdr.GetString(rdr.GetOrdinal("Notes")),
             SupervisorName = rdr.IsDBNull(rdr.GetOrdinal("SupervisorName"))
                 ? null : rdr.GetString(rdr.GetOrdinal("SupervisorName")),
+            ReportsTo = rdr.IsDBNull(rdr.GetOrdinal("ReportsTo"))
+                ? (int?)null : rdr.GetInt32(rdr.GetOrdinal("ReportsTo")),
             CanBeDeleted = rdr.GetBoolean(rdr.GetOrdinal("CanBeDeleted")),
           };
 

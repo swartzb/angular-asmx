@@ -30,6 +30,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
 
       for (i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
         if ($scope.northwind.employees[i].EmployeeID == $scope.id) {
+          $scope.reportsTo = $scope.northwind.employees[i].ReportsTo;
           $scope.employeeName = $scope.northwind.employees[i].Name;
         }
       }
