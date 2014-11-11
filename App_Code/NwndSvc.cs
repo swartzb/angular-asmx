@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using DA = DataAccess;
 using System.Data.SqlClient;
+using System.Data;
 
 /// <summary>
 /// Summary description for NwndSvc
@@ -127,7 +128,14 @@ public class NwndSvc : System.Web.Services.WebService
         using (SqlCommand cmd = new SqlCommand(cmdStr, conn, txn))
         {
           cmd.Parameters.AddWithValue("@empId", empId);
-          cmd.Parameters.AddWithValue("@supId", hasValue ? (int?)supId : null);
+          SqlParameter p = new SqlParameter
+          {
+            ParameterName = "@supId",
+            IsNullable = true,
+            SqlDbType = SqlDbType.Int,
+            Value = hasValue ? (object)supId : DBNull.Value
+          };
+          cmd.Parameters.Add(p);
           numRows = cmd.ExecuteNonQuery();
         }
 
