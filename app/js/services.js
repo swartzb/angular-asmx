@@ -84,6 +84,50 @@ angular.module('myApp.services', []).
         return secondPromise;
       },
 
+      updateSupervisor: function(empId, supId) {
+        var that = this;
+        var inData = {
+          empId: empId,
+          supId: supId
+        };
+        if (supId) {
+          inData.hasValue = true;
+        }
+        else {
+          inData.supId = 0;
+          inData.hasValue = false;
+        }
+
+        this.errorInfo = {};
+        this.status = undefined;
+        this.httpState = 'inProgress';
+
+        var firstPromise = $http({
+          url: '../NwndSvc.asmx/UpdateSupervisor',
+          method: "POST",
+          data: JSON.stringify(inData),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        var secondPromise = firstPromise.
+          success(function (data, status, headers, config) {
+            var i, len;
+
+            that.employees = data.d;
+            that.status = status;
+            that.httpState = 'success';
+            return;
+          }).
+          error(function (data, status, headers, config) {
+            that.errorInfo = data;
+            that.status = status;
+            that.httpState = 'error';
+            return;
+          });
+
+        return secondPromise;
+      },
+
       updateTerritories: function(empId, territoryIDs) {
         var that = this;
         var inData = {

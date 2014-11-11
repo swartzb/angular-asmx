@@ -8,7 +8,7 @@ angular.module('myApp.routes', ['ngRoute']).
     $routeProvider.when('/employees/load/:loadVal', { templateUrl: 'partials/employees.html', controller: 'EmployeesController' });
 
     $routeProvider.when('/territoriesForEmployee/:id', { templateUrl: 'partials/territoriesForEmployee.html', controller: 'TerritoriesForEmployeeController' });
-    $routeProvider.when('/canReportTo/:id', { templateUrl: 'partials/canReportTo.html', controller: 'CanReportToController' });
+    $routeProvider.when('/canReportTo/empId/:empId/supId/:supId', { templateUrl: 'partials/canReportTo.html', controller: 'CanReportToController' });
 
     $routeProvider.when('/employeesTest/load/:loadVal', { templateUrl: 'partials/employeesTest.html', controller: 'EmployeesController' });
     $routeProvider.when('/employees/add', { templateUrl: 'partials/employee.html', controller: 'AddEmployeeController' });

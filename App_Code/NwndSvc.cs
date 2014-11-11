@@ -111,6 +111,36 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+  public List<Employee> UpdateSupervisor(int empId, int supId, bool hasValue)
+  {
+    List<Employee> eList = new List<Employee>();
+
+    Thread.Sleep(TimeSpan.FromSeconds(1));
+
+    using (SqlConnection conn = new SqlConnection(_connectionString))
+    {
+      conn.Open();
+      using (SqlTransaction txn = conn.BeginTransaction())
+      {
+        int numRows;
+        string cmdStr = "UPDATE Employees SET ReportsTo = @supId WHERE (EmployeeID = @empId)";
+        using (SqlCommand cmd = new SqlCommand(cmdStr, conn, txn))
+        {
+          cmd.Parameters.AddWithValue("@empId", empId);
+          cmd.Parameters.AddWithValue("@supId", hasValue ? (int?)supId : null);
+          numRows = cmd.ExecuteNonQuery();
+        }
+
+        eList = GetEmployeesInner(conn, txn);
+        txn.Commit();
+      }
+    }
+
+    return eList;
+  }
+
+  [WebMethod]
+  [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<Employee> UpdateTerritories(int id, List<string> territoryIDs)
   {
     List<Employee> eList;

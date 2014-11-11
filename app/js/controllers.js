@@ -9,14 +9,10 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
 
       console.log('CanReportToController');
 
+      $scope.routeParams = $routeParams;
+
       $scope.doOK = function () {
-        var territoryIDs = [];
-        for (i = 0, len = $scope.northwind.territories.length; i < len; ++i) {
-          if ($scope.northwind.territories[i].EmployeeCoversTerritory) {
-            territoryIDs.push($scope.northwind.territories[i].TerritoryID);
-          }
-        }
-        $scope.northwind.updateTerritories($scope.id, territoryIDs).
+        $scope.northwind.updateSupervisor($scope.routeParams.empId, $scope.routeParams.supId).
           success(function (data, status, headers, config, statusText) {
             $scope.location.path('/employees/load/false');
           }).
@@ -26,16 +22,13 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         return;
       };
 
-      $scope.id = $routeParams.id;
-
       for (i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
-        if ($scope.northwind.employees[i].EmployeeID == $scope.id) {
-          $scope.reportsTo = $scope.northwind.employees[i].ReportsTo;
+        if ($scope.northwind.employees[i].EmployeeID == $scope.routeParams.empId) {
           $scope.employeeName = $scope.northwind.employees[i].Name;
         }
       }
 
-      $scope.northwind.getCanReportTo($scope.id);
+      $scope.northwind.getCanReportTo($scope.routeParams.empId);
     }
   ]).
   controller('TerritoriesForEmployeeController', ['$scope', '$routeParams',
