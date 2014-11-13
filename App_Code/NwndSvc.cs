@@ -228,11 +228,44 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public DA.Employee.Details GetEmployeeDetails(int id, bool newEmployee)
+  public Employee GetEmployee(int id, bool newEmployee)
   {
-    Debug.Print("GetEmployeeDetails");
-    Thread.Sleep(TimeSpan.FromSeconds(2));
-    return DA.Employee.GetDetails(_connectionString, newEmployee ? (int?)null : id);
+    Thread.Sleep(TimeSpan.FromSeconds(1));
+
+    if (newEmployee)
+    {
+      return new Employee();
+    }
+
+    Employee e = new Employee();
+
+    using (SqlConnection conn = new SqlConnection(_connectionString))
+    {
+      conn.Open();
+      using (SqlTransaction txn = conn.BeginTransaction())
+      {
+        string sqlCmd = "SELECT EmployeeID, LastName, FirstName, Title, TitleOfCourtesy, Name, HireDate, Notes FROM vwEmployees WHERE (EmployeeID = @id)";
+        using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+        {
+          cmd.Parameters.AddWithValue("@id", id);
+          using (SqlDataReader rdr = cmd.ExecuteReader())
+          {
+            rdr.Read();
+            e.EmployeeID = rdr.GetInt32(rdr.GetOrdinal("EmployeeID"));
+            e.LastName = rdr.GetString(rdr.GetOrdinal("LastName"));
+            e.FirstName = rdr.GetString(rdr.GetOrdinal("FirstName"));
+            e.Title = rdr.IsDBNull(rdr.GetOrdinal("Title")) ? "" : rdr.GetString(rdr.GetOrdinal("Title"));
+            e.TitleOfCourtesy = rdr.IsDBNull(rdr.GetOrdinal("TitleOfCourtesy")) ? "" : rdr.GetString(rdr.GetOrdinal("TitleOfCourtesy"));
+            e.Name = rdr.GetString(rdr.GetOrdinal("Name"));
+            e.HireDate = rdr.IsDBNull(rdr.GetOrdinal("HireDate"))
+                ? (DateTime?)null : rdr.GetDateTime(rdr.GetOrdinal("HireDate"));
+            e.Notes = rdr.IsDBNull(rdr.GetOrdinal("Notes")) ? "" : rdr.GetString(rdr.GetOrdinal("Notes"));
+          }
+        }
+      }
+    }
+
+    return e;
   }
 
   [WebMethod]

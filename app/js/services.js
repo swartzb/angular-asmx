@@ -240,7 +240,7 @@ angular.module('myApp.services', []).
         return secondPromise;
       },
 
-      getEmployeeDetails: function (empId, newEmp) {
+      getEmployee: function (empId, newEmp) {
         var that = this;
         var inData = {
           id: empId,
@@ -253,7 +253,7 @@ angular.module('myApp.services', []).
         this.httpState = 'inProgress';
 
         var firstPromise = $http({
-          url: '../NwndSvc.asmx/GetEmployeeDetails',
+          url: '../NwndSvc.asmx/GetEmployee',
           method: "POST",
           data: JSON.stringify(inData),
           headers: { 'Content-Type': 'application/json' }

@@ -12,7 +12,7 @@ angular.module('myApp.routes', ['ngRoute']).
 
     $routeProvider.when('/employeesTest/load/:loadVal', { templateUrl: 'partials/employeesTest.html', controller: 'EmployeesController' });
     $routeProvider.when('/employees/add', { templateUrl: 'partials/employee.html', controller: 'AddEmployeeController' });
-    $routeProvider.when('/employees/edit', { templateUrl: 'partials/employee.html', controller: 'EditEmployeeController' });
+    $routeProvider.when('/employees/edit/id/:id', { templateUrl: 'partials/employee.html', controller: 'EditEmployeeController' });
     $routeProvider.when('/employees/view', { templateUrl: 'partials/employee.html', controller: 'ViewEmployeeController' });
     $routeProvider.otherwise({ redirectTo: '/home' });
   }]);

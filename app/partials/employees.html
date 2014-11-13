@@ -19,6 +19,9 @@
     <ul>
       <li data-ng-repeat="employee in northwind.employees | orderBy:'Name'"
         data-ng-class="{selected: employee == northwind.selectedEmployee}" class="list-unstyled">
+        <button class="btn btn-primary btn-xs" data-ng-click="location.path('/employees/edit/id/' + employee.EmployeeID)">
+          <span class="glyphicon glyphicon-edit"></span>
+        </button>
         <button class="btn btn-danger btn-xs" data-ng-disabled="!employee.CanBeDeleted" data-ng-click="deleteEmployee(employee)">
           <span class="glyphicon glyphicon-remove"></span>
         </button>

@@ -162,7 +162,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
           });
       };
 
-      $scope.northwind.getEmployeeDetails(0, true);
+      $scope.northwind.getEmployee(0, true);
     }
   ]).
   controller('IndexController', ['$scope', '$location', 'northwindService',
@@ -219,7 +219,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
           });
       };
 
-      var myPromise = $scope.northwind.getEmployeeDetails($scope.employee.EmployeeID, false);
+      var myPromise = $scope.northwind.getEmployee($scope.employee.EmployeeID, false);
       myPromise.success(function (data, status, headers, config) {
         if ($scope.employee.ReportsTo) {
           for (var k = 0, len2 = $scope.northwind.details.canReportTo.length; k < len2; ++k) {
