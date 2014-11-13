@@ -3,13 +3,25 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
-  controller('CanReportToController', ['$scope', '$routeParams',
-    function ($scope, $routeParams) {
+  controller('CanReportToController', ['$scope', '$routeParams', '$window',
+    function ($scope, $routeParams, $window) {
       var i, len;
 
       console.log('CanReportToController');
 
       $scope.routeParams = $routeParams;
+
+      $scope.$watch(
+        function () {
+          return $window.document.getElementById("noSup");
+        },
+        function (newValue, oldValue) {
+          if (newValue && !oldValue) {
+            if ($scope.routeParams.supId == 'null') {
+              $window.document.getElementById('noSup').checked = true;
+            }
+          }
+        });
 
       $scope.doOK = function () {
         $scope.northwind.updateSupervisor($scope.routeParams.empId, $scope.routeParams.supId).

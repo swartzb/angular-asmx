@@ -13,7 +13,8 @@
     <div data-my-sizer="northwind.canReportTo">
       <ul class="list-unstyled">
         <li>
-          <input type="radio" name="radio" data-ng-model="routeParams.supId" data-ng-value="" />
+          <input type="radio" name="radio" data-ng-model="routeParams.supId" data-ng-value="null"
+            id="noSup" />
           None
         </li>
         <li data-ng-repeat="item in northwind.canReportTo">
@@ -30,7 +31,4 @@
         Cancel</button>
     </div>
   </form>
-  <pre>routeParams = {{ routeParams | json }}</pre>
-  <pre>form = {{ form | json }}</pre>
-  <pre>northwind.canReportTo = {{ northwind.canReportTo | json }}</pre>
 </div>
