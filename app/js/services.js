@@ -261,7 +261,7 @@ angular.module('myApp.services', []).
 
         var secondPromise = firstPromise.
           success(function (data, status, headers, config) {
-            that.details = data.d;
+            that.employee = data.d;
             that.status = status;
             that.httpState = 'success';
             return;

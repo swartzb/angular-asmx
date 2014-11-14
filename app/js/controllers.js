@@ -84,14 +84,10 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
   ]).
   controller('EmployeesController', ['$scope', '$routeParams',
     function ($scope, $routeParams) {
+      console.log('EmployeesController');
 
       $scope.addNewEmployee = function () {
         $scope.location.path('/employees/add');
-        return;
-      };
-
-      $scope.editSelectedEmployee = function () {
-        $scope.location.path('/employees/edit');
         return;
       };
 
@@ -148,10 +144,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         return FormController.$pristine || FormController.$invalid;
       };
 
-      $scope.doCancel = function () {
-        $location.path('/employees/load/false');
-      };
-
       $scope.doOK = function () {
         $scope.northwind.addEmployee($scope.employee).
           success(function (data, status, headers, config, statusText) {
@@ -167,15 +159,28 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
   ]).
   controller('IndexController', ['$scope', '$location', 'northwindService',
     function ($scope, $location, northwindService) {
+      console.log('IndexController');
+
       $scope.northwind = northwindService;
       $scope.location = $location;
     }
   ]).
-  controller('EditEmployeeController', ['$scope', '$location',
-    function ($scope, $location) {
+  controller('EditEmployeeController', ['$scope', '$routeParams',
+    function ($scope, $routeParams) {
+      var i, len;
+
+      console.log('EditEmployeeController');
+
+      $scope.routeParams = $routeParams;
+
+      for (i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
+        if ($scope.northwind.employees[i].EmployeeID == $scope.routeParams.id) {
+          $scope.employeeName = $scope.northwind.employees[i].Name;
+        }
+      }
+
       $scope.readOnly = false;
-      $scope.employee = angular.copy($scope.northwind.selectedEmployee);
-      $scope.headerText = 'Edit ' + $scope.northwind.selectedEmployee.DisplayName;
+      $scope.headerText = 'Edit';
 
       $scope.getCssClasses = function (ngModelContoller) {
         var classes = {};
@@ -205,10 +210,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         return FormController.$pristine || FormController.$invalid;
       };
 
-      $scope.doCancel = function () {
-        $location.path('/employees/load/false');
-      };
-
       $scope.doOK = function () {
         $scope.northwind.editEmployee($scope.employee).
           success(function (data, status, headers, config, statusText) {
@@ -219,16 +220,9 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
           });
       };
 
-      var myPromise = $scope.northwind.getEmployee($scope.employee.EmployeeID, false);
+      var myPromise = $scope.northwind.getEmployee($scope.routeParams.id, false);
       myPromise.success(function (data, status, headers, config) {
-        if ($scope.employee.ReportsTo) {
-          for (var k = 0, len2 = $scope.northwind.details.canReportTo.length; k < len2; ++k) {
-            if ($scope.northwind.details.canReportTo[k].EmployeeID == $scope.employee.ReportsTo) {
-              $scope.employee.Supervisor = $scope.northwind.details.canReportTo[k];
-              break;
-            }
-          }
-        }
+        return;
       });
     }
   ]).
@@ -246,9 +240,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.isOkButtonDisabled = function (FormController) {
         return false;
       };
-      $scope.doCancel = function () {
-        $location.path('/employees/load/false');
-      };
+
       $scope.doOK = function () {
         $location.path('/employees/load/false');
       };
