@@ -210,11 +210,24 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public BL.Employee.ReturnVal EditEmployee(DA.Employee employee)
+  public List<Employee> EditEmployee(Employee employee)
   {
-    Debug.Print("AddEmployee");
-    Thread.Sleep(TimeSpan.FromSeconds(2));
-    return BL.Employee.Edit(_connectionString, employee);
+    List<Employee> eList;
+
+    Thread.Sleep(TimeSpan.FromSeconds(1));
+
+    using (SqlConnection conn = new SqlConnection(_connectionString))
+    {
+      conn.Open();
+      using (SqlTransaction txn = conn.BeginTransaction())
+      {
+        int numRows = Update(conn, txn, employee); 
+        eList = GetEmployeesInner(conn, txn);
+        txn.Commit();
+      }
+    }
+
+    return eList;
   }
 
   [WebMethod]
@@ -354,6 +367,30 @@ public class NwndSvc : System.Web.Services.WebService
     }
 
     return names;
+  }
+
+  int Update(SqlConnection conn, SqlTransaction txn, Employee emp)
+  {
+    int numRows = 0;
+    string sqlCmd = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, Title = @Title, TitleOfCourtesy = @TitleOfCourtesy, HireDate = @HireDate,"
+      + " Notes = @Notes WHERE (EmployeeID = @EmployeeID)";
+    using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+    {
+      cmd.Parameters.AddWithValue("@EmployeeID", emp.EmployeeID);
+      cmd.Parameters.AddWithValue("@LastName", emp.LastName);
+      cmd.Parameters.AddWithValue("@FirstName", emp.FirstName);
+      cmd.Parameters.AddWithValue("@Title",
+        string.IsNullOrWhiteSpace(emp.Title) ? DBNull.Value : (object)emp.Title);
+      cmd.Parameters.AddWithValue("@TitleOfCourtesy",
+        string.IsNullOrWhiteSpace(emp.TitleOfCourtesy) ? DBNull.Value : (object)emp.TitleOfCourtesy);
+      cmd.Parameters.AddWithValue("@HireDate",
+        emp.HireDate.HasValue ? (object)emp.HireDate.Value : DBNull.Value);
+      cmd.Parameters.AddWithValue("@Notes",
+        string.IsNullOrWhiteSpace(emp.Notes) ? DBNull.Value : (object)emp.Notes);
+
+      numRows = cmd.ExecuteNonQuery();
+    }
+    return numRows;
   }
 }
 

@@ -140,9 +140,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       };
 
       $scope.okButtonText = 'Add';
-      $scope.isOkButtonDisabled = function (FormController) {
-        return FormController.$pristine || FormController.$invalid;
-      };
 
       $scope.doOK = function () {
         $scope.northwind.addEmployee($scope.employee).
@@ -183,35 +180,17 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.headerText = 'Edit';
 
       $scope.getCssClasses = function (ngModelContoller) {
-        var classes = {};
-        if (ngModelContoller) {
-          switch (ngModelContoller.$name) {
-            case 'lName':
-            case 'fName':
-            case 'hDate':
-              classes = {
-                'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
-                'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
-              };
-              break;
-            default:
-              classes = {
-                'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
-                'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
-              };
-              break;
-          }
-        }
+        var classes = {
+          'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
+          'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
+        };
         return classes;
       };
 
       $scope.okButtonText = 'Update';
-      $scope.isOkButtonDisabled = function (FormController) {
-        return FormController.$pristine || FormController.$invalid;
-      };
 
       $scope.doOK = function () {
-        $scope.northwind.editEmployee($scope.employee).
+        $scope.northwind.editEmployee($scope.northwind.employee).
           success(function (data, status, headers, config, statusText) {
             $location.path('/employees/load/false');
           }).
@@ -237,9 +216,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         };
       };
       $scope.okButtonText = 'Ok';
-      $scope.isOkButtonDisabled = function (FormController) {
-        return false;
-      };
 
       $scope.doOK = function () {
         $location.path('/employees/load/false');

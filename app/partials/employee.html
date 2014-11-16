@@ -52,23 +52,15 @@
       </div>
     </div>
 
-    <div class="form-group" data-ng-class="getCssClasses(form.bDate)">
-      <label class="control-label" for="bDate">Birth Date</label>
-      <input type="text" data-ng-disabled="readOnly" data-ng-model="employee.BirthDate"
-        class="form-control" id="bDate"
-        placeholder="Enter Birth Date (month/day/year)" name="bDate" data-valid-date="" />
-      <div data-ng-show="form.bDate.$dirty && form.bDate.$invalid">
-        <span class="help-block" data-ng-show="form.bDate.$error.validDate">Date Entered is
-          Invalid.</span>
-        <span class="help-block" data-ng-show="form.bDate.$error.fullYear">Enter a 4-digit
-          Year.</span>
-        <span class="help-block" data-ng-show="form.bDate.$error.futureDate">Birth Date Can't
-          be in the Future.</span>
-      </div>
+    <div class="form-group" data-ng-class="getCssClasses(form.notes)">
+      <label class="control-label" for="notes">Notes</label>
+      <textarea data-ng-disabled="readOnly" data-ng-model="northwind.employee.Notes"
+        class="form-control" id="notes"
+        placeholder="Enter Notes" name="notes" ></textarea>
     </div>
 
     <div class="form-group">
-      <button class="btn btn-success" data-ng-disabled="isOkButtonDisabled(form)" data-ng-click="doOK()">
+      <button class="btn btn-success" data-ng-disabled="form.$pristine || form.$invalid" data-ng-click="doOK()">
         {{okButtonText}}</button>
       <button class="btn btn-primary" data-ng-if="!readOnly" data-ng-click="location.path('/employees/load/false')">
         Cancel</button>
