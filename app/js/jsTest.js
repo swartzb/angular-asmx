@@ -35,12 +35,32 @@ console.log(JSON.stringify(new Date()));
 (function () {
   /* code */
   var ds = "/Date(-664736400000)/";
-  var re = /^\/Date\((-?\d+)\)\/$/;
+  var re = /-?\d+/;
+//  var re = /^\/Date\((-?\d+)\)\/$/;
   var res = re.exec(ds);
   console.log(res);
-  console.log(res[1]);
-  console.log(parseInt(res[1]));
-  var d = new Date(parseInt(res[1]));
+  console.log(res[0]);
+  console.log(parseInt(res[0]));
+  var d = new Date(parseInt(res[0]));
   console.log(d);
-  console.log(d.toLocaleDateString("en-US"));
+  var s = d.toLocaleDateString("en-US");
+  console.log(s);
+  console.log(d.toDateString());
+}()); // Crockford recommends this one
+
+(function () {
+  /* code */
+  var ds = "09/11/2001";
+  var arr = ds.split('/');
+  console.log(arr);
+  var d = arr[2] + '-' + arr[0] + '-' + arr[1];
+  console.log(d);
+}()); // Crockford recommends this one
+
+(function () {
+  var re = /^\/Date\((-?\d+)\)\/$/;
+  var res1 = re.exec("/Date(-664736400000)/");
+  console.log(res1);
+  var res2 = re.exec("10/8/1947");
+  console.log(res2);
 }()); // Crockford recommends this one

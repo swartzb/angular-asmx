@@ -192,7 +192,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.doOK = function () {
         $scope.northwind.editEmployee($scope.northwind.employee).
           success(function (data, status, headers, config, statusText) {
-            $location.path('/employees/load/false');
+            $scope.location.path('/employees/load/false');
           }).
           error(function (data, status, headers, config, statusText) {
 
