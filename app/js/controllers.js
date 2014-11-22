@@ -160,6 +160,23 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
 
       $scope.northwind = northwindService;
       $scope.location = $location;
+
+      $scope.getDisplayDate = function (val) {
+        var re = /^\/Date\((-?\d+)\)\/$/;
+        var result = re.exec(val);
+        if (!result || result.length < 2) {
+          return val;
+        }
+
+        var i = parseInt(result[1]);
+        var d = new Date(i);
+        if (Number.isNaN(d)) {
+          return val;
+        }
+
+        var outVal = d.toLocaleDateString("en-US");
+        return outVal;
+      };
     }
   ]).
   controller('EditEmployeeController', ['$scope', '$routeParams',

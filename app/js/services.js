@@ -29,23 +29,6 @@ angular.module('myApp.services', []).
         return;
       },
 
-      getDisplayDate: function (val) {
-        var re = /^\/Date\((-?\d+)\)\/$/;
-        var result = re.exec(val);
-        if (!result || result.length < 2) {
-          return val;
-        }
-
-        var i = parseInt(result[1]);
-        var d = new Date(i);
-        if (Number.isNaN(d)) {
-          return val;
-        }
-
-        var outVal = d.toLocaleDateString("en-US");
-        return outVal;
-      },
-
       getEmployees: function () {
         var that = this;
         this.selectedEmployee = null;
