@@ -174,7 +174,11 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
           return val;
         }
 
-        var outVal = d.toLocaleDateString("en-US");
+        var fy = d.getUTCFullYear();
+        var mo = d.getUTCMonth() + 1;
+        var day = d.getUTCDate();
+        var outVal = mo + '/' + day + '/' + fy;
+        //var outVal = d.toLocaleDateString("en-US");
         return outVal;
       };
     }
@@ -207,6 +211,11 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       $scope.okButtonText = 'Update';
 
       $scope.doOK = function () {
+        var d1 = $scope.northwind.employee.HireDate;
+        var d2 = $scope.getDisplayDate(d1);
+        $scope.northwind.employee.HireDate = d2;
+        //return;
+
         $scope.northwind.editEmployee($scope.northwind.employee).
           success(function (data, status, headers, config, statusText) {
             $scope.location.path('/employees/load/false');

@@ -66,8 +66,8 @@
         Cancel</button>
     </div>
   </form>
-  <pre>routeParams = {{ routeParams | json }}</pre>
-  <pre>northwind.employee = {{ northwind.employee | json }}</pre>
+  <pre>northwind.employee.HireDate = {{ northwind.employee.HireDate | json }}</pre>
+  <pre>getdisplayDate(northwind.employee.HireDate) = {{ getdisplayDate(northwind.employee.HireDate) }}</pre>
 </div>
 
 <div data-ng-if="northwind.httpState =='inProgress'">
