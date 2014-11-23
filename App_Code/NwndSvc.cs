@@ -2,11 +2,9 @@
 using System.Web.Services;
 using System.Configuration;
 using System.Web.Script.Services;
-using BL = BusinessLogic;
 using System.Threading;
 using System;
 using System.Diagnostics;
-using DA = DataAccess;
 using System.Data.SqlClient;
 using System.Data;
 
@@ -232,11 +230,25 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public BL.Employee.ReturnVal AddEmployee(DA.Employee employee)
+  public List<Employee> AddEmployee(Employee employee)
   {
-    Debug.Print("AddEmployee");
-    Thread.Sleep(TimeSpan.FromSeconds(2));
-    return BL.Employee.Add(_connectionString, employee);
+    List<Employee> eList;
+
+    Thread.Sleep(TimeSpan.FromSeconds(1));
+
+    using (SqlConnection conn = new SqlConnection(_connectionString))
+    {
+      conn.Open();
+      using (SqlTransaction txn = conn.BeginTransaction())
+      {
+        int newId;
+        int numRows = Insert(conn, txn, employee, out newId);
+        eList = GetEmployeesInner(conn, txn);
+        txn.Commit();
+      }
+    }
+
+    return eList;
   }
 
   [WebMethod]
@@ -367,6 +379,38 @@ public class NwndSvc : System.Web.Services.WebService
     }
 
     return names;
+  }
+
+  int Insert(SqlConnection conn, SqlTransaction txn, Employee emp, out int newId)
+  {
+    int numRows;
+    string sqlCmd = "INSERT INTO Employees (LastName, FirstName, Title, TitleOfCourtesy, HireDate, Notes)"
+      + " VALUES (@LastName,@FirstName,@Title,@TitleOfCourtesy,@HireDate,@Notes)"
+      + " SELECT @id = SCOPE_IDENTITY()";
+    using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+    {
+      SqlParameter p = new SqlParameter
+      {
+        ParameterName = "@id",
+        SqlDbType = SqlDbType.Int,
+        Direction = ParameterDirection.Output
+      };
+      cmd.Parameters.Add(p);
+      cmd.Parameters.AddWithValue("@LastName", emp.LastName);
+      cmd.Parameters.AddWithValue("@FirstName", emp.FirstName);
+      cmd.Parameters.AddWithValue("@Title",
+        string.IsNullOrWhiteSpace(emp.Title) ? DBNull.Value : (object)emp.Title);
+      cmd.Parameters.AddWithValue("@TitleOfCourtesy",
+        string.IsNullOrWhiteSpace(emp.TitleOfCourtesy) ? DBNull.Value : (object)emp.TitleOfCourtesy);
+     cmd.Parameters.AddWithValue("@HireDate",
+        emp.HireDate.HasValue ? (object)emp.HireDate.Value : DBNull.Value);
+      cmd.Parameters.AddWithValue("@Notes",
+        string.IsNullOrWhiteSpace(emp.Notes) ? DBNull.Value : (object)emp.Notes);
+
+      numRows = cmd.ExecuteNonQuery();
+      newId = (int)p.Value;
+    }
+    return numRows;
   }
 
   int Update(SqlConnection conn, SqlTransaction txn, Employee emp)
