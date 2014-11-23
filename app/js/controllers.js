@@ -86,11 +86,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
     function ($scope, $routeParams) {
       console.log('EmployeesController');
 
-      $scope.addNewEmployee = function () {
-        $scope.location.path('/employees/add');
-        return;
-      };
-
       $scope.deleteEmployee = function (employee) {
         $scope.northwind.deleteEmployee(employee).
           success(function (data, status, headers, config, statusText) {
@@ -112,39 +107,24 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
       }
     }
   ]).
-  controller('AddEmployeeController', ['$scope', '$location',
-    function ($scope, $location) {
-      $scope.readOnly = false;
-      $scope.employee = {};
-      $scope.headerText = 'Add New Employee';
+  controller('AddEmployeeController', ['$scope',
+    function ($scope) {
 
-      $scope.getCssClasses = function (ngModelContoller) {
-        var classes = {};
-        switch (ngModelContoller.$name) {
-          case 'lName':
-          case 'fName':
-          case 'hDate':
-            classes = {
-              'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
-              'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
-            };
-            break;
-          default:
-            classes = {
-              'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
-              'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
-            };
-            break;
-        }
-        return classes;
-      };
+      console.log('AddEmployeeController');
+
+      $scope.readOnly = false;
+      $scope.headerText = 'Add';
 
       $scope.okButtonText = 'Add';
 
       $scope.doOK = function () {
-        $scope.northwind.addEmployee($scope.employee).
+        var d1 = $scope.northwind.employee.HireDate;
+        var d2 = $scope.getDisplayDate(d1);
+        $scope.northwind.employee.HireDate = d2;
+
+        $scope.northwind.addEmployee($scope.northwind.employee).
           success(function (data, status, headers, config, statusText) {
-            $location.path('/employees/load/false');
+            $scope.location.path('/employees/load/false');
           }).
           error(function (data, status, headers, config, statusText) {
 
@@ -185,17 +165,10 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
   ]).
   controller('EditEmployeeController', ['$scope', '$routeParams',
     function ($scope, $routeParams) {
-      var i, len;
 
       console.log('EditEmployeeController');
 
       $scope.routeParams = $routeParams;
-
-      for (i = 0, len = $scope.northwind.employees.length; i < len; ++i) {
-        if ($scope.northwind.employees[i].EmployeeID == $scope.routeParams.id) {
-          $scope.employeeName = $scope.northwind.employees[i].Name;
-        }
-      }
 
       $scope.readOnly = false;
       $scope.headerText = 'Edit';
@@ -214,7 +187,6 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
         var d1 = $scope.northwind.employee.HireDate;
         var d2 = $scope.getDisplayDate(d1);
         $scope.northwind.employee.HireDate = d2;
-        //return;
 
         $scope.northwind.editEmployee($scope.northwind.employee).
           success(function (data, status, headers, config, statusText) {
@@ -225,10 +197,7 @@ angular.module('myApp.controllers', ['ngRoute', 'myApp.services']).
           });
       };
 
-      var myPromise = $scope.northwind.getEmployee($scope.routeParams.id, false);
-      myPromise.success(function (data, status, headers, config) {
-        return;
-      });
+      $scope.northwind.getEmployee($scope.routeParams.id, false);
     }
   ]).
   controller('ViewEmployeeController', ['$scope', '$location',

@@ -9,7 +9,9 @@
 </div>
 <div data-ng-if="northwind.httpState =='success'">
   <div>
-    <button class="btn btn-primary" data-ng-click="addNewEmployee()">Add New Employee</button>
+    <button class="btn btn-primary" data-ng-click="location.path('/employees/add')">
+      <span class="glyphicon glyphicon-plus"></span>
+    </button>
     <button class="btn btn-primary" data-ng-disabled="!northwind.selectedEmployee" data-ng-click="viewSelectedEmployeeDetails()">
       View Selected Employee Details</button>
   </div>
