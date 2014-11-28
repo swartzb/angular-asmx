@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Data.SqlClient;
 using System.Data;
+using DA = DataAccess;
 
 /// <summary>
 /// Summary description for NwndSvc
@@ -29,9 +30,9 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<Employee> GetCanReportTo(int id)
+  public List<DA.Employee> GetCanReportTo(int id)
   {
-    List<Employee> eList = new List<Employee>();
+    List<DA.Employee> eList = new List<DA.Employee>();
 
     Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -49,7 +50,7 @@ public class NwndSvc : System.Web.Services.WebService
           {
             while (rdr.Read())
             {
-              Employee e = new Employee
+              DA.Employee e = new DA.Employee
               {
                 EmployeeID = rdr.GetInt32(rdr.GetOrdinal("EmployeeID")),
                 Name = rdr.GetString(rdr.GetOrdinal("Name")),
@@ -110,9 +111,9 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<Employee> UpdateSupervisor(int empId, int supId, bool hasValue)
+  public List<DA.Employee> UpdateSupervisor(int empId, int supId, bool hasValue)
   {
-    List<Employee> eList = new List<Employee>();
+    List<DA.Employee> eList = new List<DA.Employee>();
 
     Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -147,9 +148,9 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<Employee> UpdateTerritories(int id, List<string> territoryIDs)
+  public List<DA.Employee> UpdateTerritories(int id, List<string> territoryIDs)
   {
-    List<Employee> eList;
+    List<DA.Employee> eList;
 
     Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -187,9 +188,9 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<Employee> GetEmployees()
+  public List<DA.Employee> GetEmployees()
   {
-    List<Employee> eList;
+    List<DA.Employee> eList;
 
     Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -208,9 +209,9 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<Employee> EditEmployee(Employee employee)
+  public List<DA.Employee> EditEmployee(DA.Employee employee)
   {
-    List<Employee> eList;
+    List<DA.Employee> eList;
 
     Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -230,9 +231,9 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<Employee> AddEmployee(Employee employee)
+  public List<DA.Employee> AddEmployee(DA.Employee employee)
   {
-    List<Employee> eList;
+    List<DA.Employee> eList;
 
     Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -253,16 +254,16 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public Employee GetEmployee(int id, bool newEmployee)
+  public DA.Employee GetEmployee(int id, bool newEmployee)
   {
     Thread.Sleep(TimeSpan.FromSeconds(1));
 
     if (newEmployee)
     {
-      return new Employee();
+      return new DA.Employee();
     }
 
-    Employee e = new Employee();
+    DA.Employee e = new DA.Employee();
 
     using (SqlConnection conn = new SqlConnection(_connectionString))
     {
@@ -295,9 +296,9 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<Employee> DeleteEmployee(int id)
+  public List<DA.Employee> DeleteEmployee(int id)
   {
-    List<Employee> eList;
+    List<DA.Employee> eList;
 
     Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -322,9 +323,9 @@ public class NwndSvc : System.Web.Services.WebService
     return eList;
   }
 
-  List<Employee> GetEmployeesInner(SqlConnection conn, SqlTransaction txn)
+  List<DA.Employee> GetEmployeesInner(SqlConnection conn, SqlTransaction txn)
   {
-    List<Employee> eList = new List<Employee>();
+    List<DA.Employee> eList = new List<DA.Employee>();
 
     string sqlCmd = "SELECT EmployeeID, Name, HireDate, Notes, SupervisorName, ReportsTo, CanBeDeleted FROM vwEmployees ORDER BY LastName";
     using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
@@ -333,7 +334,7 @@ public class NwndSvc : System.Web.Services.WebService
       {
         while (rdr.Read())
         {
-          Employee e = new Employee
+          DA.Employee e = new DA.Employee
           {
             EmployeeID = rdr.GetInt32(rdr.GetOrdinal("EmployeeID")),
             Name = rdr.GetString(rdr.GetOrdinal("Name")),
@@ -352,7 +353,7 @@ public class NwndSvc : System.Web.Services.WebService
       }
     }
 
-    foreach (Employee e in eList)
+    foreach (DA.Employee e in eList)
     {
       e.TerritoryNames = GetTerritoryNames(conn, txn, e.EmployeeID);
     }
@@ -381,7 +382,7 @@ public class NwndSvc : System.Web.Services.WebService
     return names;
   }
 
-  int Insert(SqlConnection conn, SqlTransaction txn, Employee emp, out int newId)
+  int Insert(SqlConnection conn, SqlTransaction txn, DA.Employee emp, out int newId)
   {
     int numRows;
     string sqlCmd = "INSERT INTO Employees (LastName, FirstName, Title, TitleOfCourtesy, HireDate, Notes)"
@@ -413,7 +414,7 @@ public class NwndSvc : System.Web.Services.WebService
     return numRows;
   }
 
-  int Update(SqlConnection conn, SqlTransaction txn, Employee emp)
+  int Update(SqlConnection conn, SqlTransaction txn, DA.Employee emp)
   {
     int numRows = 0;
     string sqlCmd = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, Title = @Title, TitleOfCourtesy = @TitleOfCourtesy, HireDate = @HireDate,"
@@ -436,30 +437,6 @@ public class NwndSvc : System.Web.Services.WebService
     }
     return numRows;
   }
-}
-
-public class Employee
-{
-  public int EmployeeID { get; set; }
-  public string LastName { get; set; }
-  public string FirstName { get; set; }
-  public string Title { get; set; }
-  public string TitleOfCourtesy { get; set; }
-  public string Name { get; set; }
-  public System.Nullable<System.DateTime> BirthDate { get; set; }
-  public System.Nullable<System.DateTime> HireDate { get; set; }
-  public string Address { get; set; }
-  public string City { get; set; }
-  public string Region { get; set; }
-  public string PostalCode { get; set; }
-  public string Country { get; set; }
-  public string HomePhone { get; set; }
-  public string Extension { get; set; }
-  public string Notes { get; set; }
-  public System.Nullable<int> ReportsTo { get; set; }
-  public string SupervisorName { get; set; }
-  public bool CanBeDeleted { get; set; }
-  public List<string> TerritoryNames { get; set; }
 }
 
 public class Territory
