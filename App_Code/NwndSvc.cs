@@ -72,9 +72,9 @@ public class NwndSvc : System.Web.Services.WebService
 
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<Territory> GetTerritories(int id)
+  public List<DA.Territory> GetTerritories(int id)
   {
-    List<Territory> tList = new List<Territory>();
+    List<DA.Territory> tList = new List<DA.Territory>();
 
     Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -91,7 +91,7 @@ public class NwndSvc : System.Web.Services.WebService
           {
             while (rdr.Read())
             {
-              Territory t = new Territory
+              DA.Territory t = new DA.Territory
               {
                 TerritoryID = rdr.GetString(rdr.GetOrdinal("TerritoryID")),
                 TerritoryDescription = rdr.GetString(rdr.GetOrdinal("TerritoryDescription")),
@@ -437,11 +437,4 @@ public class NwndSvc : System.Web.Services.WebService
     }
     return numRows;
   }
-}
-
-public class Territory
-{
-  public string TerritoryID { set; get; }
-  public string TerritoryDescription { set; get; }
-  public bool EmployeeCoversTerritory { get; set; }
 }
