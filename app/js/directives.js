@@ -14,9 +14,9 @@ angular.module('myApp.directives', ['myApp.services']).
         var docHeight = $window.document.body.clientHeight;
         var elemHeight = parseInt(window.getComputedStyle(elem, null).getPropertyValue("height"));
         var newHeight = elemHeight - docHeight + winHeight;
-        if (newHeight > 400) {
+        console.log(winHeight + ',' + elemHeight + ',' + docHeight + ',' + newHeight);
+        if (newHeight > 350) {
           elem.style.height = newHeight + 'px';
-          console.log(winHeight + ',' + elemHeight + ',' + docHeight + ',' + newHeight);
         } else {
           elem.style.height = null;
           console.log('removed height');
