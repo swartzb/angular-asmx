@@ -138,7 +138,7 @@ public class NwndSvc : System.Web.Services.WebService
           numRows = cmd.ExecuteNonQuery();
         }
 
-        eList = GetEmployeesInner(conn, txn);
+        eList = DA.Employee.GetAll(conn, txn);
         txn.Commit();
       }
     }
@@ -178,7 +178,7 @@ public class NwndSvc : System.Web.Services.WebService
           }
         }
 
-        eList = GetEmployeesInner(conn, txn);
+        eList = DA.Employee.GetAll(conn, txn);
         txn.Commit();
       }
     }
@@ -199,7 +199,7 @@ public class NwndSvc : System.Web.Services.WebService
       conn.Open();
       using (SqlTransaction txn = conn.BeginTransaction())
       {
-        eList = GetEmployeesInner(conn, txn);
+        eList = DA.Employee.GetAll(conn, txn);
         txn.Commit();
       }
     }
@@ -220,8 +220,8 @@ public class NwndSvc : System.Web.Services.WebService
       conn.Open();
       using (SqlTransaction txn = conn.BeginTransaction())
       {
-        int numRows = Update(conn, txn, employee); 
-        eList = GetEmployeesInner(conn, txn);
+        int numRows = employee.Update(conn, txn);
+        eList = DA.Employee.GetAll(conn, txn);
         txn.Commit();
       }
     }
@@ -243,8 +243,8 @@ public class NwndSvc : System.Web.Services.WebService
       using (SqlTransaction txn = conn.BeginTransaction())
       {
         int newId;
-        int numRows = Insert(conn, txn, employee, out newId);
-        eList = GetEmployeesInner(conn, txn);
+        int numRows = employee.Insert(conn, txn, out newId);
+        eList = DA.Employee.GetAll(conn, txn);
         txn.Commit();
       }
     }
@@ -315,126 +315,11 @@ public class NwndSvc : System.Web.Services.WebService
           numRows = cmd.ExecuteNonQuery();
         }
 
-        eList = GetEmployeesInner(conn, txn);
+        eList = DA.Employee.GetAll(conn, txn);
         txn.Commit();
       }
     }
 
     return eList;
-  }
-
-  List<DA.Employee> GetEmployeesInner(SqlConnection conn, SqlTransaction txn)
-  {
-    List<DA.Employee> eList = new List<DA.Employee>();
-
-    string sqlCmd = "SELECT EmployeeID, Name, HireDate, Notes, SupervisorName, ReportsTo, CanBeDeleted FROM vwEmployees ORDER BY LastName";
-    using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
-    {
-      using (SqlDataReader rdr = cmd.ExecuteReader())
-      {
-        while (rdr.Read())
-        {
-          DA.Employee e = new DA.Employee
-          {
-            EmployeeID = rdr.GetInt32(rdr.GetOrdinal("EmployeeID")),
-            Name = rdr.GetString(rdr.GetOrdinal("Name")),
-            HireDate = rdr.IsDBNull(rdr.GetOrdinal("HireDate"))
-                ? (DateTime?)null : rdr.GetDateTime(rdr.GetOrdinal("HireDate")),
-            Notes = rdr.IsDBNull(rdr.GetOrdinal("Notes")) ? "" : rdr.GetString(rdr.GetOrdinal("Notes")),
-            SupervisorName = rdr.IsDBNull(rdr.GetOrdinal("SupervisorName"))
-                ? null : rdr.GetString(rdr.GetOrdinal("SupervisorName")),
-            ReportsTo = rdr.IsDBNull(rdr.GetOrdinal("ReportsTo"))
-                ? (int?)null : rdr.GetInt32(rdr.GetOrdinal("ReportsTo")),
-            CanBeDeleted = rdr.GetBoolean(rdr.GetOrdinal("CanBeDeleted")),
-          };
-
-          eList.Add(e);
-        }
-      }
-    }
-
-    foreach (DA.Employee e in eList)
-    {
-      e.TerritoryNames = GetTerritoryNames(conn, txn, e.EmployeeID);
-    }
-
-    return eList;
-  }
-
-  List<string> GetTerritoryNames(SqlConnection conn, SqlTransaction txn, int id)
-  {
-    List<string> names = new List<string>();
-
-    string sqlCmd = "SELECT TerritoryDescription FROM Territories WHERE (dbo.EmployeeCoversTerritory(@id, TerritoryID) = 1) ORDER BY TerritoryDescription";
-    using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
-    {
-      cmd.Parameters.AddWithValue("@id", id);
-      using (SqlDataReader rdr = cmd.ExecuteReader())
-      {
-        while (rdr.Read())
-        {
-          string name = rdr.GetString(rdr.GetOrdinal("TerritoryDescription"));
-          names.Add(name.Trim());
-        }
-      }
-    }
-
-    return names;
-  }
-
-  int Insert(SqlConnection conn, SqlTransaction txn, DA.Employee emp, out int newId)
-  {
-    int numRows;
-    string sqlCmd = "INSERT INTO Employees (LastName, FirstName, Title, TitleOfCourtesy, HireDate, Notes)"
-      + " VALUES (@LastName,@FirstName,@Title,@TitleOfCourtesy,@HireDate,@Notes)"
-      + " SELECT @id = SCOPE_IDENTITY()";
-    using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
-    {
-      SqlParameter p = new SqlParameter
-      {
-        ParameterName = "@id",
-        SqlDbType = SqlDbType.Int,
-        Direction = ParameterDirection.Output
-      };
-      cmd.Parameters.Add(p);
-      cmd.Parameters.AddWithValue("@LastName", emp.LastName);
-      cmd.Parameters.AddWithValue("@FirstName", emp.FirstName);
-      cmd.Parameters.AddWithValue("@Title",
-        string.IsNullOrWhiteSpace(emp.Title) ? DBNull.Value : (object)emp.Title);
-      cmd.Parameters.AddWithValue("@TitleOfCourtesy",
-        string.IsNullOrWhiteSpace(emp.TitleOfCourtesy) ? DBNull.Value : (object)emp.TitleOfCourtesy);
-     cmd.Parameters.AddWithValue("@HireDate",
-        emp.HireDate.HasValue ? (object)emp.HireDate.Value : DBNull.Value);
-      cmd.Parameters.AddWithValue("@Notes",
-        string.IsNullOrWhiteSpace(emp.Notes) ? DBNull.Value : (object)emp.Notes);
-
-      numRows = cmd.ExecuteNonQuery();
-      newId = (int)p.Value;
-    }
-    return numRows;
-  }
-
-  int Update(SqlConnection conn, SqlTransaction txn, DA.Employee emp)
-  {
-    int numRows = 0;
-    string sqlCmd = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, Title = @Title, TitleOfCourtesy = @TitleOfCourtesy, HireDate = @HireDate,"
-      + " Notes = @Notes WHERE (EmployeeID = @EmployeeID)";
-    using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
-    {
-      cmd.Parameters.AddWithValue("@EmployeeID", emp.EmployeeID);
-      cmd.Parameters.AddWithValue("@LastName", emp.LastName);
-      cmd.Parameters.AddWithValue("@FirstName", emp.FirstName);
-      cmd.Parameters.AddWithValue("@Title",
-        string.IsNullOrWhiteSpace(emp.Title) ? DBNull.Value : (object)emp.Title);
-      cmd.Parameters.AddWithValue("@TitleOfCourtesy",
-        string.IsNullOrWhiteSpace(emp.TitleOfCourtesy) ? DBNull.Value : (object)emp.TitleOfCourtesy);
-      cmd.Parameters.AddWithValue("@HireDate",
-        emp.HireDate.HasValue ? (object)emp.HireDate.Value : DBNull.Value);
-      cmd.Parameters.AddWithValue("@Notes",
-        string.IsNullOrWhiteSpace(emp.Notes) ? DBNull.Value : (object)emp.Notes);
-
-      numRows = cmd.ExecuteNonQuery();
-    }
-    return numRows;
   }
 }
