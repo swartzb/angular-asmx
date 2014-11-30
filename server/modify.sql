@@ -5,18 +5,6 @@ IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[
 ALTER TABLE [dbo].[Orders] DROP CONSTRAINT [FK_Orders_Employees]
 GO
 
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EmployeeTerritories_Employees]') AND parent_object_id = OBJECT_ID(N'[dbo].[EmployeeTerritories]'))
-ALTER TABLE [dbo].[EmployeeTerritories] DROP CONSTRAINT [FK_EmployeeTerritories_Employees]
-GO
-
-ALTER TABLE [dbo].[EmployeeTerritories]  WITH CHECK ADD  CONSTRAINT [FK_EmployeeTerritories_Employees] FOREIGN KEY([EmployeeID])
-REFERENCES [dbo].[Employees] ([EmployeeID])
-ON DELETE CASCADE
-GO
-
-ALTER TABLE [dbo].[EmployeeTerritories] CHECK CONSTRAINT [FK_EmployeeTerritories_Employees]
-GO
-
 /****** Object:  StoredProcedure [dbo].[EmployeeTerritoriesTest]    Script Date: 10/14/2014 20:07:10 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EmployeeTerritoriesTest]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[EmployeeTerritoriesTest]

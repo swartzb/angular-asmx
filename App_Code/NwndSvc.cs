@@ -308,7 +308,16 @@ public class NwndSvc : System.Web.Services.WebService
       using (SqlTransaction txn = conn.BeginTransaction())
       {
         int numRows;
-        string sqlCmd = "DELETE FROM Employees WHERE (EmployeeID = @id)";
+        string sqlCmd;
+
+        sqlCmd = "DELETE FROM EmployeeTerritories WHERE (EmployeeID = @id)";
+        using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
+        {
+          cmd.Parameters.AddWithValue("@id", id);
+          numRows = cmd.ExecuteNonQuery();
+        }
+
+        sqlCmd = "DELETE FROM Employees WHERE (EmployeeID = @id)";
         using (SqlCommand cmd = new SqlCommand(sqlCmd, conn, txn))
         {
           cmd.Parameters.AddWithValue("@id", id);
