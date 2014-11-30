@@ -229,6 +229,11 @@ public class NwndSvc : System.Web.Services.WebService
     return eList;
   }
 
+  /// <summary>
+  /// Add a new employee.
+  /// </summary>
+  /// <param name="employee">new employee to add</param>
+  /// <returns>updated list of employee information</returns>
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<DA.Employee> AddEmployee(DA.Employee employee)
@@ -294,6 +299,11 @@ public class NwndSvc : System.Web.Services.WebService
     return e;
   }
 
+  /// <summary>
+  /// Delete the employee with the given id.
+  /// </summary>
+  /// <param name="id">employee id</param>
+  /// <returns>updated list of employee information</returns>
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<DA.Employee> DeleteEmployee(int id)
