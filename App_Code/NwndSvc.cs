@@ -28,6 +28,12 @@ public class NwndSvc : System.Web.Services.WebService
     //InitializeComponent(); 
   }
 
+  /// <summary>
+  /// Get the list of potential supervisors for the employee with the given id.
+  /// An employee can report to another employee, provided no cycles are introduced in the org chart.
+  /// </summary>
+  /// <param name="id"> employee id</param>
+  /// <returns>list of potential supervisors</returns>
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<DA.Employee> GetCanReportTo(int id)
@@ -70,6 +76,11 @@ public class NwndSvc : System.Web.Services.WebService
     return eList;
   }
 
+  /// <summary>
+  /// Get territories covered by the employee with the given id.
+  /// </summary>
+  /// <param name="id">employee id</param>
+  /// <returns>list of territories</returns>
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<DA.Territory> GetTerritories(int id)
@@ -109,6 +120,13 @@ public class NwndSvc : System.Web.Services.WebService
     return tList;
   }
 
+  /// <summary>
+  /// Update the supervisor of the employee with the given id.
+  /// </summary>
+  /// <param name="empId">employee id</param>
+  /// <param name="supId">supervisor id</param>
+  /// <param name="hasValue">supervisor id is (false) or is not (true) null</param>
+  /// <returns>updated list of employee information</returns>
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<DA.Employee> UpdateSupervisor(int empId, int supId, bool hasValue)
@@ -146,6 +164,12 @@ public class NwndSvc : System.Web.Services.WebService
     return eList;
   }
 
+  /// <summary>
+  /// Update the territories covered by the employee with the given id.
+  /// </summary>
+  /// <param name="id">employee id</param>
+  /// <param name="territoryIDs">list of territory ids</param>
+  /// <returns>updated list of employee information</returns>
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<DA.Employee> UpdateTerritories(int id, List<string> territoryIDs)
@@ -186,6 +210,10 @@ public class NwndSvc : System.Web.Services.WebService
     return eList;
   }
 
+  /// <summary>
+  /// Get a list of all employees.
+  /// </summary>
+  /// <returns>list of all employees</returns>
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public List<DA.Employee> GetEmployees()
@@ -207,9 +235,14 @@ public class NwndSvc : System.Web.Services.WebService
     return eList;
   }
 
+  /// <summary>
+  /// Update the given employee.
+  /// </summary>
+  /// <param name="employee">employee to be updated</param>
+  /// <returns>updated list of employee information</returns>
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-  public List<DA.Employee> EditEmployee(DA.Employee employee)
+  public List<DA.Employee> UpdateEmployee(DA.Employee employee)
   {
     List<DA.Employee> eList;
 
@@ -257,6 +290,12 @@ public class NwndSvc : System.Web.Services.WebService
     return eList;
   }
 
+  /// <summary>
+  /// Get details for either a new employee or an existing employee.
+  /// </summary>
+  /// <param name="id">employee id, valid for an existing employee.</param>
+  /// <param name="newEmployee">new (true) or existing (false) employee</param>
+  /// <returns>employee details</returns>
   [WebMethod]
   [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
   public DA.Employee GetEmployee(int id, bool newEmployee)

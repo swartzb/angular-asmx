@@ -323,7 +323,7 @@ angular.module('myApp.services', []).
         this.httpState = 'inProgress';
 
         var firstPromise = $http({
-          url: '../NwndSvc.asmx/EditEmployee',
+          url: '../NwndSvc.asmx/UpdateEmployee',
           method: "POST",
           data: JSON.stringify(inData),
           headers: { 'Content-Type': 'application/json' }
